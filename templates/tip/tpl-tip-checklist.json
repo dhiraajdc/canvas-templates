@@ -1,0 +1,46 @@
+{
+  "meta": {"template_id":"tip-checklist-v1","intent":"tip","mode":"checklist","style":"bold_checklist","version":"3.1","total_frames":270,"fps":30},
+  "canvas": {"ratio":"4:5","background":"#0A0A0C"},
+  "brand": {
+    "logo":"DAILY·TIP",
+    "colors":{"primary":"#E8762A","background":"#0A0A0C","text":"#F5F2EB","muted":"#888888","surface":"#111520"},
+    "fonts":{"display":"Bebas Neue","serif":"Playfair Display","sans":"DM Sans","mono":"DM Mono","grotesk":"Space Grotesk"}
+  },
+  "data": {"tip_headline":"Before every important meeting","item_1":"Write down the one outcome you need","item_2":"Prepare your first question in advance","item_3":"Arrive 2 minutes early and breathe"},
+  "layers": [
+    {"id":"bg","type":"fill_rect","x":0,"y":0,"width":"$canvas.width","height":"$canvas.height","color":"@brand.colors.background","opacity":1},
+    {"id":"bg_glow","type":"radial_gradient","cx":"$canvas.width*0.5","cy":"$canvas.height*0.38","radius":460,"color_start":"@brand.colors.primary","opacity_start":0.09,"color_end":"@brand.colors.primary","opacity_end":0,"opacity":1},
+    {"id":"vignette","type":"vignette","inner_radius":200,"outer_radius":900,"color":"#000000","strength":0.45,"opacity":0},
+    {"id":"label","type":"tag","content":"CHECKLIST","font":"@brand.fonts.grotesk","size":18,"weight":600,"letter_spacing":4,"color":"@brand.colors.primary","bg_opacity":0.1,"border":true,"border_opacity":0.35,"padding_h":28,"padding_v":12,"x":"$canvas.width*0.5","y":"$canvas.height*0.12","align":"center","opacity":0},
+    {"id":"headline","type":"text_block","content_ref":"@data.tip_headline","max_width":"$canvas.width-160","font":"@brand.fonts.serif","size":64,"weight":700,"color":"@brand.colors.text","line_height":80,"x":"$canvas.width*0.5","y":"$canvas.height*0.22","align":"center","baseline":"alphabetic","opacity":0},
+    {"id":"divider","type":"divider_ornament","x1":108,"x2":"$canvas.width-108","y":"$canvas.height*0.42","gap":10,"stroke_width":1,"color":"@brand.colors.primary","centre":"diamond","centre_size":10,"inner_gap":24,"opacity":0},
+    {"id":"tick_1","type":"rectangle","x":108,"y":"$canvas.height*0.498","width":32,"height":32,"color":"@brand.colors.primary","corner_radius":6,"opacity":0},
+    {"id":"item_1","type":"text_block","content_ref":"@data.item_1","max_width":"$canvas.width-230","font":"@brand.fonts.sans","size":32,"weight":400,"color":"@brand.colors.text","line_height":46,"x":164,"y":"$canvas.height*0.52","align":"left","baseline":"alphabetic","opacity":0},
+    {"id":"tick_2","type":"rectangle","x":108,"y":"$canvas.height*0.625","width":32,"height":32,"color":"@brand.colors.primary","corner_radius":6,"opacity":0},
+    {"id":"item_2","type":"text_block","content_ref":"@data.item_2","max_width":"$canvas.width-230","font":"@brand.fonts.sans","size":32,"weight":400,"color":"@brand.colors.text","line_height":46,"x":164,"y":"$canvas.height*0.646","align":"left","baseline":"alphabetic","opacity":0},
+    {"id":"tick_3","type":"rectangle","x":108,"y":"$canvas.height*0.752","width":32,"height":32,"color":"@brand.colors.primary","corner_radius":6,"opacity":0},
+    {"id":"item_3","type":"text_block","content_ref":"@data.item_3","max_width":"$canvas.width-230","font":"@brand.fonts.sans","size":32,"weight":400,"color":"@brand.colors.text","line_height":46,"x":164,"y":"$canvas.height*0.773","align":"left","baseline":"alphabetic","opacity":0},
+    {"id":"brand_logo","type":"brand_watermark","font":"@brand.fonts.mono","size":17,"letter_spacing":5,"color":"@brand.colors.muted","color_opacity":0.35,"x":"$canvas.width*0.5","y":"$canvas.height*0.94","align":"center","baseline":"alphabetic","opacity":0}
+  ],
+  "animations": [
+    {"layer_id":"vignette","property":"opacity","from_value":0,"to_value":1,"start_frame":0,"end_frame":30,"easing":"ease_out"},
+    {"layer_id":"label","property":"opacity","from_value":0,"to_value":1,"start_frame":8,"end_frame":35,"easing":"ease_out"},
+    {"layer_id":"headline","property":"opacity","from_value":0,"to_value":1,"start_frame":20,"end_frame":65,"easing":"ease_out"},
+    {"layer_id":"headline","property":"y","from_value":22,"to_value":0,"start_frame":20,"end_frame":65,"easing":"ease_out"},
+    {"layer_id":"divider","property":"opacity","from_value":0,"to_value":1,"start_frame":72,"end_frame":95,"easing":"ease_out"},
+    {"layer_id":"divider","property":"scale_x","from_value":0,"to_value":1,"start_frame":72,"end_frame":98,"easing":"ease_out"},
+    {"layer_id":"tick_1","property":"opacity","from_value":0,"to_value":1,"start_frame":105,"end_frame":128,"easing":"elastic_out"},
+    {"layer_id":"tick_1","property":"scale","from_value":0,"to_value":1,"start_frame":105,"end_frame":130,"easing":"elastic_out"},
+    {"layer_id":"item_1","property":"opacity","from_value":0,"to_value":1,"start_frame":112,"end_frame":140,"easing":"ease_out"},
+    {"layer_id":"item_1","property":"x","from_value":-20,"to_value":0,"start_frame":112,"end_frame":140,"easing":"ease_out"},
+    {"layer_id":"tick_2","property":"opacity","from_value":0,"to_value":1,"start_frame":142,"end_frame":165,"easing":"elastic_out"},
+    {"layer_id":"tick_2","property":"scale","from_value":0,"to_value":1,"start_frame":142,"end_frame":167,"easing":"elastic_out"},
+    {"layer_id":"item_2","property":"opacity","from_value":0,"to_value":1,"start_frame":150,"end_frame":178,"easing":"ease_out"},
+    {"layer_id":"item_2","property":"x","from_value":-20,"to_value":0,"start_frame":150,"end_frame":178,"easing":"ease_out"},
+    {"layer_id":"tick_3","property":"opacity","from_value":0,"to_value":1,"start_frame":180,"end_frame":202,"easing":"elastic_out"},
+    {"layer_id":"tick_3","property":"scale","from_value":0,"to_value":1,"start_frame":180,"end_frame":204,"easing":"elastic_out"},
+    {"layer_id":"item_3","property":"opacity","from_value":0,"to_value":1,"start_frame":188,"end_frame":215,"easing":"ease_out"},
+    {"layer_id":"item_3","property":"x","from_value":-20,"to_value":0,"start_frame":188,"end_frame":215,"easing":"ease_out"},
+    {"layer_id":"brand_logo","property":"opacity","from_value":0,"to_value":1,"start_frame":228,"end_frame":252,"easing":"ease_out"}
+  ]
+}

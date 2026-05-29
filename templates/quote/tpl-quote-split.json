@@ -1,0 +1,42 @@
+{
+  "meta": {"template_id":"quote-split-v1","intent":"quote","mode":"split","style":"dramatic_split","version":"3.1","total_frames":270,"fps":30},
+  "canvas": {"ratio":"4:5","background":"#0A0A0C"},
+  "brand": {
+    "logo":"MINDFUL·CO",
+    "colors":{"primary":"#C8A96E","background":"#0A0A0C","text":"#F5F2EB","muted":"#7A7468","surface":"#111114"},
+    "fonts":{"display":"Bebas Neue","serif":"Playfair Display","sans":"DM Sans","mono":"DM Mono","grotesk":"Space Grotesk"}
+  },
+  "data": {"quote_hook":"First they ignore you.","quote_body":"Then they laugh at you. Then they fight you. Then you win.","author_name":"Mahatma Gandhi","source":"Trade Union Speech, 1918"},
+  "layers": [
+    {"id":"bg","type":"fill_rect","x":0,"y":0,"width":"$canvas.width","height":"$canvas.height","color":"@brand.colors.background","opacity":1},
+    {"id":"bg_glow","type":"radial_gradient","cx":"$canvas.width*0.5","cy":"$canvas.height*0.35","radius":480,"color_start":"@brand.colors.primary","opacity_start":0.09,"color_end":"@brand.colors.primary","opacity_end":0,"opacity":1},
+    {"id":"vignette","type":"vignette","inner_radius":200,"outer_radius":900,"color":"#000000","strength":0.5,"opacity":0},
+    {"id":"top_rule","type":"line","x1":90,"y1":108,"x2":"$canvas.width-90","y2":108,"color":"@brand.colors.primary","stroke_width":1,"origin":"center","opacity":0},
+    {"id":"open_quote","type":"text","content":"\u201C","font":"@brand.fonts.serif","size":200,"color":"@brand.colors.primary","color_opacity":0.13,"x":80,"y":380,"align":"left","baseline":"alphabetic","opacity":0},
+    {"id":"hook","type":"text_block","content_ref":"@data.quote_hook","max_width":"$canvas.width-160","font":"@brand.fonts.serif","size":80,"weight":700,"color":"@brand.colors.text","line_height":96,"x":"$canvas.width*0.5","y":"$canvas.height*0.33","align":"center","baseline":"alphabetic","opacity":0},
+    {"id":"pause_rule","type":"line","x1":"$canvas.width*0.35","y1":"$canvas.height*0.475","x2":"$canvas.width*0.65","y2":"$canvas.height*0.475","color":"@brand.colors.primary","stroke_width":1,"origin":"center","opacity":0},
+    {"id":"pause_diamond","type":"diamond","cx":"$canvas.width*0.5","cy":"$canvas.height*0.475","size":10,"color":"@brand.colors.primary","opacity":0},
+    {"id":"body","type":"text_block","content_ref":"@data.quote_body","max_width":"$canvas.width-180","font":"@brand.fonts.serif","size":40,"weight":400,"color":"@brand.colors.text","color_opacity":0.6,"line_height":58,"x":"$canvas.width*0.5","y":"$canvas.height*0.515","align":"center","baseline":"alphabetic","opacity":0},
+    {"id":"author_name","type":"text","content_ref":"@data.author_name","font":"@brand.fonts.serif","size":34,"weight":700,"color":"@brand.colors.primary","x":"$canvas.width*0.5","y":"$canvas.height*0.775","align":"center","baseline":"alphabetic","opacity":0},
+    {"id":"source_tag","type":"source_tag","content_ref":"@data.source","prefix":"","font":"@brand.fonts.mono","size":18,"letter_spacing":1,"color":"@brand.colors.primary","bg_opacity":0.08,"border_opacity":0.2,"padding_h":28,"padding_v":12,"x":"$canvas.width*0.5","y":"$canvas.height*0.855","align":"center","opacity":0},
+    {"id":"brand_logo","type":"brand_watermark","font":"@brand.fonts.mono","size":17,"letter_spacing":5,"color":"@brand.colors.muted","color_opacity":0.35,"x":"$canvas.width*0.5","y":"$canvas.height*0.94","align":"center","baseline":"alphabetic","opacity":0}
+  ],
+  "animations": [
+    {"layer_id":"vignette","property":"opacity","from_value":0,"to_value":1,"start_frame":0,"end_frame":30,"easing":"ease_out"},
+    {"layer_id":"top_rule","property":"opacity","from_value":0,"to_value":0.4,"start_frame":5,"end_frame":32,"easing":"ease_out"},
+    {"layer_id":"top_rule","property":"scale_x","from_value":0,"to_value":1,"start_frame":5,"end_frame":35,"easing":"ease_out"},
+    {"layer_id":"open_quote","property":"opacity","from_value":0,"to_value":1,"start_frame":15,"end_frame":45,"easing":"ease_out"},
+    {"layer_id":"hook","property":"opacity","from_value":0,"to_value":1,"start_frame":25,"end_frame":68,"easing":"ease_out"},
+    {"layer_id":"hook","property":"y","from_value":24,"to_value":0,"start_frame":25,"end_frame":68,"easing":"ease_out"},
+    {"layer_id":"pause_rule","property":"opacity","from_value":0,"to_value":0.5,"start_frame":80,"end_frame":105,"easing":"ease_out"},
+    {"layer_id":"pause_rule","property":"scale_x","from_value":0,"to_value":1,"start_frame":80,"end_frame":108,"easing":"ease_out"},
+    {"layer_id":"pause_diamond","property":"opacity","from_value":0,"to_value":0.9,"start_frame":82,"end_frame":108,"easing":"elastic_out"},
+    {"layer_id":"pause_diamond","property":"scale","from_value":0,"to_value":1,"start_frame":82,"end_frame":110,"easing":"elastic_out"},
+    {"layer_id":"body","property":"opacity","from_value":0,"to_value":1,"start_frame":100,"end_frame":140,"easing":"ease_out"},
+    {"layer_id":"body","property":"y","from_value":20,"to_value":0,"start_frame":100,"end_frame":140,"easing":"ease_out"},
+    {"layer_id":"author_name","property":"opacity","from_value":0,"to_value":1,"start_frame":152,"end_frame":180,"easing":"ease_out"},
+    {"layer_id":"author_name","property":"y","from_value":16,"to_value":0,"start_frame":152,"end_frame":180,"easing":"ease_out"},
+    {"layer_id":"source_tag","property":"opacity","from_value":0,"to_value":1,"start_frame":185,"end_frame":210,"easing":"ease_out"},
+    {"layer_id":"brand_logo","property":"opacity","from_value":0,"to_value":1,"start_frame":205,"end_frame":228,"easing":"ease_out"}
+  ]
+}

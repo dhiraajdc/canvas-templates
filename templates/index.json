@@ -1,0 +1,22 @@
+[
+  { "key": "dyk::stat",            "intent": "dyk",      "mode": "stat",         "status": "ready", "file": "dyk/tpl-dyk-stat.json" },
+  { "key": "dyk::ratio",           "intent": "dyk",      "mode": "ratio",        "status": "ready", "file": "dyk/tpl-dyk-ratio.json" },
+  { "key": "dyk::timeframe",       "intent": "dyk",      "mode": "timeframe",    "status": "ready", "file": "dyk/tpl-dyk-timeframe.json" },
+  { "key": "dyk::statement",       "intent": "dyk",      "mode": "statement",    "status": "soon",  "file": null },
+  { "key": "quote::portrait",      "intent": "quote",    "mode": "portrait",     "status": "ready", "file": "quote/tpl-quote-portrait.json" },
+  { "key": "quote::topic",         "intent": "quote",    "mode": "topic",        "status": "ready", "file": "quote/tpl-quote-topic.json" },
+  { "key": "quote::split",         "intent": "quote",    "mode": "split",        "status": "ready", "file": "quote/tpl-quote-split.json" },
+  { "key": "quote::classic",       "intent": "quote",    "mode": "classic",      "status": "soon",  "file": null },
+  { "key": "tip::checklist",       "intent": "tip",      "mode": "checklist",    "status": "ready", "file": "tip/tpl-tip-checklist.json" },
+  { "key": "tip::do_dont",         "intent": "tip",      "mode": "do_dont",      "status": "ready", "file": "tip/tpl-tip-do-dont.json" },
+  { "key": "tip::stat_tip",        "intent": "tip",      "mode": "stat_tip",     "status": "ready", "file": "tip/tpl-tip-stat-tip.json" },
+  { "key": "tip::single",          "intent": "tip",      "mode": "single",       "status": "soon",  "file": null },
+  { "key": "funfact::versus",      "intent": "funfact",  "mode": "versus",       "status": "ready", "file": "funfact/tpl-funfact-versus.json" },
+  { "key": "funfact::number_fact", "intent": "funfact",  "mode": "number_fact",  "status": "ready", "file": "funfact/tpl-funfact-number.json" },
+  { "key": "funfact::mind_blown",  "intent": "funfact",  "mode": "mind_blown",   "status": "ready", "file": "funfact/tpl-funfact-mind-blown.json" },
+  { "key": "funfact::curiosity",   "intent": "funfact",  "mode": "curiosity",    "status": "soon",  "file": null },
+  { "key": "carousel::listicle",   "intent": "carousel", "mode": "listicle",     "status": "soon",  "file": null },
+  { "key": "carousel::story_arc",  "intent": "carousel", "mode": "story_arc",    "status": "soon",  "file": null },
+  { "key": "carousel::step_by_step","intent":"carousel", "mode": "step_by_step", "status": "soon",  "file": null },
+  { "key": "carousel::comparison", "intent": "carousel", "mode": "comparison",   "status": "soon",  "file": null }
+]

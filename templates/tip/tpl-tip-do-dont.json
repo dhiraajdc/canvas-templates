@@ -1,0 +1,39 @@
+{
+  "meta": {"template_id":"tip-do-dont-v1","intent":"tip","mode":"do_dont","style":"contrast_blocks","version":"3.1","total_frames":270,"fps":30},
+  "canvas": {"ratio":"4:5","background":"#0A0A0C"},
+  "brand": {
+    "logo":"DAILY·TIP",
+    "colors":{"primary":"#E8762A","background":"#0A0A0C","text":"#F5F2EB","muted":"#888888","surface":"#111520"},
+    "fonts":{"display":"Bebas Neue","serif":"Playfair Display","sans":"DM Sans","mono":"DM Mono","grotesk":"Space Grotesk"}
+  },
+  "data": {"tip_headline":"Writing a cold email","do_text":"Lead with what is in it for them","dont_text":"Lead with who you are and your credentials","category":"Communication"},
+  "layers": [
+    {"id":"bg","type":"fill_rect","x":0,"y":0,"width":"$canvas.width","height":"$canvas.height","color":"@brand.colors.background","opacity":1},
+    {"id":"bg_glow","type":"radial_gradient","cx":"$canvas.width*0.5","cy":"$canvas.height*0.5","radius":500,"color_start":"@brand.colors.primary","opacity_start":0.07,"color_end":"@brand.colors.primary","opacity_end":0,"opacity":1},
+    {"id":"vignette","type":"vignette","inner_radius":200,"outer_radius":900,"color":"#000000","strength":0.45,"opacity":0},
+    {"id":"cat_tag","type":"tag","content_ref":"@data.category","font":"@brand.fonts.grotesk","size":18,"weight":600,"letter_spacing":4,"color":"@brand.colors.primary","bg_opacity":0.1,"border":true,"border_opacity":0.35,"padding_h":28,"padding_v":12,"x":"$canvas.width*0.5","y":"$canvas.height*0.11","align":"center","opacity":0},
+    {"id":"headline","type":"text_block","content_ref":"@data.tip_headline","max_width":"$canvas.width-160","font":"@brand.fonts.serif","size":60,"weight":700,"color":"@brand.colors.text","line_height":76,"x":"$canvas.width*0.5","y":"$canvas.height*0.215","align":"center","baseline":"alphabetic","opacity":0},
+    {"id":"do_bg","type":"rectangle","x":80,"y":"$canvas.height*0.365","width":"$canvas.width-160","height":210,"color":"#22c55e","color_opacity":0.08,"stroke_color":"#22c55e","stroke_opacity":0.25,"stroke_width":1,"corner_radius":16,"opacity":0},
+    {"id":"do_label","type":"text","content":"DO","font":"@brand.fonts.grotesk","size":22,"weight":700,"letter_spacing":6,"color":"#22c55e","x":118,"y":"$canvas.height*0.408","align":"left","baseline":"alphabetic","opacity":0},
+    {"id":"do_text","type":"text_block","content_ref":"@data.do_text","max_width":"$canvas.width-230","font":"@brand.fonts.sans","size":34,"weight":400,"color":"@brand.colors.text","line_height":50,"x":118,"y":"$canvas.height*0.458","align":"left","baseline":"alphabetic","opacity":0},
+    {"id":"dont_bg","type":"rectangle","x":80,"y":"$canvas.height*0.62","width":"$canvas.width-160","height":210,"color":"#ef4444","color_opacity":0.08,"stroke_color":"#ef4444","stroke_opacity":0.22,"stroke_width":1,"corner_radius":16,"opacity":0},
+    {"id":"dont_label","type":"text","content":"DON'T","font":"@brand.fonts.grotesk","size":22,"weight":700,"letter_spacing":6,"color":"#ef4444","x":118,"y":"$canvas.height*0.663","align":"left","baseline":"alphabetic","opacity":0},
+    {"id":"dont_text","type":"text_block","content_ref":"@data.dont_text","max_width":"$canvas.width-230","font":"@brand.fonts.sans","size":34,"weight":400,"color":"@brand.colors.text","color_opacity":0.7,"line_height":50,"x":118,"y":"$canvas.height*0.713","align":"left","baseline":"alphabetic","opacity":0},
+    {"id":"brand_logo","type":"brand_watermark","font":"@brand.fonts.mono","size":17,"letter_spacing":5,"color":"@brand.colors.muted","color_opacity":0.35,"x":"$canvas.width*0.5","y":"$canvas.height*0.94","align":"center","baseline":"alphabetic","opacity":0}
+  ],
+  "animations": [
+    {"layer_id":"vignette","property":"opacity","from_value":0,"to_value":1,"start_frame":0,"end_frame":30,"easing":"ease_out"},
+    {"layer_id":"cat_tag","property":"opacity","from_value":0,"to_value":1,"start_frame":8,"end_frame":35,"easing":"ease_out"},
+    {"layer_id":"headline","property":"opacity","from_value":0,"to_value":1,"start_frame":20,"end_frame":62,"easing":"ease_out"},
+    {"layer_id":"headline","property":"y","from_value":20,"to_value":0,"start_frame":20,"end_frame":62,"easing":"ease_out"},
+    {"layer_id":"do_bg","property":"opacity","from_value":0,"to_value":1,"start_frame":72,"end_frame":100,"easing":"ease_out"},
+    {"layer_id":"do_label","property":"opacity","from_value":0,"to_value":1,"start_frame":80,"end_frame":108,"easing":"ease_out"},
+    {"layer_id":"do_text","property":"opacity","from_value":0,"to_value":1,"start_frame":88,"end_frame":122,"easing":"ease_out"},
+    {"layer_id":"do_text","property":"y","from_value":12,"to_value":0,"start_frame":88,"end_frame":122,"easing":"ease_out"},
+    {"layer_id":"dont_bg","property":"opacity","from_value":0,"to_value":1,"start_frame":138,"end_frame":165,"easing":"ease_out"},
+    {"layer_id":"dont_label","property":"opacity","from_value":0,"to_value":1,"start_frame":146,"end_frame":172,"easing":"ease_out"},
+    {"layer_id":"dont_text","property":"opacity","from_value":0,"to_value":1,"start_frame":155,"end_frame":190,"easing":"ease_out"},
+    {"layer_id":"dont_text","property":"y","from_value":12,"to_value":0,"start_frame":155,"end_frame":190,"easing":"ease_out"},
+    {"layer_id":"brand_logo","property":"opacity","from_value":0,"to_value":1,"start_frame":228,"end_frame":252,"easing":"ease_out"}
+  ]
+}
