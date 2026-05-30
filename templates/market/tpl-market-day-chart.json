@@ -10,60 +10,86 @@
   },
   "canvas": {
     "ratio": "4:5",
-    "background": "#07090F"
+    "background": "#07090F",
+    "width": 1080,
+    "height": 1350
   },
   "brand": {
     "logo": "MARKET·PULSE",
     "colors": {
-      "primary":    "#22C55E",
+      "primary": "#22C55E",
       "background": "#07090F",
-      "text":       "#F0F2F5",
-      "muted":      "#4A5568",
-      "surface":    "#0D1117",
-      "accent":     "#22C55E"
+      "text": "#F0F2F5",
+      "muted": "#4A5568",
+      "surface": "#0D1117",
+      "accent": "#22C55E"
     },
     "fonts": {
       "display": "Bebas Neue",
-      "serif":   "Playfair Display",
-      "sans":    "DM Sans",
-      "mono":    "DM Mono",
+      "serif": "Playfair Display",
+      "sans": "DM Sans",
+      "mono": "DM Mono",
       "grotesk": "Space Grotesk"
     }
   },
   "data": {
-    "market_name":  "NIFTY 50",
-    "close_value":  "22,419.95",
-    "change_pct":   "+1.24%",
-    "change_pts":   "+274.30",
-    "direction":    "up",
-    "high":         "22,526",
-    "low":          "22,198",
-    "open":         "22,201",
-    "summary":      "IT and banking stocks led broad-based gains as foreign inflows strengthened the rupee.",
-    "date":         "May 30, 2026",
-    "source":       "NSE India 2026",
+    "market_name": "NIFTY 50",
+    "close_value": "22,419.95",
+    "change_pct": "+1.24%",
+    "change_pts": "+274.30",
+    "direction": "up",
+    "high": "22,526",
+    "low": "22,198",
+    "open": "22,201",
+    "summary": "IT and banking stocks led broad-based gains as foreign inflows strengthened the rupee.",
+    "date": "May 30, 2026",
+    "source": "NSE India 2026",
     "chart_items": [
-      { "label": "9:15", "value": 18 },
-      { "label": "10:00", "value": 32 },
-      { "label": "11:00", "value": 25 },
-      { "label": "12:00", "value": 48 },
-      { "label": "13:00", "value": 41 },
-      { "label": "14:00", "value": 62 },
-      { "label": "15:00", "value": 55 },
-      { "label": "15:30", "value": 71 }
+      {
+        "label": "9:15",
+        "value": 18
+      },
+      {
+        "label": "10:00",
+        "value": 32
+      },
+      {
+        "label": "11:00",
+        "value": 25
+      },
+      {
+        "label": "12:00",
+        "value": 48
+      },
+      {
+        "label": "13:00",
+        "value": 41
+      },
+      {
+        "label": "14:00",
+        "value": 62
+      },
+      {
+        "label": "15:00",
+        "value": 55
+      },
+      {
+        "label": "15:30",
+        "value": 71
+      }
     ]
   },
   "layers": [
-
     {
       "id": "bg",
       "type": "fill_rect",
-      "x": 0, "y": 0,
-      "width": "$canvas.width", "height": "$canvas.height",
+      "x": 0,
+      "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
       "color": "@brand.colors.background",
       "opacity": 1
     },
-
     {
       "id": "bg_glow",
       "type": "radial_gradient",
@@ -76,7 +102,6 @@
       "opacity_end": 0,
       "opacity": 1
     },
-
     {
       "id": "bg_glow_top",
       "type": "radial_gradient",
@@ -89,7 +114,6 @@
       "opacity_end": 0,
       "opacity": 1
     },
-
     {
       "id": "vignette",
       "type": "vignette",
@@ -99,18 +123,18 @@
       "strength": 0.55,
       "opacity": 0
     },
-
     {
       "id": "top_rule",
       "type": "line",
-      "x1": 80, "y1": 96,
-      "x2": "$canvas.width-80", "y2": 96,
+      "x1": 80,
+      "y1": 96,
+      "x2": "$canvas.width-80",
+      "y2": 96,
       "color": "@brand.colors.primary",
       "stroke_width": 1,
       "origin": "center",
       "opacity": 0
     },
-
     {
       "id": "eyebrow",
       "type": "text",
@@ -126,7 +150,6 @@
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "date_tag",
       "type": "tag",
@@ -145,7 +168,6 @@
       "align": "right",
       "opacity": 0
     },
-
     {
       "id": "market_name",
       "type": "text",
@@ -159,7 +181,6 @@
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "close_value",
       "type": "text",
@@ -174,7 +195,6 @@
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "change_badge",
       "type": "pill_text",
@@ -194,7 +214,6 @@
       "align": "left",
       "opacity": 0
     },
-
     {
       "id": "change_pts",
       "type": "text",
@@ -209,7 +228,6 @@
       "baseline": "middle",
       "opacity": 0
     },
-
     {
       "id": "chart_surface",
       "type": "rectangle",
@@ -225,7 +243,6 @@
       "stroke_width": 1,
       "opacity": 0
     },
-
     {
       "id": "chart",
       "type": "line_chart",
@@ -244,7 +261,6 @@
       "draw_progress": 0,
       "opacity": 0
     },
-
     {
       "id": "chart_dot_start",
       "type": "circle",
@@ -258,7 +274,6 @@
       "stroke_width": 2,
       "opacity": 0
     },
-
     {
       "id": "chart_dot_end",
       "type": "circle",
@@ -272,20 +287,21 @@
       "stroke_width": 3,
       "opacity": 0
     },
-
     {
       "id": "high_label_line",
       "type": "dashed_line",
       "x1": 100,
       "y1": "$canvas.height*0.445+290*0.05",
       "x2": "$canvas.width-100",
-      "y2": "$canvas.height*0.445+290*0.05",
+      "y2": "$canvas.height*0.455+290*0.05",
       "color": "@brand.colors.muted",
       "stroke_width": 1,
-      "dash": [4, 8],
+      "dash": [
+        4,
+        8
+      ],
       "opacity": 0
     },
-
     {
       "id": "high_label",
       "type": "text",
@@ -296,12 +312,11 @@
       "letter_spacing": 1,
       "color": "@brand.colors.muted",
       "x": 100,
-      "y": "$canvas.height*0.445+290*0.05-10",
+      "y": "$canvas.height*0.455+290*0.05-10",
       "align": "left",
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "high_value",
       "type": "text",
@@ -311,12 +326,11 @@
       "weight": 600,
       "color": "@brand.colors.text",
       "x": 130,
-      "y": "$canvas.height*0.445+290*0.05-10",
+      "y": "$canvas.height*0.455+290*0.05-10",
       "align": "left",
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "low_label",
       "type": "text",
@@ -332,7 +346,6 @@
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "low_value",
       "type": "text",
@@ -347,7 +360,6 @@
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "open_label",
       "type": "text",
@@ -363,7 +375,6 @@
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "open_value",
       "type": "text",
@@ -378,7 +389,6 @@
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "summary_rule",
       "type": "line",
@@ -391,7 +401,6 @@
       "origin": "center",
       "opacity": 0
     },
-
     {
       "id": "summary",
       "type": "text_block",
@@ -409,7 +418,6 @@
       "baseline": "alphabetic",
       "opacity": 0
     },
-
     {
       "id": "bottom_rule",
       "type": "line",
@@ -422,7 +430,6 @@
       "origin": "center",
       "opacity": 0
     },
-
     {
       "id": "source_tag",
       "type": "source_tag",
@@ -441,7 +448,6 @@
       "align": "center",
       "opacity": 0
     },
-
     {
       "id": "brand_logo",
       "type": "brand_watermark",
@@ -456,61 +462,304 @@
       "baseline": "alphabetic",
       "opacity": 0
     }
-
   ],
   "animations": [
-
-    { "layer_id": "vignette",      "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 0,   "end_frame": 25,  "easing": "ease_out" },
-
-    { "layer_id": "top_rule",      "property": "opacity", "from_value": 0,   "to_value": 0.4, "start_frame": 5,   "end_frame": 30,  "easing": "ease_out" },
-    { "layer_id": "top_rule",      "property": "scale_x", "from_value": 0,   "to_value": 1,   "start_frame": 5,   "end_frame": 32,  "easing": "ease_out" },
-
-    { "layer_id": "eyebrow",       "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 8,   "end_frame": 35,  "easing": "ease_out" },
-    { "layer_id": "eyebrow",       "property": "y",       "from_value": 12,  "to_value": 0,   "start_frame": 8,   "end_frame": 35,  "easing": "ease_out" },
-
-    { "layer_id": "date_tag",      "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 12,  "end_frame": 38,  "easing": "ease_out" },
-
-    { "layer_id": "market_name",   "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 20,  "end_frame": 55,  "easing": "ease_out" },
-    { "layer_id": "market_name",   "property": "y",       "from_value": 24,  "to_value": 0,   "start_frame": 20,  "end_frame": 55,  "easing": "ease_out" },
-
-    { "layer_id": "close_value",   "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 32,  "end_frame": 62,  "easing": "ease_out" },
-    { "layer_id": "close_value",   "property": "y",       "from_value": 16,  "to_value": 0,   "start_frame": 32,  "end_frame": 62,  "easing": "ease_out" },
-
-    { "layer_id": "change_badge",  "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 40,  "end_frame": 65,  "easing": "elastic_out" },
-    { "layer_id": "change_badge",  "property": "scale_x", "from_value": 0.6, "to_value": 1,   "start_frame": 40,  "end_frame": 65,  "easing": "elastic_out" },
-
-    { "layer_id": "change_pts",    "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 45,  "end_frame": 68,  "easing": "ease_out" },
-
-    { "layer_id": "chart_surface", "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 60,  "end_frame": 80,  "easing": "ease_out" },
-
-    { "layer_id": "chart",         "property": "opacity",       "from_value": 0, "to_value": 1, "start_frame": 65,  "end_frame": 82,  "easing": "ease_out" },
-    { "layer_id": "chart",         "property": "draw_progress", "from_value": 0, "to_value": 1, "start_frame": 70,  "end_frame": 165, "easing": "ease_out" },
-
-    { "layer_id": "chart_dot_start","property": "opacity", "from_value": 0,  "to_value": 1,   "start_frame": 72,  "end_frame": 90,  "easing": "elastic_out" },
-    { "layer_id": "chart_dot_end", "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 158, "end_frame": 175, "easing": "elastic_out" },
-
-    { "layer_id": "high_label_line","property": "opacity", "from_value": 0,  "to_value": 1,   "start_frame": 155, "end_frame": 175, "easing": "ease_out" },
-    { "layer_id": "high_label",    "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 160, "end_frame": 180, "easing": "ease_out" },
-    { "layer_id": "high_value",    "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 162, "end_frame": 182, "easing": "ease_out" },
-
-    { "layer_id": "low_label",     "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 165, "end_frame": 185, "easing": "ease_out" },
-    { "layer_id": "low_value",     "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 167, "end_frame": 187, "easing": "ease_out" },
-
-    { "layer_id": "open_label",    "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 170, "end_frame": 188, "easing": "ease_out" },
-    { "layer_id": "open_value",    "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 172, "end_frame": 190, "easing": "ease_out" },
-
-    { "layer_id": "summary_rule",  "property": "opacity", "from_value": 0,   "to_value": 0.2, "start_frame": 182, "end_frame": 200, "easing": "ease_out" },
-    { "layer_id": "summary_rule",  "property": "scale_x", "from_value": 0,   "to_value": 1,   "start_frame": 182, "end_frame": 202, "easing": "ease_out" },
-
-    { "layer_id": "summary",       "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 188, "end_frame": 215, "easing": "ease_out" },
-    { "layer_id": "summary",       "property": "y",       "from_value": 16,  "to_value": 0,   "start_frame": 188, "end_frame": 215, "easing": "ease_out" },
-
-    { "layer_id": "bottom_rule",   "property": "opacity", "from_value": 0,   "to_value": 0.4, "start_frame": 210, "end_frame": 228, "easing": "ease_out" },
-    { "layer_id": "bottom_rule",   "property": "scale_x", "from_value": 0,   "to_value": 1,   "start_frame": 210, "end_frame": 230, "easing": "ease_out" },
-
-    { "layer_id": "source_tag",    "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 215, "end_frame": 238, "easing": "ease_out" },
-
-    { "layer_id": "brand_logo",    "property": "opacity", "from_value": 0,   "to_value": 1,   "start_frame": 228, "end_frame": 252, "easing": "ease_out" }
-
+    {
+      "layer_id": "vignette",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 25,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "top_rule",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 0.4,
+      "start_frame": 5,
+      "end_frame": 30,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "top_rule",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 5,
+      "end_frame": 32,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "eyebrow",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 8,
+      "end_frame": 35,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "eyebrow",
+      "property": "y",
+      "from_value": 12,
+      "to_value": 0,
+      "start_frame": 8,
+      "end_frame": 35,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "date_tag",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 12,
+      "end_frame": 38,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "market_name",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 20,
+      "end_frame": 55,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "market_name",
+      "property": "y",
+      "from_value": 24,
+      "to_value": 0,
+      "start_frame": 20,
+      "end_frame": 55,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "close_value",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 32,
+      "end_frame": 62,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "close_value",
+      "property": "y",
+      "from_value": 16,
+      "to_value": 0,
+      "start_frame": 32,
+      "end_frame": 62,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "change_badge",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 40,
+      "end_frame": 65,
+      "easing": "elastic_out"
+    },
+    {
+      "layer_id": "change_badge",
+      "property": "scale_x",
+      "from_value": 0.6,
+      "to_value": 1,
+      "start_frame": 40,
+      "end_frame": 65,
+      "easing": "elastic_out"
+    },
+    {
+      "layer_id": "change_pts",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 45,
+      "end_frame": 68,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "chart_surface",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 60,
+      "end_frame": 80,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "chart",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 65,
+      "end_frame": 82,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "chart",
+      "property": "draw_progress",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 70,
+      "end_frame": 165,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "chart_dot_start",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 72,
+      "end_frame": 90,
+      "easing": "elastic_out"
+    },
+    {
+      "layer_id": "chart_dot_end",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 158,
+      "end_frame": 175,
+      "easing": "elastic_out"
+    },
+    {
+      "layer_id": "high_label_line",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 155,
+      "end_frame": 175,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "high_label",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 160,
+      "end_frame": 180,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "high_value",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 162,
+      "end_frame": 182,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "low_label",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 165,
+      "end_frame": 185,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "low_value",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 167,
+      "end_frame": 187,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "open_label",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 170,
+      "end_frame": 188,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "open_value",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 172,
+      "end_frame": 190,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "summary_rule",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 0.2,
+      "start_frame": 182,
+      "end_frame": 200,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "summary_rule",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 182,
+      "end_frame": 202,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "summary",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 188,
+      "end_frame": 215,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "summary",
+      "property": "y",
+      "from_value": 16,
+      "to_value": 0,
+      "start_frame": 188,
+      "end_frame": 215,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "bottom_rule",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 0.4,
+      "start_frame": 210,
+      "end_frame": 228,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "bottom_rule",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 210,
+      "end_frame": 230,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "source_tag",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 215,
+      "end_frame": 238,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "brand_logo",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 228,
+      "end_frame": 252,
+      "easing": "ease_out"
+    }
   ]
 }

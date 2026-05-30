@@ -34,10 +34,5 @@
   { "key": "news::opinion",          "intent": "news",    "mode": "opinion",      "status": "soon",  "file": null },
   { "key": "news::timeline",         "intent": "news",    "mode": "timeline",     "status": "soon",  "file": null },
   {
-  "key": "editorial::cover",
-  "intent": "editorial",
-  "mode": "cover",
-  "status": "ready",
-  "file": "editorial/tpl-editorial-cover.json"
-}
+  "key": "editorial::cover",  "intent": "editorial",  "mode": "cover",  "status": "ready",  "file": "editorial/tpl-editorial-cover.json"}
 ]
