@@ -1,41 +1,228 @@
 [
-  { "key": "dyk::stat",              "intent": "dyk",     "mode": "stat",         "status": "ready", "file": "dyk/tpl-dyk-stat.json" },
-  { "key": "dyk::ratio",             "intent": "dyk",     "mode": "ratio",        "status": "ready", "file": "dyk/tpl-dyk-ratio.json" },
-  { "key": "dyk::timeframe",         "intent": "dyk",     "mode": "timeframe",    "status": "ready", "file": "dyk/tpl-dyk-timeframe.json" },
-  { "key": "dyk::statement",         "intent": "dyk",     "mode": "statement",    "status": "soon",  "file": null },
-
-  { "key": "quote::portrait",        "intent": "quote",   "mode": "portrait",     "status": "ready", "file": "quote/tpl-quote-portrait.json" },
-  { "key": "quote::topic",           "intent": "quote",   "mode": "topic",        "status": "ready", "file": "quote/tpl-quote-topic.json" },
-  { "key": "quote::split",           "intent": "quote",   "mode": "split",        "status": "ready", "file": "quote/tpl-quote-split.json" },
-  { "key": "quote::classic",         "intent": "quote",   "mode": "classic",      "status": "soon",  "file": null },
-  
-
-  { "key": "tip::checklist",         "intent": "tip",     "mode": "checklist",    "status": "ready", "file": "tip/tpl-tip-checklist.json" },
-  { "key": "tip::do_dont",           "intent": "tip",     "mode": "do_dont",      "status": "ready", "file": "tip/tpl-tip-do-dont.json" },
-  { "key": "tip::stat_tip",          "intent": "tip",     "mode": "stat_tip",     "status": "ready", "file": "tip/tpl-tip-stat-tip.json" },
-  { "key": "tip::single",            "intent": "tip",     "mode": "single",       "status": "soon",  "file": null },
-
-  { "key": "funfact::versus",        "intent": "funfact", "mode": "versus",       "status": "ready", "file": "funfact/tpl-funfact-versus.json" },
-  { "key": "funfact::number_fact",   "intent": "funfact", "mode": "number_fact",  "status": "ready", "file": "funfact/tpl-funfact-number.json" },
-  { "key": "funfact::mind_blown",    "intent": "funfact", "mode": "mind_blown",   "status": "ready", "file": "funfact/tpl-funfact-mind-blown.json" },
-  { "key": "funfact::curiosity",     "intent": "funfact", "mode": "curiosity",    "status": "soon",  "file": null },
-
-
-  { "key": "market::day_chart",      "intent": "market",  "mode": "day_chart",    "status": "ready", "file": "market/tpl-market-day-chart.json" },
-  { "key": "market::week_chart",     "intent": "market",  "mode": "week_chart",   "status": "soon",  "file": null },
-  { "key": "market::gainers",        "intent": "market",  "mode": "gainers",      "status": "soon",  "file": null },
-  { "key": "market::movers",         "intent": "market",  "mode": "movers",       "status": "soon",  "file": null },
-
-  { "key": "news::headline",         "intent": "news",    "mode": "headline",     "status": "ready", "file": "news/tpl-news-headline.json" },
-  { "key": "news::briefing",         "intent": "news",    "mode": "briefing",     "status": "soon",  "file": null },
-  { "key": "news::opinion",          "intent": "news",    "mode": "opinion",      "status": "soon",  "file": null },
-  { "key": "news::timeline",         "intent": "news",    "mode": "timeline",     "status": "soon",  "file": null },
   {
-  "key": "editorial::cover",  "intent": "editorial",  "mode": "cover",  "status": "ready",  "file": "editorial/tpl-editorial-cover.json"},
-  
-  { "key": "carousel::listicle",    "intent": "carousel", "mode": "listicle",    "status": "ready", "file": "carousel/tpl-carousel-listicle.json" },
-{ "key": "carousel::story_arc",   "intent": "carousel", "mode": "story_arc",   "status": "ready", "file": "carousel/tpl-carousel-story-arc.json" },
-{ "key": "carousel::step_by_step","intent": "carousel", "mode": "step_by_step","status": "ready", "file": "carousel/tpl-carousel-step-by-step.json" },
-{ "key": "carousel::comparison",  "intent": "carousel", "mode": "comparison",  "status": "ready", "file": "carousel/tpl-carousel-comparison.json" }
-  
+    "intent": "dyk",
+    "label": "Did You Know",
+    "modes": [
+      {
+        "mode": "stat",
+        "label": "Stat",
+        "templates": [
+          { "id": "dyk-stat-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "dyk/stat/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "countup"] }
+        ]
+      },
+      {
+        "mode": "ratio",
+        "label": "Ratio",
+        "templates": [
+          { "id": "dyk-ratio-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "dyk/ratio/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+        ]
+      },
+      {
+        "mode": "timeframe",
+        "label": "Timeframe",
+        "templates": [
+          { "id": "dyk-timeframe-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "dyk/timeframe/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+        ]
+      },
+      {
+        "mode": "statement",
+        "label": "Statement",
+        "templates": [
+          { "id": "dyk-statement-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "dyk/statement/tpl-dark-feed.json", "status": "soon", "tags": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "intent": "quote",
+    "label": "Quote",
+    "modes": [
+      {
+        "mode": "portrait",
+        "label": "Portrait",
+        "templates": [
+          { "id": "quote-portrait-dark-feed",  "size": "feed",  "style": "dark", "aspect": "4:5",  "width": 1080, "height": 1350, "file": "quote/portrait/tpl-dark-feed.json",  "status": "ready", "tags": ["animated", "author-photo"] },
+          { "id": "quote-portrait-dark-story", "size": "story", "style": "dark", "aspect": "9:16", "width": 1080, "height": 1920, "file": "quote/portrait/tpl-dark-story.json", "status": "ready", "tags": ["animated", "author-photo"] }
+        ]
+      },
+      {
+        "mode": "topic",
+        "label": "Topic",
+        "templates": [
+          { "id": "quote-topic-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "quote/topic/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+        ]
+      },
+      {
+        "mode": "split",
+        "label": "Split",
+        "templates": [
+          { "id": "quote-split-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "quote/split/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+        ]
+      },
+      {
+        "mode": "classic",
+        "label": "Classic",
+        "templates": [
+          { "id": "quote-classic-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "quote/classic/tpl-dark-feed.json", "status": "soon", "tags": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "intent": "tip",
+    "label": "Tip",
+    "modes": [
+      {
+        "mode": "checklist",
+        "label": "Checklist",
+        "templates": [
+          { "id": "tip-checklist-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "tip/checklist/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "checklist"] }
+        ]
+      },
+      {
+        "mode": "do_dont",
+        "label": "Do / Don't",
+        "templates": [
+          { "id": "tip-do-dont-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "tip/do_dont/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+        ]
+      },
+      {
+        "mode": "stat_tip",
+        "label": "Stat + Tip",
+        "templates": [
+          { "id": "tip-stat-tip-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "tip/stat_tip/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "stat"] }
+        ]
+      },
+      {
+        "mode": "single",
+        "label": "Single",
+        "templates": [
+          { "id": "tip-single-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "tip/single/tpl-dark-feed.json", "status": "soon", "tags": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "intent": "funfact",
+    "label": "Fun Fact",
+    "modes": [
+      {
+        "mode": "versus",
+        "label": "Versus",
+        "templates": [
+          { "id": "funfact-versus-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "funfact/versus/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+        ]
+      },
+      {
+        "mode": "number_fact",
+        "label": "Number Fact",
+        "templates": [
+          { "id": "funfact-number-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "funfact/number_fact/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "countup"] }
+        ]
+      },
+      {
+        "mode": "mind_blown",
+        "label": "Mind Blown",
+        "templates": [
+          { "id": "funfact-mind-blown-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "funfact/mind_blown/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+        ]
+      },
+      {
+        "mode": "curiosity",
+        "label": "Curiosity",
+        "templates": [
+          { "id": "funfact-curiosity-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "funfact/curiosity/tpl-dark-feed.json", "status": "soon", "tags": [] }
+        ]
+      }
+    ]
+  },
+  {
+    "intent": "editorial",
+    "label": "Editorial",
+    "modes": [
+      {
+        "mode": "cover",
+        "label": "Cover",
+        "templates": [
+          { "id": "editorial-cover-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "editorial/cover/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "image-bg"] }
+        ]
+      }
+    ]
+  },
+  {
+    "intent": "carousel",
+    "label": "Carousel",
+    "modes": [
+      {
+        "mode": "listicle",
+        "label": "Listicle",
+        "templates": [
+          { "id": "carousel-listicle-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "carousel/listicle/tpl-dark-feed.json", "status": "ready", "tags": ["carousel", "multi-slide"] }
+        ]
+      },
+      {
+        "mode": "story_arc",
+        "label": "Story Arc",
+        "templates": [
+          { "id": "carousel-story-arc-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "carousel/story_arc/tpl-dark-feed.json", "status": "ready", "tags": ["carousel", "multi-slide"] }
+        ]
+      },
+      {
+        "mode": "step_by_step",
+        "label": "Step by Step",
+        "templates": [
+          { "id": "carousel-step-by-step-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "carousel/step_by_step/tpl-dark-feed.json", "status": "ready", "tags": ["carousel", "multi-slide"] }
+        ]
+      },
+      {
+        "mode": "comparison",
+        "label": "Comparison",
+        "templates": [
+          { "id": "carousel-comparison-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "carousel/comparison/tpl-dark-feed.json", "status": "ready", "tags": ["carousel", "multi-slide"] }
+        ]
+      }
+    ]
+  },
+  {
+    "intent": "market",
+    "label": "Market",
+    "modes": [
+      {
+        "mode": "day_chart",
+        "label": "Day Chart",
+        "templates": [
+          { "id": "market-day-chart-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "market/day_chart/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "chart", "live-data"] }
+        ]
+      },
+      {
+        "mode": "week_chart", "label": "Week Chart",
+        "templates": [{ "id": "market-week-chart-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "market/week_chart/tpl-dark-feed.json", "status": "soon", "tags": [] }]
+      },
+      {
+        "mode": "gainers", "label": "Gainers",
+        "templates": [{ "id": "market-gainers-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "market/gainers/tpl-dark-feed.json", "status": "soon", "tags": [] }]
+      }
+    ]
+  },
+  {
+    "intent": "news",
+    "label": "News",
+    "modes": [
+      {
+        "mode": "headline",
+        "label": "Headline",
+        "templates": [
+          { "id": "news-headline-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "news/headline/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "live-data"] }
+        ]
+      },
+      {
+        "mode": "briefing", "label": "Briefing",
+        "templates": [{ "id": "news-briefing-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "news/briefing/tpl-dark-feed.json", "status": "soon", "tags": [] }]
+      },
+      {
+        "mode": "opinion", "label": "Opinion",
+        "templates": [{ "id": "news-opinion-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "news/opinion/tpl-dark-feed.json", "status": "soon", "tags": [] }]
+      }
+    ]
+  }
 ]
