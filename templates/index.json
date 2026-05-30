@@ -19,10 +19,6 @@
   { "key": "funfact::mind_blown",    "intent": "funfact", "mode": "mind_blown",   "status": "ready", "file": "funfact/tpl-funfact-mind-blown.json" },
   { "key": "funfact::curiosity",     "intent": "funfact", "mode": "curiosity",    "status": "soon",  "file": null },
 
-  { "key": "carousel::listicle",     "intent": "carousel","mode": "listicle",     "status": "soon",  "file": null },
-  { "key": "carousel::story_arc",    "intent": "carousel","mode": "story_arc",    "status": "soon",  "file": null },
-  { "key": "carousel::step_by_step", "intent": "carousel","mode": "step_by_step", "status": "soon",  "file": null },
-  { "key": "carousel::comparison",   "intent": "carousel","mode": "comparison",   "status": "soon",  "file": null },
 
   { "key": "market::day_chart",      "intent": "market",  "mode": "day_chart",    "status": "ready", "file": "market/tpl-market-day-chart.json" },
   { "key": "market::week_chart",     "intent": "market",  "mode": "week_chart",   "status": "soon",  "file": null },
