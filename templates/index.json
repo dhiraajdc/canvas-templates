@@ -34,5 +34,10 @@
   { "key": "news::opinion",          "intent": "news",    "mode": "opinion",      "status": "soon",  "file": null },
   { "key": "news::timeline",         "intent": "news",    "mode": "timeline",     "status": "soon",  "file": null },
   {
-  "key": "editorial::cover",  "intent": "editorial",  "mode": "cover",  "status": "ready",  "file": "editorial/tpl-editorial-cover.json"}
+  "key": "editorial::cover",  "intent": "editorial",  "mode": "cover",  "status": "ready",  "file": "editorial/tpl-editorial-cover.json"},
+  { "key": "carousel::listicle",    "intent": "carousel", "mode": "listicle",    "status": "ready", "file": "carousel/tpl-carousel-listicle.json" },
+{ "key": "carousel::story_arc",   "intent": "carousel", "mode": "story_arc",   "status": "ready", "file": "carousel/tpl-carousel-story-arc.json" },
+{ "key": "carousel::step_by_step","intent": "carousel", "mode": "step_by_step","status": "ready", "file": "carousel/tpl-carousel-step-by-step.json" },
+{ "key": "carousel::comparison",  "intent": "carousel", "mode": "comparison",  "status": "ready", "file": "carousel/tpl-carousel-comparison.json" }
+  
 ]

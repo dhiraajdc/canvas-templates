@@ -1,0 +1,236 @@
+{
+  "meta": {
+    "template_id": "carousel-comparison-v1",
+    "intent": "carousel",
+    "mode": "comparison",
+    "version": "1.0",
+    "total_frames": 90,
+    "fps": 30
+  },
+  "canvas": {
+    "width": 1080,
+    "height": 1350,
+    "background": "#0B0F0E"
+  },
+  "brand": {
+    "logo": "INSIGHT·DAILY",
+    "colors": {
+      "primary":    "#2DD4BF",
+      "background": "#0B0F0E",
+      "text":       "#F5F7F7",
+      "muted":      "#7C8A88",
+      "surface":    "#111814"
+    },
+    "fonts": {
+      "display":  "Bebas Neue",
+      "serif":    "Playfair Display",
+      "sans":     "DM Sans",
+      "mono":     "DM Mono",
+      "grotesk":  "Space Grotesk"
+    }
+  },
+  "data": [
+    {
+      "heading": "Two ways to run your day",
+      "body": "Both organize work — but they treat time very differently.",
+      "label": "Setup",
+      "category": "Productivity",
+      "image": "https://picsum.photos/id/28/1080/1350"
+    },
+    {
+      "heading": "To-do lists",
+      "body": "Endless, flexible, and quietly overwhelming. Tasks have no home in your day.",
+      "label": "Side A",
+      "category": "Productivity",
+      "image": "https://picsum.photos/id/28/1080/1350"
+    },
+    {
+      "heading": "Time blocking",
+      "body": "Every task gets a slot. Less choice, more done — but rigid when plans shift.",
+      "label": "Side B",
+      "category": "Productivity",
+      "image": "https://picsum.photos/id/28/1080/1350"
+    },
+    {
+      "heading": "Block first, list second",
+      "body": "Use blocks for the day, a list for the overflow.",
+      "label": "Verdict",
+      "category": "Productivity",
+      "image": "https://picsum.photos/id/28/1080/1350"
+    }
+  ],
+  "playback": {
+    "frames_per_item": 90,
+    "hold_frames": 20,
+    "transition": { "type": "slide_left", "duration_frames": 18 }
+  },
+  "layers": [
+    {
+      "id": "bg",
+      "type": "fill_rect",
+      "x": 0, "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "color": "@brand.colors.background",
+      "opacity": 1
+    },
+    {
+      "id": "cover_image",
+      "type": "image_fill",
+      "src": "@data.image",
+      "x": 0, "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "opacity": 1
+    },
+    {
+      "id": "scrim",
+      "type": "fill_rect",
+      "x": 0, "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "color": "#000000",
+      "opacity": 0.5
+    },
+    {
+      "id": "gradient_bottom",
+      "type": "linear_gradient",
+      "x1": 0, "y1": "$canvas.height*0.4",
+      "x2": 0, "y2": "$canvas.height",
+      "color_start": "#000000", "opacity_start": 0,
+      "color_end": "#000000",   "opacity_end": 0.88,
+      "opacity": 1
+    },
+    {
+      "id": "frame_label",
+      "type": "pill_text",
+      "content_ref": "@data.label",
+      "x": 88, "y": 148,
+      "font": "@brand.fonts.mono",
+      "size": 22,
+      "weight": 600,
+      "color": "@brand.colors.primary",
+      "bg_opacity": 0.12,
+      "border": true,
+      "border_opacity": 0.4,
+      "padding_h": 28,
+      "padding_v": 12,
+      "letter_spacing": 3,
+      "align": "left",
+      "opacity": 1
+    },
+    {
+      "id": "category",
+      "type": "text",
+      "content_ref": "@data.category",
+      "x": "$canvas.width-88", "y": 135,
+      "font": "@brand.fonts.mono",
+      "size": 24,
+      "weight": 400,
+      "color": "@brand.colors.text",
+      "letter_spacing": 3,
+      "align": "right",
+      "baseline": "alphabetic",
+      "opacity": 0.45
+    },
+    {
+      "id": "accent_bar",
+      "type": "line",
+      "x1": 88, "y1": 185,
+      "x2": 216, "y2": 185,
+      "color": "@brand.colors.primary",
+      "stroke_width": 3,
+      "opacity": 1
+    },
+    {
+      "id": "heading",
+      "type": "text_block",
+      "content_ref": "@data.heading",
+      "x": 88, "y": 820,
+      "max_width": "$canvas.width-176",
+      "font": "@brand.fonts.serif",
+      "size": 82,
+      "weight": 700,
+      "color": "@brand.colors.text",
+      "line_height": 94,
+      "align": "left",
+      "baseline": "alphabetic",
+      "opacity": 1
+    },
+    {
+      "id": "body",
+      "type": "text_block",
+      "content_ref": "@data.body",
+      "x": 88, "y": 1060,
+      "max_width": "$canvas.width-176",
+      "font": "@brand.fonts.sans",
+      "size": 36,
+      "weight": 300,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.75,
+      "line_height": 52,
+      "align": "left",
+      "baseline": "alphabetic",
+      "opacity": 1
+    },
+    {
+      "id": "divider",
+      "type": "line",
+      "x1": 88, "y1": 1230,
+      "x2": "$canvas.width-88", "y2": 1230,
+      "color": "@brand.colors.primary",
+      "stroke_width": 1,
+      "opacity": 0.25
+    },
+    {
+      "id": "brand_watermark",
+      "type": "brand_watermark",
+      "x": 88, "y": 1288,
+      "font": "@brand.fonts.mono",
+      "size": 18,
+      "letter_spacing": 4,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.3,
+      "align": "left",
+      "baseline": "alphabetic",
+      "opacity": 1
+    }
+  ],
+  "animations": [
+    {
+      "layer_id": "frame_label",
+      "property": "opacity",
+      "from_value": 0, "to_value": 1,
+      "start_frame": 0, "end_frame": 14,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "heading",
+      "property": "opacity",
+      "from_value": 0, "to_value": 1,
+      "start_frame": 6, "end_frame": 26,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "heading",
+      "property": "y",
+      "from_value": 22, "to_value": 0,
+      "start_frame": 6, "end_frame": 26,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "body",
+      "property": "opacity",
+      "from_value": 0, "to_value": 1,
+      "start_frame": 18, "end_frame": 36,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "body",
+      "property": "y",
+      "from_value": 16, "to_value": 0,
+      "start_frame": 18, "end_frame": 36,
+      "easing": "ease_out"
+    }
+  ]
+}
