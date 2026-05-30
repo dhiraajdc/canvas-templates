@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=Bebas+Neue&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#08080B;display:flex;flex-wrap:wrap;gap:20px;padding:20px;font-family:sans-serif}
+.card{background:#111;border:1px solid #222;border-radius:12px;overflow:hidden;width:300px}
+h3{color:#888;font-size:11px;padding:8px 12px;letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="card"><h3>Gradient Text</h3><div id="s1" style="aspect-ratio:4/5"></div></div>
+<div class="card"><h3>Bar Chart</h3><div id="s2" style="aspect-ratio:4/5"></div></div>
+<div class="card"><h3>Line Chart</h3><div id="s3" style="aspect-ratio:4/5"></div></div>
+<div class="card"><h3>Checklist Item</h3><div id="s4" style="aspect-ratio:4/5"></div></div>
+<script src="player-lite.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  await document.fonts.ready;
+
+  const base = {
+    meta:{intent:'test',mode:'test',total_frames:120,fps:30},
+    canvas:{ratio:'4:5'},
+    brand:{logo:'TEST',colors:{primary:'#6B3CF7',background:'#08080B',text:'#EEEEF0',muted:'#4A4A58',surface:'#111'},fonts:{display:'Bebas Neue',serif:'Playfair Display',sans:'DM Sans',mono:'DM Sans',grotesk:'Space Grotesk'}}
+  };
+
+  // 1 — gradient_text
+  const s1 = {...base, data:{headline:'Think Different'},layers:[
+    {id:'bg',type:'fill_rect',x:0,y:0,width:'$canvas.width',height:'$canvas.height',color:'@brand.colors.background',opacity:1},
+    {id:'gt',type:'gradient_text',content_ref:'@data.headline',font:'@brand.fonts.display',size:140,weight:900,gradient_start:'#6B3CF7',gradient_end:'#EC4899',gradient_angle:45,x:'$canvas.width*0.5',y:'$canvas.height*0.5',align:'center',baseline:'middle',opacity:0},
+    {id:'gt2',type:'gradient_text',content:'Gradient',font:'@brand.fonts.serif',size:80,weight:700,gradient_start:'#F59E0B',gradient_end:'#EF4444',gradient_angle:90,x:'$canvas.width*0.5',y:'$canvas.height*0.65',align:'center',baseline:'middle',opacity:0},
+  ],animations:[
+    {layer_id:'gt',property:'opacity',from_value:0,to_value:1,start_frame:0,end_frame:30,easing:'ease_out'},
+    {layer_id:'gt2',property:'opacity',from_value:0,to_value:1,start_frame:15,end_frame:45,easing:'ease_out'},
+  ]};
+
+  // 2 — bar_chart
+  const s2 = {...base, data:{
+    chart_items:[{label:'Mon',value:42},{label:'Tue',value:78},{label:'Wed',value:55},{label:'Thu',value:91},{label:'Fri',value:63}]
+  },layers:[
+    {id:'bg',type:'fill_rect',x:0,y:0,width:'$canvas.width',height:'$canvas.height',color:'@brand.colors.background',opacity:1},
+    {id:'title',type:'text',content:'Weekly Stats',font:'@brand.fonts.grotesk',size:36,weight:600,color:'@brand.colors.text',x:'$canvas.width*0.5',y:120,align:'center',baseline:'alphabetic',opacity:1},
+    {id:'bc',type:'bar_chart',data_ref:'@data.chart_items',x:80,y:'$canvas.height*0.2',width:'$canvas.width-160',height:400,bar_color:'@brand.colors.primary',bar_radius:8,label_size:28,value_size:28,opacity:0},
+  ],animations:[
+    {layer_id:'bc',property:'opacity',from_value:0,to_value:1,start_frame:0,end_frame:20,easing:'ease_out'},
+    {layer_id:'bc',property:'bar_progress',from_value:0,to_value:1,start_frame:10,end_frame:80,easing:'ease_out'},
+  ]};
+
+  // 3 — line_chart
+  const s3 = {...base, data:{
+    chart_items:[{label:'Jan',value:30},{label:'Feb',value:55},{label:'Mar',value:40},{label:'Apr',value:80},{label:'May',value:65},{label:'Jun',value:95}]
+  },layers:[
+    {id:'bg',type:'fill_rect',x:0,y:0,width:'$canvas.width',height:'$canvas.height',color:'@brand.colors.background',opacity:1},
+    {id:'title',type:'text',content:'Growth Trend',font:'@brand.fonts.grotesk',size:36,weight:600,color:'@brand.colors.text',x:'$canvas.width*0.5',y:120,align:'center',baseline:'alphabetic',opacity:1},
+    {id:'lc',type:'line_chart',data_ref:'@data.chart_items',x:80,y:'$canvas.height*0.2',width:'$canvas.width-160',height:380,line_color:'@brand.colors.primary',line_width:4,dot_radius:8,fill_under:true,fill_opacity:0.15,label_size:28,opacity:0},
+  ],animations:[
+    {layer_id:'lc',property:'opacity',from_value:0,to_value:1,start_frame:0,end_frame:20,easing:'ease_out'},
+    {layer_id:'lc',property:'draw_progress',from_value:0,to_value:1,start_frame:10,end_frame:90,easing:'ease_out'},
+  ]};
+
+  // 4 — checklist_item
+  const s4 = {...base, data:{item_1:'Write down the one outcome you need',item_2:'Prepare your first question',item_3:'Arrive 2 minutes early'},layers:[
+    {id:'bg',type:'fill_rect',x:0,y:0,width:'$canvas.width',height:'$canvas.height',color:'@brand.colors.background',opacity:1},
+    {id:'title',type:'text',content:'Before every meeting',font:'@brand.fonts.serif',size:52,weight:700,color:'@brand.colors.text',x:'$canvas.width*0.5',y:140,align:'center',baseline:'alphabetic',opacity:1},
+    {id:'c1',type:'checklist_item',content_ref:'@data.item_1',x:80,y:'$canvas.height*0.35',max_width:'$canvas.width-160',font:'@brand.fonts.sans',size:34,weight:400,line_height:50,tick_color:'@brand.colors.primary',tick_size:36,tick_gap:20,color:'@brand.colors.text',opacity:0},
+    {id:'c2',type:'checklist_item',content_ref:'@data.item_2',x:80,y:'$canvas.height*0.52',max_width:'$canvas.width-160',font:'@brand.fonts.sans',size:34,weight:400,line_height:50,tick_color:'@brand.colors.primary',tick_size:36,tick_gap:20,color:'@brand.colors.text',opacity:0},
+    {id:'c3',type:'checklist_item',content_ref:'@data.item_3',x:80,y:'$canvas.height*0.69',max_width:'$canvas.width-160',font:'@brand.fonts.sans',size:34,weight:400,line_height:50,tick_color:'@brand.colors.primary',tick_size:36,tick_gap:20,color:'@brand.colors.text',opacity:0},
+  ],animations:[
+    {layer_id:'c1',property:'opacity',from_value:0,to_value:1,start_frame:5,end_frame:30,easing:'ease_out'},
+    {layer_id:'c1',property:'x',from_value:-20,to_value:0,start_frame:5,end_frame:30,easing:'ease_out'},
+    {layer_id:'c2',property:'opacity',from_value:0,to_value:1,start_frame:30,end_frame:55,easing:'ease_out'},
+    {layer_id:'c2',property:'x',from_value:-20,to_value:0,start_frame:30,end_frame:55,easing:'ease_out'},
+    {layer_id:'c3',property:'opacity',from_value:0,to_value:1,start_frame:55,end_frame:80,easing:'ease_out'},
+    {layer_id:'c3',property:'x',from_value:-20,to_value:0,start_frame:55,end_frame:80,easing:'ease_out'},
+  ]};
+
+  for(const [id,schema] of [['s1',s1],['s2',s2],['s3',s3],['s4',s4]]){
+    CanvasPlayer.loadFonts(schema);
+    const p = new CanvasPlayer('#'+id, {autoplay:true, speed:0.5});
+    await p.load(schema);
+    p.play();
+  }
+});
+</script>
+</body>
+</html>

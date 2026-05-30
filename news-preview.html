@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>News Headline — Live Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E8E7E3;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;font-family:"DM Sans",sans-serif;gap:16px}
+.player-wrap{width:100%;max-width:400px;border-radius:16px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.18)}
+.controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+button{padding:8px 18px;border-radius:8px;border:1px solid #ccc;background:#fff;color:#555;font-size:12px;font-family:"DM Mono",monospace;cursor:pointer;transition:all .15s;white-space:nowrap}
+button:hover{background:#f0f0ee;color:#111;border-color:#aaa}
+button.on{background:#0F172A;color:#fff;border-color:#0F172A}
+button.spd{background:#f0f0ee;color:#111;border-color:#aaa}
+.feed-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.feed-btn{padding:6px 14px;border-radius:6px;border:1px solid #ccc;background:#fff;color:#666;font-size:11px;font-family:"DM Mono",monospace;cursor:pointer;transition:all .15s}
+.feed-btn:hover{background:#f0f0ee;border-color:#aaa;color:#111}
+.feed-btn.active{background:#0F172A;color:#fff;border-color:#0F172A}
+.status{font-size:11px;color:#999;font-family:"DM Mono",monospace;min-height:16px;text-align:center}
+.status.err{color:#dc2626}.status.ok{color:#16a34a}
+.info{font-size:10px;color:#aaa;font-family:"DM Mono",monospace;letter-spacing:.5px}
+</style>
+</head>
+<body>
+
+<div class="player-wrap">
+  <div id="player" style="width:100%;aspect-ratio:4/5;background:#F5F4F0"></div>
+</div>
+
+<div class="controls">
+  <button id="btnPlay">Play</button>
+  <button id="btnStop">Stop</button>
+  <button id="btnReplay">Replay</button>
+</div>
+<div class="controls">
+  <button id="btn05">0.5x</button>
+  <button id="btn1" class="spd">1x</button>
+  <button id="btn2">2x</button>
+</div>
+
+<div class="feed-row">
+  <span style="font-size:11px;color:#aaa;font-family:DM Mono,monospace;align-self:center">Feed:</span>
+  <button class="feed-btn active" data-feed="bbc_world">BBC World</button>
+  <button class="feed-btn" data-feed="bbc_tech">BBC Tech</button>
+  <button class="feed-btn" data-feed="techcrunch">TechCrunch</button>
+  <button class="feed-btn" data-feed="wired">Wired</button>
+  <button class="feed-btn" data-feed="verge">The Verge</button>
+  <button class="feed-btn" data-feed="aljazeera">Al Jazeera</button>
+  <button class="feed-btn" data-feed="guardian">Guardian</button>
+  <button class="feed-btn" data-feed="google">Google News</button>
+</div>
+
+<div class="controls">
+  <button id="btnNext">Next Article</button>
+  <button id="btnDummy">Dummy Data</button>
+</div>
+
+<div class="status" id="status">Loading...</div>
+<div class="info">news::headline · Pipeline v1 · RSS</div>
+
+<script src="player-lite.js"></script>
+<script src="data/field-schemas.js"></script>
+<script src="data/mappers.js"></script>
+<script src="data/fetchers/news-fetcher.js"></script>
+<script src="data/pipeline.js"></script>
+
+<script>
+(async () => {
+  const status  = document.getElementById("status");
+  const playBtn = document.getElementById("btnPlay");
+  let player    = null;
+  let schema    = null;
+  let activeFeed = "bbc_world";
+
+  /* Load base template */
+  status.textContent = "Loading template...";
+  schema = await fetch("tpl-news-headline.json").then(r => r.json());
+
+  CanvasPlayer.loadFonts(schema);
+  await document.fonts.ready;
+  await new Promise(r => setTimeout(r, 300));
+
+  async function load(source, feedKey) {
+    const input = source === "news" ? { feed: feedKey ?? activeFeed } : {};
+    status.textContent = source === "news"
+      ? `Fetching ${feedKey ?? activeFeed} RSS...`
+      : "Loading dummy data...";
+    status.className = "status";
+
+    try {
+      if (!player) {
+        player = new CanvasPlayer("#player", { playback:"manual" });
+        await Pipeline.loadAndRender({ key:"news::headline", source, input, schema, player, isFirst:true });
+        player.play();
+        wireControls();
+      } else {
+        await Pipeline.loadAndRender({ key:"news::headline", source, input, schema, player, isFirst:false });
+        player.stop(); player.play();
+      }
+      status.textContent = source === "news" ? "Live article loaded" : "Dummy loaded";
+      status.className = "status ok";
+      setTimeout(() => { status.textContent = ""; status.className = "status"; }, 2500);
+    } catch(e) {
+      status.textContent = "Error: " + e.message;
+      status.className = "status err";
+      console.error(e);
+    }
+  }
+
+  function wireControls() {
+    player.onStateChange(s => {
+      playBtn.textContent = s.playing ? "Pause" : "Play";
+      playBtn.classList.toggle("on", s.playing);
+    });
+    player.onEnded(() => { playBtn.textContent = "Replay"; playBtn.classList.remove("on"); });
+
+    playBtn.addEventListener("click", () => player.toggle());
+    document.getElementById("btnStop").addEventListener("click", () => player.stop());
+    document.getElementById("btnReplay").addEventListener("click", () => { player.stop(); player.play(); });
+
+    document.getElementById("btn05").addEventListener("click", () => { player.setSpeed(0.5); setSpd("btn05"); });
+    document.getElementById("btn1").addEventListener("click",  () => { player.setSpeed(1);   setSpd("btn1"); });
+    document.getElementById("btn2").addEventListener("click",  () => { player.setSpeed(2);   setSpd("btn2"); });
+
+    document.getElementById("btnNext").addEventListener("click",  () => load("news", activeFeed));
+    document.getElementById("btnDummy").addEventListener("click", () => load("dummy"));
+
+    document.querySelectorAll(".feed-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activeFeed = btn.dataset.feed;
+        document.querySelectorAll(".feed-btn").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        load("news", activeFeed);
+      });
+    });
+
+    function setSpd(id) {
+      ["btn05","btn1","btn2"].forEach(b =>
+        document.getElementById(b).classList.toggle("spd", b===id));
+    }
+  }
+
+  /* Boot */
+  try {
+    await load("news", "bbc");
+  } catch {
+    await load("dummy");
+  }
+})();
+</script>
+</body>
+</html>

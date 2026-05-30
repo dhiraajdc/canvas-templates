@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canvas Feed</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080B;--s:#0F0F13;--s2:#16161C;--b:#1E1E26;--b2:#2A2A36;
+  --tx:#EEEEF0;--mt:#4A4A58;--mt2:#7A7A8C;
+  --ac:#6B3CF7;--ac2:#8B5CF6;--ac-glow:rgba(107,60,247,0.3);
+  --red:#EF4444;--green:#22C55E;--pink:#EC4899;
+  --card-max:420px;--radius:16px;--radius-sm:10px;
+}
+html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--tx);overscroll-behavior:none}
+.app-header{position:sticky;top:0;z-index:30;width:100%;background:rgba(8,8,11,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--b);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 12px var(--ac-glow)}
+.logo-text{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
+.post-count{font-size:11px;color:var(--mt2);background:var(--s2);border:1px solid var(--b);border-radius:20px;padding:3px 10px;font-family:'DM Mono',monospace;display:none}
+.feed{width:100%;max-width:var(--card-max);margin:0 auto;padding:24px 16px 120px;display:flex;flex-direction:column;gap:20px;min-height:100vh}
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 64px);gap:0;padding:40px 20px}
+.empty-graphic{width:160px;height:160px;margin-bottom:32px;flex-shrink:0}
+.empty-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;letter-spacing:-.3px;text-align:center;margin-bottom:10px}
+.empty-sub{font-size:14px;color:var(--mt2);text-align:center;line-height:1.6;max-width:280px;margin-bottom:36px}
+.empty-btn{display:flex;align-items:center;gap:10px;padding:16px 32px;border-radius:50px;background:var(--ac);border:none;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 8px 32px var(--ac-glow)}
+.empty-btn:hover{background:var(--ac2);transform:translateY(-2px)}
+.empty-btn:active{transform:translateY(0)}
+.empty-btn svg{width:18px;height:18px;flex-shrink:0}
+.post-card{width:100%;background:var(--s);border:1px solid var(--b);border-radius:var(--radius);overflow:hidden;animation:cardIn .4s cubic-bezier(.34,1.4,.64,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.card-canvas{width:100%;position:relative;background:#0A0A0D}
+.card-footer{display:flex;align-items:center;padding:10px 12px;gap:6px;border-top:1px solid var(--b)}
+.footer-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 12px;border-radius:8px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.footer-btn:hover{border-color:var(--b2);color:var(--tx)}
+.footer-btn svg{width:14px;height:14px;flex-shrink:0}
+.footer-btn.play-btn.is-playing{background:rgba(107,60,247,.12);border-color:rgba(107,60,247,.3);color:var(--ac2)}
+.footer-btn.like-btn.liked{background:rgba(236,72,153,.1);border-color:rgba(236,72,153,.3);color:var(--pink)}
+.footer-btn.like-btn.liked svg{fill:var(--pink)}
+.footer-btn.delete-btn:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red)}
+.footer-spacer{flex:1}
+.generate-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:30;padding:12px 16px;background:rgba(8,8,11,0.9);backdrop-filter:blur(16px);border-top:1px solid var(--b)}
+.generate-bar.visible{display:block}
+.generate-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:var(--card-max);margin:0 auto;padding:14px;border-radius:50px;background:var(--ac);border:none;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 24px var(--ac-glow)}
+.generate-btn:hover{background:var(--ac2)}
+.generate-btn:active{transform:scale(.98)}
+.generate-btn svg{width:16px;height:16px;flex-shrink:0}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--s2);border:1px solid var(--b2);color:var(--tx);padding:8px 16px;border-radius:10px;font-size:12px;opacity:0;transition:all .25s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:999;display:flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.5);white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-dot{width:5px;height:5px;border-radius:50%;background:var(--ac);flex-shrink:0}
+/* CREATOR SHEET */
+.cs-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
+.cs-backdrop.open{opacity:1;pointer-events:auto}
+.cs-sheet{position:fixed;bottom:0;left:0;right:0;z-index:41;background:var(--s);border-top:1px solid var(--b);border-radius:20px 20px 0 0;max-height:92vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);touch-action:none}
+.cs-sheet.open{transform:translateY(0)}
+.cs-handle{padding:12px 0 4px;display:flex;justify-content:center;flex-shrink:0;cursor:grab}
+.cs-handle-bar{width:36px;height:4px;border-radius:2px;background:var(--b2)}
+.cs-header{padding:4px 20px 14px;flex-shrink:0;border-bottom:1px solid var(--b)}
+.cs-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.cs-sub{font-size:12px;color:var(--mt2)}
+.cs-body{flex:1;overflow-y:auto;padding:16px 16px 0;-webkit-overflow-scrolling:touch}
+.cs-tabs{display:flex;gap:3px;background:var(--s2);border:1px solid var(--b);border-radius:9px;padding:3px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
+.cs-tabs::-webkit-scrollbar{display:none}
+.cs-tab{flex:0 0 auto;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:500;color:var(--mt2);cursor:pointer;transition:all .15s;white-space:nowrap;border:1px solid transparent}
+.cs-tab.active{background:var(--b);color:var(--tx);border-color:var(--b2)}
+.cs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+.cs-card{background:var(--s2);border:1.5px solid var(--b);border-radius:10px;overflow:hidden;cursor:pointer;transition:border-color .15s,transform .1s;user-select:none;-webkit-tap-highlight-color:transparent;position:relative}
+.cs-card:hover{border-color:var(--b2)}
+.cs-card:active{transform:scale(.98)}
+.cs-card.selected{border-color:var(--tx);background:var(--b)}
+.cs-card.coming-soon{opacity:.38;cursor:not-allowed;pointer-events:none}
+.cs-check{position:absolute;top:7px;right:7px;width:18px;height:18px;border-radius:50%;background:var(--tx);display:none;align-items:center;justify-content:center;z-index:2}
+.cs-card.selected .cs-check{display:flex}
+.cs-check svg{width:10px;height:10px;color:var(--bg)}
+.cs-soon{position:absolute;top:7px;right:7px;font-size:8px;font-weight:600;letter-spacing:.5px;background:var(--b2);color:var(--mt2);border-radius:4px;padding:2px 5px;text-transform:uppercase;z-index:2}
+.cs-thumb{aspect-ratio:4/5;background:var(--bg);padding:9px 8px;display:flex;flex-direction:column;gap:4px;overflow:hidden;position:relative}
+.t-rule{height:1px;background:var(--b2);width:78%;margin:0 auto}
+.t-eyebrow{height:4px;background:var(--b2);width:50%;border-radius:2px;margin:0 auto}
+.t-line{height:3.5px;background:var(--b2);border-radius:2px;margin:0 auto}
+.t-hl{height:6px;background:var(--mt);border-radius:2px;opacity:.5}
+.t-space{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
+.t-bignum{font-size:38px;font-weight:900;font-family:'Bebas Neue',sans-serif;color:var(--tx);line-height:1;opacity:.85}
+.t-bignum sup{font-size:15px;color:var(--mt2);vertical-align:super}
+.t-source{height:12px;background:var(--b2);width:60%;border-radius:6px;margin:0 auto;opacity:.4}
+.t-brand{height:3.5px;background:var(--b2);width:36%;border-radius:2px;margin:0 auto;opacity:.2}
+.t-ratio{display:flex;align-items:center;justify-content:center;gap:5px}
+.t-rnum{font-size:32px;font-weight:900;font-family:'Bebas Neue',sans-serif;color:var(--tx);line-height:1}
+.t-rnum.dim{color:var(--mt2);opacity:.35}
+.t-rin{font-size:7px;font-weight:600;letter-spacing:.06em;color:var(--mt2);text-align:center}
+.t-tick{height:1px;width:14px;background:var(--b2)}
+.t-rcon{display:flex;flex-direction:column;align-items:center;gap:2px}
+.t-tnum{font-size:26px;font-weight:900;font-family:'Bebas Neue',sans-serif;line-height:1;color:var(--tx)}
+.t-tnum.dim{color:var(--mt2);opacity:.35}
+.t-tunit{height:3.5px;width:36px;background:var(--b2);border-radius:2px}
+.t-tdiv{height:1px;width:34%;background:var(--b2);margin:3px 0;opacity:.35}
+.t-qmark{font-size:28px;font-weight:900;font-family:'Playfair Display',serif;opacity:.15;line-height:.8;align-self:flex-start;padding-left:2px;color:var(--mt2)}
+.t-author{display:flex;flex-direction:column;gap:3px;align-items:center}
+.t-aname{height:4.5px;background:var(--mt);border-radius:2px;width:60%;opacity:.5}
+.t-arole{height:3px;background:var(--b2);border-radius:2px;width:44%;opacity:.55}
+.t-avatar{width:44px;height:44px;border-radius:50%;background:var(--b2);margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--mt2);font-family:'Playfair Display',serif;flex-shrink:0;border:1.5px solid var(--b)}
+.t-topic-tag{background:var(--b);border:1px solid var(--b2);border-radius:4px;padding:3px 9px;font-size:8px;font-weight:600;letter-spacing:.08em;color:var(--mt2);align-self:center}
+.t-hook{font-size:12px;font-weight:700;font-family:'Playfair Display',serif;color:var(--tx);text-align:center;line-height:1.2;opacity:.8}
+.t-badge{background:var(--b);border:1px solid var(--b2);border-radius:4px;padding:2px 7px;font-size:7.5px;font-weight:700;letter-spacing:.08em;color:var(--mt2);align-self:center}
+.t-block{width:100%;border-radius:5px;padding:4px 6px;display:flex;flex-direction:column;gap:2px}
+.t-block.do{background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2)}
+.t-block.dont{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.18)}
+.t-block-lbl{font-size:6.5px;font-weight:800;letter-spacing:.1em}
+.t-block.do .t-block-lbl{color:rgba(34,197,94,.7)}
+.t-block.dont .t-block-lbl{color:rgba(239,68,68,.65)}
+.t-block-line{height:2.5px;background:var(--b2);border-radius:2px}
+.t-diamond{width:7px;height:7px;transform:rotate(45deg);background:var(--mt2);margin:0 auto;opacity:.45}
+.t-vs{font-size:22px;font-weight:900;font-family:'Bebas Neue',sans-serif;color:var(--mt2);opacity:.5;line-height:1}
+.t-setup-line{height:7px;background:var(--mt);border-radius:2px;opacity:.5}
+.t-twist-line{height:4.5px;border-radius:2px;opacity:.45;background:var(--mt2)}
+.cs-card-body{padding:8px 10px 11px}
+.cs-card-title{font-size:12px;font-weight:500;color:var(--tx);margin-bottom:2px}
+.cs-card-desc{font-size:10px;color:var(--mt2);line-height:1.45}
+.cs-cap-warn{font-size:11px;color:var(--mt2);background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:8px 12px;margin-bottom:12px;display:none;text-align:center}
+.cs-cap-warn.show{display:block}
+.cs-footer{padding:12px 16px;border-top:1px solid var(--b);flex-shrink:0}
+.cs-confirm-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:50px;background:var(--b2);border:none;color:var(--mt2);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.cs-confirm-btn.active{background:var(--ac);color:#fff;box-shadow:0 4px 20px var(--ac-glow)}
+.cs-confirm-btn.active:hover{background:var(--ac2)}
+.cs-confirm-btn.active:active{transform:scale(.98)}
+.cs-confirm-btn svg{width:16px;height:16px;flex-shrink:0}
+@media(min-width:600px){.cs-grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="logo"><div class="logo-dot"></div><div class="logo-text">Canvas Feed</div></div>
+  <div class="post-count" id="postCount">0 posts</div>
+</header>
+<div class="feed" id="feed">
+  <div class="empty-state" id="emptyState">
+    <div class="empty-graphic">
+      <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs><radialGradient id="rg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#6B3CF7" stop-opacity="0.2"/><stop offset="100%" stop-color="#6B3CF7" stop-opacity="0"/></radialGradient><radialGradient id="rg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#6B3CF7" stop-opacity="0.08"/><stop offset="100%" stop-color="#6B3CF7" stop-opacity="0"/></radialGradient></defs>
+        <circle cx="80" cy="80" r="76" fill="url(#rg2)"/><circle cx="80" cy="80" r="55" fill="url(#rg1)"/>
+        <circle cx="80" cy="80" r="66" stroke="#6B3CF7" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="4 6"/>
+        <circle cx="80" cy="80" r="44" stroke="#6B3CF7" stroke-opacity="0.25" stroke-width="1"/>
+        <rect x="52" y="42" width="56" height="72" rx="8" fill="#111520" stroke="#6B3CF7" stroke-opacity="0.3" stroke-width="1"/>
+        <rect x="46" y="48" width="56" height="72" rx="8" fill="#16161C" stroke="#6B3CF7" stroke-opacity="0.2" stroke-width="1"/>
+        <rect x="40" y="54" width="56" height="72" rx="8" fill="#1E1E26" stroke="#6B3CF7" stroke-opacity="0.35" stroke-width="1.5"/>
+        <text x="68" y="95" font-family="'Bebas Neue',sans-serif" font-size="28" fill="#6B3CF7" fill-opacity="0.9" text-anchor="middle">73%</text>
+        <rect x="50" y="103" width="36" height="2.5" rx="1.25" fill="#6B3CF7" fill-opacity="0.2"/>
+        <rect x="50" y="109" width="24" height="2.5" rx="1.25" fill="#6B3CF7" fill-opacity="0.15"/>
+        <circle cx="118" cy="38" r="2.5" fill="#6B3CF7" fill-opacity="0.5"/><circle cx="36" cy="112" r="2" fill="#6B3CF7" fill-opacity="0.4"/>
+      </svg>
+    </div>
+    <div class="empty-title">Your feed is empty</div>
+    <div class="empty-sub">Generate your first animated stat post and start building your feed.</div>
+    <button class="empty-btn" id="emptyBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Generate Post
+    </button>
+  </div>
+</div>
+<div class="generate-bar" id="generateBar">
+  <button class="generate-btn" id="generateBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Generate Post
+  </button>
+</div>
+<!-- CREATOR SHEET -->
+<div class="cs-backdrop" id="csBackdrop"></div>
+<div class="cs-sheet" id="csSheet">
+  <div class="cs-handle" id="csHandle"><div class="cs-handle-bar"></div></div>
+  <div class="cs-header">
+    <div class="cs-title">What do you want to post?</div>
+    <div class="cs-sub">Select one or more — up to 3 posts generated at once</div>
+  </div>
+  <div class="cs-body" id="csBody">
+    <div class="cs-tabs" id="csTabs">
+      <div class="cs-tab active" data-tab="dyk">Did You Know</div>
+      <div class="cs-tab" data-tab="quote">Quote</div>
+      <div class="cs-tab" data-tab="tip">Tip</div>
+      <div class="cs-tab" data-tab="carousel">Carousel</div>
+      <div class="cs-tab" data-tab="funfact">Fun Fact</div>
+    </div>
+    <div class="cs-cap-warn" id="csCapWarn">Max 3 posts — only 3 of your selections will be used</div>
+    <!-- DYK -->
+    <div class="cs-panel" id="panel-dyk"><div class="cs-grid">
+      <div class="cs-card" data-key="dyk::stat"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-rule"></div><div class="t-eyebrow"></div><div class="t-space"><div class="t-bignum">73<sup>%</sup></div><div class="t-line" style="width:90%"></div><div class="t-line" style="width:72%"></div></div><div class="t-rule" style="margin-bottom:2px"></div><div class="t-source"></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Stat</div><div class="cs-card-desc">Large number counts up with unit and description.</div></div></div>
+      <div class="cs-card coming-soon" data-key="dyk::statement"><div class="cs-soon">Soon</div><div class="cs-thumb"><div class="t-rule"></div><div class="t-eyebrow"></div><div class="t-space"><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-hl" style="width:96%"></div><div class="t-hl" style="width:86%"></div><div class="t-hl" style="width:64%"></div></div><div class="t-rule" style="width:48%;margin:3px auto;opacity:.4"></div><div class="t-line" style="width:90%"></div><div class="t-line" style="width:76%"></div></div><div class="t-source"></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Statement</div><div class="cs-card-desc">Bold fact as headline. No number.</div></div></div>
+      <div class="cs-card" data-key="dyk::ratio"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-rule"></div><div class="t-eyebrow"></div><div class="t-space"><div class="t-ratio"><div class="t-rnum">1</div><div class="t-rcon"><div class="t-tick"></div><div class="t-rin">IN</div><div class="t-tick"></div></div><div class="t-rnum dim">5</div></div><div class="t-line" style="width:86%"></div><div class="t-line" style="width:68%"></div></div><div class="t-source"></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Ratio</div><div class="cs-card-desc">1 in X format. Two numbers as hero.</div></div></div>
+      <div class="cs-card" data-key="dyk::timeframe"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-rule"></div><div class="t-eyebrow"></div><div class="t-space"><div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div class="t-tunit"></div><div class="t-tnum">60</div><div class="t-tunit"></div></div><div class="t-tdiv"></div><div style="display:flex;align-items:center;gap:4px"><div class="t-tnum" style="font-size:20px">500</div><div class="t-tnum dim" style="font-size:14px">hrs</div></div><div class="t-line" style="width:82%"></div></div><div class="t-source"></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Timeframe</div><div class="cs-card-desc">How often something happens in a time unit.</div></div></div>
+    </div></div>
+    <!-- Quote -->
+    <div class="cs-panel" id="panel-quote" style="display:none"><div class="cs-grid">
+      <div class="cs-card coming-soon" data-key="quote::classic"><div class="cs-soon">Soon</div><div class="cs-thumb"><div class="t-rule"></div><div class="t-space"><div class="t-qmark">"</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-hl" style="width:96%"></div><div class="t-hl" style="width:80%"></div></div><div class="t-author"><div class="t-aname"></div><div class="t-arole"></div></div></div><div class="t-source"></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Classic</div><div class="cs-card-desc">Pure typography, words and person only.</div></div></div>
+      <div class="cs-card" data-key="quote::portrait"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-rule"></div><div class="t-space"><div class="t-qmark">"</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-hl" style="width:90%"></div><div class="t-hl" style="width:72%"></div></div><div class="t-avatar">S</div><div class="t-author"><div class="t-aname"></div></div></div><div class="t-source"></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Portrait</div><div class="cs-card-desc">Quote anchored by author's photo.</div></div></div>
+      <div class="cs-card" data-key="quote::topic"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-rule"></div><div class="t-space"><div class="t-topic-tag">LEADERSHIP</div><div class="t-qmark">"</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-hl" style="width:94%"></div><div class="t-hl" style="width:76%"></div></div><div class="t-author"><div class="t-aname"></div></div></div><div class="t-source"></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Topic</div><div class="cs-card-desc">Quote tied to a named subject.</div></div></div>
+      <div class="cs-card" data-key="quote::split"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-rule"></div><div class="t-space"><div class="t-hook">"First they ignore you."</div><div style="display:flex;align-items:center;gap:4px;margin:3px 0"><div style="flex:1;height:1px;background:var(--b2)"></div><div class="t-diamond"></div><div style="flex:1;height:1px;background:var(--b2)"></div></div><div style="width:100%;display:flex;flex-direction:column;gap:3px;padding:0 2px"><div class="t-line" style="width:96%;opacity:.4"></div><div class="t-line" style="width:84%;opacity:.4"></div></div><div class="t-author" style="margin-top:4px"><div class="t-aname"></div></div></div><div class="t-source"></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Split</div><div class="cs-card-desc">Hook leads, body delivers the reveal.</div></div></div>
+    </div></div>
+    <!-- Tip -->
+    <div class="cs-panel" id="panel-tip" style="display:none"><div class="cs-grid">
+      <div class="cs-card coming-soon" data-key="tip::single"><div class="cs-soon">Soon</div><div class="cs-thumb"><div class="t-space"><div class="t-badge">TIP</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px;margin-top:4px"><div class="t-hl" style="width:94%"></div><div class="t-hl" style="width:78%"></div></div><div class="t-line" style="width:88%"></div><div class="t-line" style="width:70%"></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Single</div><div class="cs-card-desc">One focused tip with headline and body.</div></div></div>
+      <div class="cs-card" data-key="tip::checklist"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-space"><div class="t-badge">CHECKLIST</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-hl" style="width:88%"></div></div><div style="width:100%;display:flex;flex-direction:column;gap:5px;margin-top:4px"><div style="display:flex;align-items:center;gap:5px"><div style="width:9px;height:9px;border-radius:2px;background:var(--mt2);opacity:.5;flex-shrink:0"></div><div class="t-line" style="flex:1;margin:0"></div></div><div style="display:flex;align-items:center;gap:5px"><div style="width:9px;height:9px;border-radius:2px;background:var(--mt2);opacity:.5;flex-shrink:0"></div><div class="t-line" style="flex:1;margin:0"></div></div><div style="display:flex;align-items:center;gap:5px"><div style="width:9px;height:9px;border-radius:2px;background:var(--mt2);opacity:.5;flex-shrink:0"></div><div class="t-line" style="flex:1;margin:0"></div></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Checklist</div><div class="cs-card-desc">Three actionable items with tick marks.</div></div></div>
+      <div class="cs-card" data-key="tip::do_dont"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-space"><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-hl" style="width:86%"></div></div><div style="width:100%;display:flex;flex-direction:column;gap:5px;margin-top:4px"><div class="t-block do"><div class="t-block-lbl">DO</div><div class="t-block-line"></div><div class="t-block-line" style="width:80%"></div></div><div class="t-block dont"><div class="t-block-lbl">DON'T</div><div class="t-block-line"></div><div class="t-block-line" style="width:75%"></div></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Do / Don't</div><div class="cs-card-desc">Contrast blocks — do this, avoid that.</div></div></div>
+      <div class="cs-card" data-key="tip::stat_tip"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-space"><div class="t-badge">TIP</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-hl" style="width:92%"></div><div class="t-hl" style="width:74%"></div></div><div style="width:80%;border:1px solid var(--b2);border-radius:6px;padding:5px;display:flex;align-items:center;justify-content:center;gap:4px;margin-top:4px"><div class="t-tnum" style="font-size:22px">52</div><div style="height:3.5px;width:20px;background:var(--b2);border-radius:2px"></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Stat Tip</div><div class="cs-card-desc">A tip backed by a supporting number.</div></div></div>
+    </div></div>
+    <!-- Carousel -->
+    <div class="cs-panel" id="panel-carousel" style="display:none"><div class="cs-grid">
+      <div class="cs-card coming-soon" data-key="carousel::listicle"><div class="cs-soon">Soon</div><div class="cs-thumb"><div class="t-space"><div class="t-badge">CAROUSEL</div><div style="display:flex;gap:3px;margin-top:4px"><div style="flex:1;aspect-ratio:1;background:var(--b2);border-radius:3px;opacity:.5"></div><div style="flex:1;aspect-ratio:1;background:var(--b2);border-radius:3px;opacity:.35"></div><div style="flex:1;aspect-ratio:1;background:var(--b2);border-radius:3px;opacity:.25"></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Listicle</div><div class="cs-card-desc">5-frame equal-weight list.</div></div></div>
+      <div class="cs-card coming-soon" data-key="carousel::story_arc"><div class="cs-soon">Soon</div><div class="cs-thumb"><div class="t-space"><div class="t-badge">CAROUSEL</div><div style="width:100%;display:flex;flex-direction:column;gap:3px;margin-top:4px"><div class="t-hl" style="width:80%;opacity:.4"></div><div class="t-hl" style="width:64%;opacity:.35"></div><div class="t-hl" style="width:90%;opacity:.45"></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Story Arc</div><div class="cs-card-desc">Hook to Build to Payoff to CTA.</div></div></div>
+      <div class="cs-card coming-soon" data-key="carousel::step_by_step"><div class="cs-soon">Soon</div><div class="cs-thumb"><div class="t-space"><div class="t-badge">CAROUSEL</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;margin-top:4px"><div style="display:flex;align-items:center;gap:4px"><div style="font-size:8px;font-weight:700;color:var(--mt2);opacity:.5;width:14px;text-align:right">01</div><div class="t-line" style="flex:1;margin:0"></div></div><div style="display:flex;align-items:center;gap:4px"><div style="font-size:8px;font-weight:700;color:var(--mt2);opacity:.35;width:14px;text-align:right">02</div><div class="t-line" style="flex:1;margin:0;opacity:.6"></div></div><div style="display:flex;align-items:center;gap:4px"><div style="font-size:8px;font-weight:700;color:var(--mt2);opacity:.25;width:14px;text-align:right">03</div><div class="t-line" style="flex:1;margin:0;opacity:.45"></div></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Step by Step</div><div class="cs-card-desc">Numbered steps, order matters.</div></div></div>
+      <div class="cs-card coming-soon" data-key="carousel::comparison"><div class="cs-soon">Soon</div><div class="cs-thumb"><div class="t-space"><div class="t-badge">CAROUSEL</div><div style="display:flex;gap:4px;margin-top:4px;width:100%"><div style="flex:1;background:var(--b2);border-radius:4px;padding:4px;opacity:.45"><div style="height:3px;background:var(--mt2);border-radius:2px;margin-bottom:3px"></div><div style="height:3px;background:var(--mt2);border-radius:2px;width:80%"></div></div><div style="flex:1;background:var(--b2);border-radius:4px;padding:4px;opacity:.35"><div style="height:3px;background:var(--mt2);border-radius:2px;margin-bottom:3px"></div><div style="height:3px;background:var(--mt2);border-radius:2px;width:70%"></div></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Comparison</div><div class="cs-card-desc">A vs B across 4 frames.</div></div></div>
+    </div></div>
+    <!-- Fun Fact -->
+    <div class="cs-panel" id="panel-funfact" style="display:none"><div class="cs-grid">
+      <div class="cs-card coming-soon" data-key="funfact::curiosity"><div class="cs-soon">Soon</div><div class="cs-thumb"><div class="t-space"><div class="t-badge">FUN FACT</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px;margin-top:4px"><div class="t-hl" style="width:94%"></div><div class="t-hl" style="width:82%"></div><div class="t-hl" style="width:66%"></div></div><div class="t-line" style="width:86%"></div><div class="t-line" style="width:70%"></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Curiosity</div><div class="cs-card-desc">Surprising standalone fact as hero.</div></div></div>
+      <div class="cs-card" data-key="funfact::versus"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-space"><div class="t-badge">FUN FACT</div><div style="width:100%;border:1px solid var(--b2);border-radius:4px;padding:4px;margin-top:4px;display:flex;flex-direction:column;gap:2px"><div class="t-hl" style="width:84%"></div><div class="t-hl" style="width:66%"></div></div><div class="t-vs">VS</div><div style="width:100%;border:1px solid var(--b2);border-radius:4px;padding:4px;opacity:.45;display:flex;flex-direction:column;gap:2px"><div class="t-hl" style="width:80%"></div><div class="t-hl" style="width:62%"></div></div><div class="t-line" style="width:88%;opacity:.5"></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Versus</div><div class="cs-card-desc">Two things compared. Gap is the fact.</div></div></div>
+      <div class="cs-card" data-key="funfact::number_fact"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-space"><div class="t-badge">FUN FACT</div><div style="display:flex;align-items:baseline;gap:3px;margin-top:4px"><div class="t-bignum">10</div><div style="font-size:16px;font-weight:700;font-family:'Bebas Neue',sans-serif;color:var(--mt2);opacity:.6">M</div></div><div class="t-rule" style="width:60%;margin:3px auto"></div><div class="t-line" style="width:94%;opacity:.5"></div><div class="t-line" style="width:80%;opacity:.5"></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Number Fact</div><div class="cs-card-desc">A surprising number styled playfully.</div></div></div>
+      <div class="cs-card" data-key="funfact::mind_blown"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-space"><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-setup-line" style="width:96%"></div><div class="t-setup-line" style="width:82%"></div><div class="t-setup-line" style="width:68%"></div></div><div style="display:flex;align-items:center;gap:4px;margin:3px 0"><div style="flex:1;height:1px;background:var(--b2)"></div><div class="t-diamond"></div><div style="flex:1;height:1px;background:var(--b2)"></div></div><div style="width:100%;display:flex;flex-direction:column;gap:3px;padding:0 2px"><div class="t-twist-line" style="width:92%"></div><div class="t-twist-line" style="width:76%"></div><div class="t-twist-line" style="width:58%"></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Mind Blown</div><div class="cs-card-desc">Setup then twist delivers the punchline.</div></div></div>
+    </div></div>
+  </div>
+  <div class="cs-footer">
+    <button class="cs-confirm-btn" id="csConfirmBtn" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span id="csConfirmLabel">Select a format</span>
+    </button>
+  </div>
+</div>
+<div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
+
+<script src="data/field-schemas.js"></script>
+<script src="data/mappers.js"></script>
+<script src="data/fetchers/dummy-fetcher.js"></script>
+<script src="data/pipeline.js"></script>
+<script src="player-lite.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+/* ══ REMOTE TEMPLATE STORE ══════════════════════════════════════
+   All templates fetched from GitHub on demand.
+   Index loaded once at startup. Individual JSONs fetched lazily
+   and cached in memory so the same template is never fetched twice.
+══════════════════════════════════════════════════════════════════*/
+const BASE = 'https://raw.githubusercontent.com/dhiraajdc/canvas-templates/master/templates';
+const cache = {};  /* key → schema, populated on first fetch */
+let   index = [];  /* catalogue from index.json */
+
+/* Single shared promise — ensures index is only fetched once.
+   Any caller awaits ensureIndex() before using index. */
+let _indexReady = null;
+function ensureIndex() {
+  if (_indexReady) return _indexReady;
+  _indexReady = fetch(`${BASE}/index.json`)
+    .then(r => r.json())
+    .then(data => { index = data; })
+    .catch(e => console.warn('[canvas] index load failed:', e));
+  return _indexReady;
+}
+
+/* Direct file map — used if index hasn't loaded yet or as fallback */
+const FILE_MAP = {
+  'dyk::stat':            'dyk/tpl-dyk-stat.json',
+  'dyk::ratio':           'dyk/tpl-dyk-ratio.json',
+  'dyk::timeframe':       'dyk/tpl-dyk-timeframe.json',
+  'quote::portrait':      'quote/tpl-quote-portrait.json',
+  'quote::topic':         'quote/tpl-quote-topic.json',
+  'quote::split':         'quote/tpl-quote-split.json',
+  'tip::checklist':       'tip/tpl-tip-checklist.json',
+  'tip::do_dont':         'tip/tpl-tip-do-dont.json',
+  'tip::stat_tip':        'tip/tpl-tip-stat-tip.json',
+  'funfact::versus':      'funfact/tpl-funfact-versus.json',
+  'funfact::number_fact': 'funfact/tpl-funfact-number.json',
+  'funfact::mind_blown':  'funfact/tpl-funfact-mind-blown.json',
+};
+
+async function fetchTemplate(key) {
+  if (cache[key]) return cache[key];
+  await ensureIndex();
+
+  const entry = index.find(t => t.key === key);
+  const file = entry?.file || FILE_MAP[key];
+  if (!file) return null;
+
+  try {
+    const url = `${BASE}/${file}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(res.status);
+    cache[key] = await res.json();
+    return cache[key];
+  } catch(e) {
+    toast('Could not load template: ' + key);
+    return null;
+  }
+}
+
+/* ══ FEED STATE ═════════════════════════════════════════════════ */
+const posts = [];
+let postCount = 0;
+
+const cardPlayerMap = new Map();
+const feedObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    const p = cardPlayerMap.get(e.target);
+    if (!p) return;
+    e.isIntersecting ? p.play() : p.pause();
+  });
+}, { threshold: 0.25 });
+
+/* ══ SHEET STATE ════════════════════════════════════════════════ */
+let selectedKeys = new Set(['dyk::stat']);
+let activeTab = 'dyk';
+
+/* ══ TOAST ══════════════════════════════════════════════════════ */
+function toast(msg) {
+  document.getElementById('toastMsg').textContent = msg;
+  const el = document.getElementById('toast');
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+/* ══ SHEET ══════════════════════════════════════════════════════ */
+function openSheet() {
+  document.getElementById('csBackdrop').classList.add('open');
+  document.getElementById('csSheet').classList.add('open');
+  syncSheetUI();
+}
+
+function closeSheet() {
+  document.getElementById('csBackdrop').classList.remove('open');
+  document.getElementById('csSheet').classList.remove('open');
+}
+
+function syncSheetUI() {
+  document.querySelectorAll('.cs-card:not(.coming-soon)').forEach(card => {
+    card.classList.toggle('selected', selectedKeys.has(card.dataset.key));
+  });
+  updateConfirmBtn();
+  updateCapWarn();
+}
+
+function updateConfirmBtn() {
+  const n = selectedKeys.size;
+  const show = Math.min(n, 3);
+  const btn = document.getElementById('csConfirmBtn');
+  const lbl = document.getElementById('csConfirmLabel');
+  if (n === 0) {
+    btn.disabled = true; btn.classList.remove('active');
+    lbl.textContent = 'Select a format';
+  } else {
+    btn.disabled = false; btn.classList.add('active');
+    lbl.textContent = show === 1 ? 'Generate 1 post →' : `Generate ${show} posts →`;
+  }
+}
+
+function updateCapWarn() {
+  document.getElementById('csCapWarn').classList.toggle('show', selectedKeys.size > 3);
+}
+
+/* Tabs */
+document.querySelectorAll('.cs-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    activeTab = tab.dataset.tab;
+    document.querySelectorAll('.cs-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === activeTab));
+    document.querySelectorAll('.cs-panel').forEach(p => p.style.display = p.id === 'panel-' + activeTab ? '' : 'none');
+  });
+});
+
+/* Card toggle */
+document.querySelectorAll('.cs-card:not(.coming-soon)').forEach(card => {
+  card.addEventListener('click', () => {
+    const key = card.dataset.key;
+    selectedKeys.has(key) ? selectedKeys.delete(key) : selectedKeys.add(key);
+    card.classList.toggle('selected', selectedKeys.has(key));
+    updateConfirmBtn();
+    updateCapWarn();
+  });
+});
+
+/* Confirm — fetch schema + pipeline data, then generate */
+document.getElementById('csConfirmBtn').addEventListener('click', async () => {
+  if (!selectedKeys.size) return;
+  closeSheet();
+  let keys = [...selectedKeys];
+  if (keys.length > 3) keys = keys.sort(() => Math.random() - 0.5).slice(0, 3);
+  for (const key of keys) {
+    const schema = await fetchTemplate(key);
+    if (!schema) continue;
+    /* Get fresh data from pipeline — random dummy pick each time */
+    const data = await Pipeline.getData({ key, source: 'dummy' });
+    const fresh = JSON.parse(JSON.stringify(schema));
+    fresh.data = data;
+    await addPost(fresh);
+  }
+});
+
+/* Backdrop dismiss */
+document.getElementById('csBackdrop').addEventListener('click', closeSheet);
+
+/* Swipe-down dismiss */
+let _ty = 0;
+const _sheet = document.getElementById('csSheet');
+const _handle = document.getElementById('csHandle');
+_handle.addEventListener('touchstart', e => { _ty = e.touches[0].clientY; }, { passive: true });
+_handle.addEventListener('touchmove', e => {
+  const dy = e.touches[0].clientY - _ty;
+  if (dy > 0) _sheet.style.transform = `translateY(${dy}px)`;
+}, { passive: true });
+_handle.addEventListener('touchend', e => {
+  _sheet.style.transform = '';
+  if (e.changedTouches[0].clientY - _ty > 80) closeSheet();
+});
+
+/* ══ ADD POST ═══════════════════════════════════════════════════ */
+async function addPost(schema) {
+  postCount++;
+  const id = postCount;
+  const card = document.createElement('div');
+  card.className = 'post-card'; card.id = 'post-' + id;
+
+  const ar = (schema.canvas.width || 1080) + '/' + (schema.canvas.height || 1350);
+  const slot = document.createElement('div');
+  slot.className = 'card-canvas'; slot.style.aspectRatio = ar; slot.id = 'slot-' + id;
+
+  /* Loading shimmer shown while player initialises */
+  slot.innerHTML = `<div style="position:absolute;inset:0;background:linear-gradient(90deg,var(--s) 25%,var(--s2) 50%,var(--s) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:0"></div>`;
+
+  const footer = document.createElement('div');
+  footer.className = 'card-footer';
+  footer.innerHTML = `
+    <button class="footer-btn play-btn" id="fp-${id}">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+    </button>
+    <button class="footer-btn like-btn" id="fl-${id}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+    </button>
+    <button class="footer-btn share-btn" id="fs-${id}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+    </button>
+    <div class="footer-spacer"></div>
+    <button class="footer-btn delete-btn" id="fd-${id}">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+    </button>`;
+
+  card.appendChild(slot); card.appendChild(footer);
+  document.getElementById('feed').appendChild(card);
+
+  /* Push immediately so updateUI() sees the correct count
+     before the async player load completes */
+  posts.push({ id, player: null, card });
+  updateUI();
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+  /* Fonts first — wait for them before player draws frame 0 */
+  CanvasPlayer.loadFonts(schema);
+  await document.fonts.ready;
+
+  /* Clear shimmer now — player will append canvas into the empty slot */
+  slot.innerHTML = '';
+
+  const player = new CanvasPlayer('#slot-' + id, { playback: 'manual' });
+  try {
+    await player.load(schema);
+  } catch(e) {
+    toast('Load error: ' + e.message);
+    card.remove(); postCount--;
+    updateUI(); return;
+  }
+
+  cardPlayerMap.set(card, player);
+  feedObserver.observe(card);
+
+  /* Small delay so IntersectionObserver fires after card is in DOM and visible */
+  setTimeout(() => player.play(), 100);
+
+  const syncPlay = playing => {
+    const btn = document.getElementById('fp-' + id); if (!btn) return;
+    btn.classList.toggle('is-playing', playing);
+    btn.innerHTML = playing
+      ? `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
+      : `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>`;
+  };
+  player.onStateChange(s => syncPlay(s.playing));
+  player.onEnded(() => syncPlay(false));
+
+  document.getElementById('fp-' + id).addEventListener('click', () => player.toggle());
+  document.getElementById('fl-' + id).addEventListener('click', function() { this.classList.toggle('liked'); });
+  document.getElementById('fs-' + id).addEventListener('click', async () => {
+    const blob = await player.captureBlob(); if (!blob) return;
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      toast('Frame copied ✓');
+    } catch {
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'post-' + id + '.png'; a.click(); toast('Frame downloaded ✓');
+    }
+  });
+  document.getElementById('fd-' + id).addEventListener('click', () => {
+    feedObserver.unobserve(card); cardPlayerMap.delete(card); player.destroy(); card.remove();
+    const i = posts.findIndex(p => p.id === id); if (i !== -1) posts.splice(i, 1);
+    updateUI(); toast('Post removed');
+  });
+
+  /* Update the posts entry with the real player now it's ready */
+  const entry = posts.find(p => p.id === id);
+  if (entry) entry.player = player;
+}
+
+/* ══ UI STATE ═══════════════════════════════════════════════════ */
+function updateUI() {
+  const n = posts.length;
+  document.getElementById('emptyState').style.display = n === 0 ? 'flex' : 'none';
+  document.getElementById('generateBar').classList.toggle('visible', n > 0);
+  const cnt = document.getElementById('postCount');
+  cnt.style.display = n === 0 ? 'none' : 'block';
+  cnt.textContent = n + (n === 1 ? ' post' : ' posts');
+}
+
+/* ══ WIRING ═════════════════════════════════════════════════════ */
+document.getElementById('emptyBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('emptyBtn');
+  btn.disabled = true;
+  btn.style.opacity = '0.6';
+  const schema = await fetchTemplate('dyk::stat');
+  btn.disabled = false;
+  btn.style.opacity = '';
+  if (!schema) return;
+  /* Fresh data from pipeline — random pick from dummy pool */
+  const data = await Pipeline.getData({ key: 'dyk::stat', source: 'dummy' });
+  const fresh = JSON.parse(JSON.stringify(schema));
+  fresh.data = data;
+  await addPost(fresh);
+});
+document.getElementById('generateBtn').addEventListener('click', openSheet);
+
+/* ══ INIT ═══════════════════════════════════════════════════════ */
+/* Add shimmer keyframe to page */
+const shimmerStyle = document.createElement('style');
+shimmerStyle.textContent = '@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}';
+document.head.appendChild(shimmerStyle);
+
+updateUI();
+ensureIndex(); /* start fetching index.json immediately — non-blocking */
+
+}); // DOMContentLoaded
+</script>
+</body>
+</html>
