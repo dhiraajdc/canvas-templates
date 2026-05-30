@@ -32,5 +32,12 @@
   { "key": "news::headline",         "intent": "news",    "mode": "headline",     "status": "ready", "file": "news/tpl-news-headline.json" },
   { "key": "news::briefing",         "intent": "news",    "mode": "briefing",     "status": "soon",  "file": null },
   { "key": "news::opinion",          "intent": "news",    "mode": "opinion",      "status": "soon",  "file": null },
-  { "key": "news::timeline",         "intent": "news",    "mode": "timeline",     "status": "soon",  "file": null }
+  { "key": "news::timeline",         "intent": "news",    "mode": "timeline",     "status": "soon",  "file": null },
+  {
+  "key": "editorial::cover",
+  "intent": "editorial",
+  "mode": "cover",
+  "status": "ready",
+  "file": "editorial/tpl-editorial-cover.json"
+}
 ]
