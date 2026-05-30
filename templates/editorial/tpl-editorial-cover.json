@@ -14,34 +14,35 @@
     "background": "#08080A"
   },
   "brand": {
-    "logo": "INSIGHT·DAILY",
+    "logo": "INSIGHT\u00b7DAILY",
     "colors": {
-      "primary":    "#6B3CF7",
+      "primary": "#6B3CF7",
       "background": "#08080A",
-      "text":       "#F5F2EB",
-      "muted":      "#888888",
-      "surface":    "#111520"
+      "text": "#F5F2EB",
+      "muted": "#888888",
+      "surface": "#111520"
     },
     "fonts": {
-      "display":  "Bebas Neue",
-      "serif":    "Playfair Display",
-      "sans":     "DM Sans",
-      "mono":     "DM Mono",
-      "grotesk":  "Space Grotesk"
+      "display": "Bebas Neue",
+      "serif": "Playfair Display",
+      "sans": "DM Sans",
+      "mono": "DM Mono",
+      "grotesk": "Space Grotesk"
     }
   },
   "data": {
-    "title":       "The Future of Open Banking",
+    "title": "The Future of Open Banking",
     "description": "How APIs are reshaping financial services and unlocking new revenue for enterprises globally.",
-    "category":    "Open Banking",
-    "image_url":   "https://picsum.photos/id/10/1080/1350",
-    "source":      "Cateina Insights"
+    "category": "Open Banking",
+    "source": "Cateina Insights",
+    "image": "https://picsum.photos/id/10/1080/1350"
   },
   "layers": [
     {
       "id": "bg",
       "type": "fill_rect",
-      "x": 0, "y": 0,
+      "x": 0,
+      "y": 0,
       "width": "$canvas.width",
       "height": "$canvas.height",
       "color": "@brand.colors.background",
@@ -50,8 +51,9 @@
     {
       "id": "cover_image",
       "type": "image_fill",
-      "src": "@data.image_url",
-      "x": 0, "y": 0,
+      "src": "@data.image",
+      "x": 0,
+      "y": 0,
       "width": "$canvas.width",
       "height": "$canvas.height",
       "opacity": 1
@@ -59,8 +61,10 @@
     {
       "id": "gradient_overlay",
       "type": "linear_gradient",
-      "x1": 0, "y1": "$canvas.height*0.35",
-      "x2": 0, "y2": "$canvas.height",
+      "x1": 0,
+      "y1": "$canvas.height*0.35",
+      "x2": 0,
+      "y2": "$canvas.height",
       "color_start": "#000000",
       "opacity_start": 0,
       "color_end": "#000000",
@@ -70,8 +74,10 @@
     {
       "id": "top_fade",
       "type": "linear_gradient",
-      "x1": 0, "y1": 0,
-      "x2": 0, "y2": "$canvas.height*0.25",
+      "x1": 0,
+      "y1": 0,
+      "x2": 0,
+      "y2": "$canvas.height*0.25",
       "color_start": "#000000",
       "opacity_start": 0.45,
       "color_end": "#000000",
@@ -179,71 +185,91 @@
     {
       "layer_id": "category_tag",
       "property": "opacity",
-      "from_value": 0, "to_value": 1,
-      "start_frame": 8, "end_frame": 38,
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 8,
+      "end_frame": 38,
       "easing": "ease_out"
     },
     {
       "layer_id": "category_tag",
       "property": "y",
-      "from_value": 18, "to_value": 0,
-      "start_frame": 8, "end_frame": 38,
+      "from_value": 18,
+      "to_value": 0,
+      "start_frame": 8,
+      "end_frame": 38,
       "easing": "ease_out"
     },
     {
       "layer_id": "title",
       "property": "opacity",
-      "from_value": 0, "to_value": 1,
-      "start_frame": 28, "end_frame": 78,
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 28,
+      "end_frame": 78,
       "easing": "ease_out"
     },
     {
       "layer_id": "title",
       "property": "y",
-      "from_value": 28, "to_value": 0,
-      "start_frame": 28, "end_frame": 78,
+      "from_value": 28,
+      "to_value": 0,
+      "start_frame": 28,
+      "end_frame": 78,
       "easing": "ease_out"
     },
     {
       "layer_id": "description",
       "property": "opacity",
-      "from_value": 0, "to_value": 1,
-      "start_frame": 68, "end_frame": 110,
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 68,
+      "end_frame": 110,
       "easing": "ease_out"
     },
     {
       "layer_id": "description",
       "property": "y",
-      "from_value": 20, "to_value": 0,
-      "start_frame": 68, "end_frame": 110,
+      "from_value": 20,
+      "to_value": 0,
+      "start_frame": 68,
+      "end_frame": 110,
       "easing": "ease_out"
     },
     {
       "layer_id": "divider",
       "property": "opacity",
-      "from_value": 0, "to_value": 0.3,
-      "start_frame": 115, "end_frame": 140,
+      "from_value": 0,
+      "to_value": 0.3,
+      "start_frame": 115,
+      "end_frame": 140,
       "easing": "ease_out"
     },
     {
       "layer_id": "divider",
       "property": "scale_x",
-      "from_value": 0, "to_value": 1,
-      "start_frame": 115, "end_frame": 142,
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 115,
+      "end_frame": 142,
       "easing": "ease_out"
     },
     {
       "layer_id": "brand_logo",
       "property": "opacity",
-      "from_value": 0, "to_value": 1,
-      "start_frame": 145, "end_frame": 170,
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 145,
+      "end_frame": 170,
       "easing": "ease_out"
     },
     {
       "layer_id": "source_tag",
       "property": "opacity",
-      "from_value": 0, "to_value": 1,
-      "start_frame": 145, "end_frame": 170,
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 145,
+      "end_frame": 170,
       "easing": "ease_out"
     }
   ]
