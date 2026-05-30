@@ -1,0 +1,1665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Feed</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<script src="player-lite.js"></script>
+<script src="data/brand-context.js"></script>
+<script src="data/ai-client.js"></script>
+<script src="data/content-generator.js"></script>
+<script src="data/field-schemas.js"></script>
+<script src="data/mappers.js"></script>
+<script src="data/fetchers/dummy-fetcher.js"></script>
+<script src="data/fetchers/news-fetcher.js"></script>
+<script src="data/fetchers/market-fetcher.js"></script>
+<script src="data/pipeline.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08080B;--s:#0F0F13;--s2:#16161C;--b:#1E1E26;--b2:#2A2A36;
+  --tx:#EEEEF0;--mt:#4A4A58;--mt2:#7A7A8C;
+  --ac:#6B3CF7;--ac2:#8B5CF6;--ac-glow:rgba(107,60,247,0.3);
+  --red:#EF4444;--card-max:420px;--radius:16px;
+}
+html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--tx);overscroll-behavior:none}
+
+/* ── Header ── */
+.app-header{position:sticky;top:0;z-index:30;background:rgba(8,8,11,0.96);border-bottom:1px solid var(--b);padding:12px 20px;display:flex;align-items:center;gap:12px}
+.header-spacer{flex:1}
+.logo{display:flex;align-items:center;gap:8px}
+.logo-dot{width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 12px var(--ac-glow)}
+.logo-text{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
+.post-count{font-size:11px;color:var(--mt2);background:var(--s2);border:1px solid var(--b);border-radius:20px;padding:3px 10px;font-family:'DM Mono',monospace;display:none}
+
+/* ── Feed ── */
+.feed{width:100%;max-width:var(--card-max);margin:0 auto;padding:24px 16px 120px;display:flex;flex-direction:column;gap:20px;min-height:100vh}
+
+/* ── Empty state ── */
+.empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 64px);padding:40px 20px}
+.empty-graphic{width:160px;height:160px;margin-bottom:32px;flex-shrink:0}
+.empty-title{font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:600;text-align:center;margin-bottom:10px}
+.empty-sub{font-size:14px;color:var(--mt2);text-align:center;line-height:1.6;max-width:280px;margin-bottom:36px}
+.empty-btn{display:flex;align-items:center;gap:10px;padding:16px 32px;border-radius:50px;background:var(--ac);border:none;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 8px 32px var(--ac-glow)}
+.empty-btn:hover{background:var(--ac2);transform:translateY(-2px)}
+.empty-btn:active{transform:translateY(0)}
+.empty-btn svg{width:18px;height:18px;flex-shrink:0}
+
+/* ── Post card ── */
+.post-card{width:100%;background:var(--s);border:1px solid var(--b);border-radius:var(--radius);overflow:hidden;animation:cardIn .4s cubic-bezier(.34,1.4,.64,1) both}
+@keyframes cardIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.card-canvas{width:100%;position:relative;background:#0A0A0D}
+.card-footer{display:flex;align-items:center;padding:10px 12px;gap:6px;border-top:1px solid var(--b)}
+.footer-btn{display:flex;align-items:center;justify-content:center;gap:5px;padding:7px 12px;border-radius:8px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.footer-btn:hover{border-color:var(--b2);color:var(--tx)}
+.footer-btn svg{width:14px;height:14px;flex-shrink:0}
+.footer-btn.play-btn{min-width:44px}
+.footer-btn.play-btn.is-playing{background:rgba(107,60,247,.12);border-color:rgba(107,60,247,.3);color:var(--ac2)}
+.footer-btn.delete-btn:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red)}
+.footer-spacer{flex:1}
+.card-header{display:flex;align-items:center;padding:10px 12px 8px;border-bottom:1px solid var(--b)}
+.card-topic{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;letter-spacing:.3px}
+
+/* ── Generate bar ── */
+.generate-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:30;padding:12px 16px;background:rgba(8,8,11,0.97);border-top:1px solid var(--b)}
+.generate-bar.visible{display:flex;align-items:center;justify-content:center}
+.generate-bar-inner{display:flex;align-items:center;gap:8px;width:100%;max-width:var(--card-max)}
+.generate-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px;border-radius:50px;background:var(--ac);border:none;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 24px var(--ac-glow)}
+.generate-btn:hover{background:var(--ac2)}
+.generate-btn:active{transform:scale(.98)}
+.generate-btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--s2);border:1px solid var(--b2);color:var(--tx);padding:8px 16px;border-radius:10px;font-size:12px;opacity:0;transition:all .25s;pointer-events:none;z-index:700;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast-dot{width:5px;height:5px;border-radius:50%;background:var(--ac);flex-shrink:0}
+
+/* ── Edit Modal ── */
+.em-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:center;justify-content:center;padding:20px}
+.em-backdrop.open{opacity:1;pointer-events:auto}
+.em-modal{background:var(--s);border:1px solid var(--b);border-radius:20px;width:100%;max-width:480px;max-height:88vh;display:flex;flex-direction:column;transform:scale(.95) translateY(12px);transition:transform .25s cubic-bezier(.34,1.4,.64,1);overflow:hidden}
+.em-backdrop.open .em-modal{transform:scale(1) translateY(0)}
+.em-header{padding:18px 20px 14px;border-bottom:1px solid var(--b);flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.em-header-text{display:flex;flex-direction:column;gap:3px}
+.em-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--tx)}
+.em-subtitle{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;letter-spacing:.5px;text-transform:uppercase}
+.em-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s}
+.em-close:hover{border-color:var(--b2);color:var(--tx)}
+.em-close svg{width:14px;height:14px}
+.em-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px;-webkit-overflow-scrolling:touch}
+.em-field{display:flex;flex-direction:column;gap:6px}
+.em-label{font-size:12px;font-weight:500;color:var(--tx);letter-spacing:.2px}
+.em-input{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:10px;padding:10px 12px;color:var(--tx);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;resize:none}
+.em-input:focus{border-color:var(--ac)}
+.em-input.error{border-color:var(--red)}
+.em-input::placeholder{color:var(--mt)}
+.em-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.em-hint{font-size:11px;color:var(--mt2);line-height:1.4;flex:1}
+.em-count{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;flex-shrink:0;white-space:nowrap}
+.em-count.over{color:var(--red)}
+.em-error-msg{font-size:11px;color:var(--red)}
+.em-img-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.em-img-opt{aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .15s;position:relative}
+.em-img-opt img{width:100%;height:100%;object-fit:cover;display:block}
+.em-img-opt.selected{border-color:var(--ac)}
+.em-img-opt.selected::after{content:'';position:absolute;inset:0;background:rgba(107,60,247,.2);border-radius:6px}
+.em-img-opt.selected::before{content:'✓';position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:var(--ac);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;z-index:1;line-height:16px;text-align:center}
+.em-footer{padding:14px 20px;border-top:1px solid var(--b);flex-shrink:0;display:flex;gap:8px}
+.em-reset-btn{padding:12px 18px;border-radius:50px;border:1px solid var(--b);background:transparent;color:var(--mt2);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
+.em-reset-btn:hover{border-color:var(--b2);color:var(--tx)}
+.em-apply-btn{flex:1;padding:12px 20px;border-radius:50px;border:none;background:var(--ac);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px var(--ac-glow)}
+.em-apply-btn:hover{background:var(--ac2)}
+.em-apply-btn:active{transform:scale(.98)}
+
+/* ── AI Loader ── */
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-loader{position:fixed;inset:0;background:rgba(8,8,11,0.96);z-index:600;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;padding:40px}
+.ai-loader.show{opacity:1;pointer-events:auto;transition:none}
+.ai-loader-ring{width:48px;height:48px;border:3px solid var(--b2);border-top-color:var(--ac);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+.ai-loader-msg{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:500;color:var(--tx);letter-spacing:.2px;text-align:center}
+.ai-loader-sub{font-size:12px;color:var(--mt2);font-family:'DM Mono',monospace;text-align:center;letter-spacing:.5px}
+.ai-loader-steps{display:flex;gap:6px;align-items:center;margin-top:4px}
+.ai-loader-step{width:6px;height:6px;border-radius:50%;background:var(--b2);transition:background .3s,opacity .3s}
+.ai-loader-step.active{background:var(--ac)}
+.ai-loader-step.done{background:var(--ac);opacity:.35}
+
+/* ── Gear button ── */
+.gear-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+.gear-btn:hover{border-color:var(--b2);color:var(--tx)}
+.gear-btn.active{background:rgba(107,60,247,.12);border-color:rgba(107,60,247,.3);color:var(--ac2)}
+.gear-btn svg{width:15px;height:15px}
+
+/* ── Settings modal ── */
+.set-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.set-backdrop.open{opacity:1;pointer-events:auto}
+.set-modal{background:var(--s);border:1px solid var(--b);border-radius:16px;width:100%;max-width:380px;padding:24px;display:flex;flex-direction:column;gap:16px;transform:scale(.96) translateY(8px);transition:transform .2s cubic-bezier(.34,1.4,.64,1)}
+.set-backdrop.open .set-modal{transform:scale(1) translateY(0)}
+.set-modal h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--tx)}
+.set-modal p{font-size:12px;color:var(--mt2);line-height:1.6}
+.set-modal a{color:var(--ac2)}
+.set-input{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:8px;padding:10px 12px;color:var(--tx);font-size:12px;font-family:'DM Mono',monospace;outline:none;transition:border-color .15s}
+.set-input:focus{border-color:var(--ac)}
+.set-input::placeholder{color:var(--mt)}
+.set-status{font-size:11px;min-height:16px;font-family:'DM Mono',monospace}
+.set-status.ok{color:#22C55E}
+.set-status.err{color:var(--red)}
+.set-footer{display:flex;gap:8px;justify-content:flex-end}
+.set-cancel{padding:8px 16px;border-radius:8px;border:1px solid var(--b);background:transparent;color:var(--mt2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.set-cancel:hover{border-color:var(--b2);color:var(--tx)}
+.set-save{padding:8px 16px;border-radius:8px;border:none;background:var(--ac);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all .15s}
+.set-save:hover{background:var(--ac2)}
+
+/* ── Topic Sheet ── */
+.ts-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.ts-backdrop.open{opacity:1;pointer-events:auto}
+.ts-sheet{position:fixed;bottom:0;left:0;right:0;z-index:201;background:var(--s);border-radius:20px 20px 0 0;border-top:1px solid var(--b);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);max-height:82vh}
+.ts-sheet.open{transform:translateY(0)}
+.ts-handle{padding:12px 0 4px;display:flex;justify-content:center;flex-shrink:0;cursor:grab}
+.ts-handle-bar{width:36px;height:4px;border-radius:2px;background:var(--b2)}
+.ts-header{padding:4px 20px 16px;flex-shrink:0;border-bottom:1px solid var(--b)}
+.ts-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.ts-sub{font-size:12px;color:var(--mt2)}
+.ts-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;min-height:0}
+.ts-input-wrap{position:relative}
+.ts-input{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:12px;padding:12px 44px 12px 16px;color:var(--tx);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
+.ts-input:focus{border-color:var(--ac)}
+.ts-input::placeholder{color:var(--mt)}
+.ts-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:22px;height:22px;border-radius:50%;background:var(--b2);border:none;color:var(--mt2);cursor:pointer;display:none;align-items:center;justify-content:center}
+.ts-clear.show{display:flex}
+.ts-clear svg{width:10px;height:10px}
+.ts-section-label{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--mt2);font-family:'DM Mono',monospace}
+.ts-chips{display:flex;flex-wrap:wrap;gap:8px}
+.ts-chip{padding:7px 14px;border-radius:50px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);font-size:13px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.ts-chip:hover{border-color:var(--b2);color:var(--tx)}
+.ts-chip.selected{background:rgba(107,60,247,.12);border-color:rgba(107,60,247,.4);color:var(--ac2)}
+
+.ts-footer{padding:14px 20px;border-top:1px solid var(--b);flex-shrink:0}
+.ts-generate-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:50px;background:var(--b2);border:none;color:var(--mt2);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .2s}
+.ts-generate-btn.active{background:var(--ac);color:#fff;box-shadow:0 4px 20px var(--ac-glow);cursor:pointer}
+.ts-generate-btn.active:hover{background:var(--ac2)}
+.ts-generate-btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* ── Topic chip shimmer ── */
+.ts-chip-shimmer{height:32px;border-radius:50px;background:linear-gradient(90deg,var(--s2) 25%,var(--b) 50%,var(--s2) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;flex-shrink:0}
+.ts-refresh-btn{background:none;border:none;color:var(--mt2);font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;padding:0;transition:color .15s;display:flex;align-items:center;gap:4px}
+.ts-refresh-btn:hover{color:var(--ac2)}
+.ts-refresh-btn svg{width:11px;height:11px}
+.ts-section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+
+.pref-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.pref-backdrop.open{opacity:1;pointer-events:auto}
+.pref-sheet{position:fixed;bottom:0;left:0;right:0;z-index:201;background:var(--s);border-radius:20px 20px 0 0;border-top:1px solid var(--b);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);max-height:88vh}
+.pref-sheet.open{transform:translateY(0)}
+.pref-handle{padding:12px 0 4px;display:flex;justify-content:center;flex-shrink:0;cursor:grab}
+.pref-handle-bar{width:36px;height:4px;border-radius:2px;background:var(--b2)}
+.pref-header{padding:4px 20px 16px;flex-shrink:0;border-bottom:1px solid var(--b)}
+.pref-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--tx)}
+.pref-sub{font-size:12px;color:var(--mt2);margin-top:2px}
+.pref-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;min-height:0;-webkit-overflow-scrolling:touch}
+.pref-footer{padding:14px 20px;border-top:1px solid var(--b);flex-shrink:0}
+.pref-mode-section{display:flex;flex-direction:column;gap:8px}
+.pref-mode-card{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;border:1.5px solid var(--b);background:var(--s2);cursor:pointer;transition:all .15s;user-select:none}
+.pref-mode-card.selected{border-color:var(--ac);background:rgba(107,60,247,.06)}
+.pref-radio{width:18px;height:18px;border-radius:50%;border:2px solid var(--b2);flex-shrink:0;margin-top:1px;transition:all .15s;position:relative}
+.pref-mode-card.selected .pref-radio{border-color:var(--ac)}
+.pref-mode-card.selected .pref-radio::after{content:'';position:absolute;width:8px;height:8px;border-radius:50%;background:var(--ac);top:50%;left:50%;transform:translate(-50%,-50%)}
+.pref-mode-label{display:flex;flex-direction:column;gap:3px;flex:1}
+.pref-mode-title{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--tx)}
+.pref-mode-desc{font-size:11px;color:var(--mt2);line-height:1.4}
+.pref-divider{display:flex;align-items:center;gap:10px}
+.pref-divider-line{flex:1;height:1px;background:var(--b)}
+.pref-divider-label{font-size:10px;font-family:'DM Mono',monospace;color:var(--mt2);letter-spacing:.5px;white-space:nowrap}
+.pref-intent-block{display:flex;flex-direction:column;gap:8px}
+.pref-intent-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;border:1.5px solid var(--b);background:var(--s2);cursor:pointer;transition:all .15s;user-select:none}
+.pref-intent-row.on{border-color:rgba(107,60,247,.35);background:rgba(107,60,247,.05)}
+.pref-intent-icon{font-size:18px;line-height:1;flex-shrink:0}
+.pref-intent-info{flex:1}
+.pref-intent-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;color:var(--tx)}
+.pref-intent-desc{font-size:11px;color:var(--mt2);margin-top:1px}
+.pref-itoggle{width:36px;height:20px;border-radius:10px;background:var(--b2);position:relative;flex-shrink:0;transition:background .2s;pointer-events:none}
+.pref-intent-row.on .pref-itoggle{background:var(--ac)}
+.pref-itoggle::after{content:'';position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.pref-intent-row.on .pref-itoggle::after{transform:translateX(16px)}
+.pref-modes{display:flex;flex-wrap:wrap;gap:7px;padding:2px 0 2px 46px}
+.pref-mode-chip{padding:6px 13px;border-radius:50px;border:1.5px solid var(--b);background:transparent;color:var(--mt2);font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;transition:all .15s;white-space:nowrap}
+.pref-mode-chip:hover{border-color:var(--b2);color:var(--tx)}
+.pref-mode-chip.on{background:rgba(107,60,247,.1);border-color:rgba(107,60,247,.35);color:var(--ac2)}
+.pref-custom{display:flex;flex-direction:column;gap:16px}
+.pref-save-btn{display:flex;align-items:center;justify-content:center;width:100%;padding:14px;border-radius:50px;background:var(--ac);border:none;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px var(--ac-glow)}
+.pref-save-btn:hover{background:var(--ac2)}
+.pref-save-btn:active{transform:scale(.98)}
+
+.split-btn-wrap{display:flex;align-items:center;width:100%;max-width:var(--card-max);border-radius:50px;overflow:hidden;box-shadow:0 4px 24px var(--ac-glow)}
+.split-btn-left{display:flex;align-items:center;justify-content:center;width:48px;flex-shrink:0;background:var(--ac);border:none;color:rgba(255,255,255,0.75);cursor:pointer;transition:background .15s;border-right:1px solid rgba(255,255,255,0.15);height:48px}
+.split-btn-left:hover{background:rgba(107,60,247,0.85)}
+.split-btn-left:active{background:var(--ac2)}
+.split-btn-left svg{width:14px;height:14px}
+.split-btn-right{display:flex;align-items:center;justify-content:center;gap:10px;flex:1;background:var(--ac);border:none;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s;height:48px;padding:0 20px}
+.split-btn-right:hover{background:var(--ac2)}
+.split-btn-right:active{transform:scale(.98)}
+.split-btn-right svg{width:16px;height:16px;flex-shrink:0}
+
+/* ══ CAROUSEL EDIT MODAL ════════════════════════════════════ */
+.cem-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:center;justify-content:center;padding:20px}
+.cem-backdrop.open{opacity:1;pointer-events:auto}
+.cem-modal{background:var(--s);border:1px solid var(--b);border-radius:20px;width:100%;max-width:480px;max-height:88vh;display:flex;flex-direction:column;transform:scale(.95) translateY(12px);transition:transform .25s cubic-bezier(.34,1.4,.64,1);overflow:hidden}
+.cem-backdrop.open .cem-modal{transform:scale(1) translateY(0)}
+.cem-header{padding:18px 20px 14px;border-bottom:1px solid var(--b);flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.cem-header-text{display:flex;flex-direction:column;gap:3px}
+.cem-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--tx)}
+.cem-subtitle{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;letter-spacing:.5px;text-transform:uppercase}
+.cem-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s}
+.cem-close:hover{border-color:var(--b2);color:var(--tx)}
+.cem-close svg{width:14px;height:14px}
+.cem-tabs{display:flex;gap:6px;padding:14px 20px;border-bottom:1px solid var(--b);flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cem-tab{padding:6px 14px;border-radius:50px;border:1.5px solid var(--b);background:transparent;color:var(--mt2);font-size:12px;font-family:'Space Grotesk',sans-serif;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.cem-tab:hover{border-color:var(--b2);color:var(--tx)}
+.cem-tab.active{background:var(--ac);border-color:var(--ac);color:#fff}
+.cem-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch}
+.cem-field{display:flex;flex-direction:column;gap:5px}
+.cem-label{font-size:12px;font-weight:500;color:var(--tx)}
+.cem-input{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:10px;padding:10px 12px;color:var(--tx);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;resize:none}
+.cem-input:focus{border-color:var(--ac)}
+.cem-input::placeholder{color:var(--mt)}
+.cem-meta{display:flex;justify-content:space-between;align-items:center}
+.cem-hint{font-size:11px;color:var(--mt2)}
+.cem-count{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace}
+.cem-count.over{color:var(--red)}
+.cem-divider{height:1px;background:var(--b)}
+.cem-section-label{font-size:11px;font-weight:600;color:var(--mt2);letter-spacing:.8px;text-transform:uppercase;font-family:'DM Mono',monospace}
+.cem-footer{padding:14px 20px;border-top:1px solid var(--b);flex-shrink:0;display:flex;gap:8px}
+.cem-reset-btn{padding:12px 18px;border-radius:50px;border:1px solid var(--b);background:transparent;color:var(--mt2);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.cem-reset-btn:hover{border-color:var(--b2);color:var(--tx)}
+.cem-apply-btn{flex:1;padding:12px 20px;border-radius:50px;border:none;background:var(--ac);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px var(--ac-glow)}
+.cem-apply-btn:hover{background:var(--ac2)}
+.cem-apply-btn:active{transform:scale(.98)}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <div class="logo-text">AI Feed</div>
+  </div>
+  <div class="header-spacer"></div>
+  <div class="post-count" id="postCount">0 posts</div>
+  <button class="gear-btn" id="settingsBtn" title="Connect AI — add API key">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </button>
+</header>
+
+<div class="feed" id="feed">
+  <div class="empty-state" id="emptyState">
+    <div class="empty-graphic">
+      <svg viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+        <defs>
+          <radialGradient id="rg1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#6B3CF7" stop-opacity="0.2"/><stop offset="100%" stop-color="#6B3CF7" stop-opacity="0"/></radialGradient>
+          <radialGradient id="rg2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#6B3CF7" stop-opacity="0.08"/><stop offset="100%" stop-color="#6B3CF7" stop-opacity="0"/></radialGradient>
+        </defs>
+        <circle cx="80" cy="80" r="76" fill="url(#rg2)"/>
+        <circle cx="80" cy="80" r="55" fill="url(#rg1)"/>
+        <circle cx="80" cy="80" r="66" stroke="#6B3CF7" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="4 6"/>
+        <circle cx="80" cy="80" r="44" stroke="#6B3CF7" stroke-opacity="0.25" stroke-width="1"/>
+        <rect x="52" y="42" width="56" height="72" rx="8" fill="#111520" stroke="#6B3CF7" stroke-opacity="0.3" stroke-width="1"/>
+        <rect x="46" y="48" width="56" height="72" rx="8" fill="#16161C" stroke="#6B3CF7" stroke-opacity="0.2" stroke-width="1"/>
+        <rect x="40" y="54" width="56" height="72" rx="8" fill="#1E1E26" stroke="#6B3CF7" stroke-opacity="0.35" stroke-width="1.5"/>
+        <text x="68" y="95" font-family="'Bebas Neue', sans-serif" font-size="28" fill="#6B3CF7" fill-opacity="0.9" text-anchor="middle">73%</text>
+        <rect x="50" y="103" width="36" height="2.5" rx="1.25" fill="#6B3CF7" fill-opacity="0.2"/>
+        <rect x="50" y="109" width="24" height="2.5" rx="1.25" fill="#6B3CF7" fill-opacity="0.15"/>
+      </svg>
+    </div>
+    <div class="empty-title">Your feed is empty</div>
+    <div class="empty-sub">Generate your first animated stat post and start building your feed.</div>
+    <button class="empty-btn" id="emptyBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Generate Post
+    </button>
+    <button onclick="openPrefsSheet()" style="margin-top:12px;background:none;border:none;color:var(--mt2);font-size:12px;font-family:'DM Mono',monospace;cursor:pointer;display:flex;align-items:center;gap:6px;padding:4px 0">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="8" cy="6" r="2" fill="currentColor" stroke="none"/><circle cx="16" cy="12" r="2" fill="currentColor" stroke="none"/><circle cx="10" cy="18" r="2" fill="currentColor" stroke="none"/></svg>
+      Content preferences
+    </button>
+  </div>
+</div>
+
+<div class="generate-bar" id="generateBar">
+  <div class="split-btn-wrap">
+    <button class="split-btn-left" id="prefsBtn" title="Content preferences">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <button class="split-btn-right" id="generateBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Generate Post
+    </button>
+  </div>
+</div>
+
+
+<!-- Preferences Sheet -->
+<div class="pref-backdrop" id="prefBackdrop"></div>
+<div class="pref-sheet" id="prefSheet">
+  <div class="pref-handle"><div class="pref-handle-bar"></div></div>
+  <div class="pref-header">
+    <div class="pref-title">Content Style</div>
+    <div class="pref-sub">How should AI pick your post formats?</div>
+  </div>
+  <div class="pref-body">
+    <div class="pref-mode-section" id="prefModeSection">
+      <div class="pref-mode-card" id="prefMode1" data-mode="full_auto">
+        <div class="pref-radio"></div>
+        <div class="pref-mode-label">
+          <div class="pref-mode-title">&#128270; Full Auto</div>
+          <div class="pref-mode-desc">AI picks the topic and format — just tap Generate</div>
+        </div>
+      </div>
+      <div class="pref-mode-card" id="prefMode2" data-mode="ai_topic">
+        <div class="pref-radio"></div>
+        <div class="pref-mode-label">
+          <div class="pref-mode-title">&#10024; AI with your topic</div>
+          <div class="pref-mode-desc">You pick the topic, AI picks the best format</div>
+        </div>
+      </div>
+      <div class="pref-mode-card" id="prefMode3" data-mode="manual">
+        <div class="pref-radio"></div>
+        <div class="pref-mode-label">
+          <div class="pref-mode-title">&#127919; Manual</div>
+          <div class="pref-mode-desc">You pick topic and preferred formats</div>
+        </div>
+      </div>
+    </div>
+    <div class="pref-divider" id="prefDivider" style="display:none">
+      <div class="pref-divider-line"></div>
+      <div class="pref-divider-label">FORMAT PREFERENCES</div>
+      <div class="pref-divider-line"></div>
+    </div>
+    <div class="pref-custom" id="prefCustom" style="display:none"></div>
+  </div>
+  <div class="pref-footer">
+    <button class="pref-save-btn" id="prefSaveBtn">Save Preferences</button>
+  </div>
+</div>
+
+<!-- Topic Sheet -->
+<div class="ts-backdrop" id="tsBackdrop"></div>
+<div class="ts-sheet" id="tsSheet">
+  <div class="ts-handle"><div class="ts-handle-bar"></div></div>
+  <div class="ts-header">
+    <div class="ts-title">What's the post about?</div>
+    <div class="ts-sub">Type a topic or pick one below</div>
+  </div>
+  <div class="ts-body" id="tsBody">
+    <div class="ts-input-wrap">
+      <input class="ts-input" id="tsInput" type="text" placeholder="e.g. morning meditation, stress at work…" autocomplete="off">
+      <button class="ts-clear" id="tsClear">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div>
+      <div class="ts-section-row">
+        <div class="ts-section-label">Suggested topics</div>
+        <button class="ts-refresh-btn" id="tsRefreshBtn" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          refresh
+        </button>
+      </div>
+      <div class="ts-chips" id="tsChips"></div>
+    </div>
+  </div>
+  <div class="ts-footer">
+    <button class="ts-generate-btn" id="tsGenerateBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span id="tsGenerateLabel">Generate Post</span>
+    </button>
+  </div>
+</div>
+
+<!-- Carousel Edit Modal -->
+<div class="cem-backdrop" id="cemBackdrop">
+  <div class="cem-modal">
+    <div class="cem-header">
+      <div class="cem-header-text">
+        <div class="cem-title">Edit Carousel</div>
+        <div class="cem-subtitle" id="cemSubtitle">Carousel</div>
+      </div>
+      <button class="cem-close" id="cemClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cem-tabs" id="cemTabs"></div>
+    <div class="cem-body" id="cemBody"></div>
+    <div class="cem-footer">
+      <button class="cem-reset-btn" id="cemResetBtn">Reset</button>
+      <button class="cem-apply-btn" id="cemApplyBtn">Apply Changes</button>
+    </div>
+  </div>
+</div>
+<!-- Settings modal -->
+<div class="set-backdrop" id="setBackdrop">
+  <div class="set-modal">
+    <h3>AI Settings</h3>
+    <p>Add your Anthropic API key to enable AI-powered brand-aware content generation.</p>
+    <p>Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys</p>
+    <input class="set-input" id="setKeyInput" type="password" placeholder="sk-ant-xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+    <div class="set-status" id="setStatus"></div>
+    <div class="set-footer">
+      <button class="set-cancel" id="setCancel">Cancel</button>
+      <button class="set-save" id="setSave">Save Key</button>
+    </div>
+  </div>
+</div>
+
+<!-- Full screen loader -->
+<div class="ai-loader" id="aiLoader">
+  <div class="ai-loader-ring"></div>
+  <div class="ai-loader-msg" id="aiLoaderMsg">Generating content...</div>
+  <div class="ai-loader-sub" id="aiLoaderSub">powered by Claude</div>
+  <div class="ai-loader-steps">
+    <div class="ai-loader-step" id="aiStep1"></div>
+    <div class="ai-loader-step" id="aiStep2"></div>
+    <div class="ai-loader-step" id="aiStep3"></div>
+  </div>
+</div>
+
+<!-- Edit Modal — placed last so it's above everything -->
+<div class="em-backdrop" id="emBackdrop">
+  <div class="em-modal" id="emModal">
+    <div class="em-header">
+      <div class="em-header-text">
+        <div class="em-title">Edit Post</div>
+        <div class="em-subtitle" id="emSubtitle">Did You Know · Stat</div>
+      </div>
+      <div class="em-close" id="emClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+    <div class="em-body" id="emBody"></div>
+    <div class="em-footer">
+      <button class="em-reset-btn" id="emResetBtn">Reset to original</button>
+      <button class="em-apply-btn" id="emApplyBtn">Apply Changes →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
+
+<script>
+/* ── GitHub template fetcher ── */
+const BASE  = 'https://raw.githubusercontent.com/dhiraajdc/canvas-templates/master/templates';
+const _tplCache = {};
+let   _tplIndex = [];
+let   _indexReady = null;
+
+function ensureIndex() {
+  if (_indexReady) return _indexReady;
+  _indexReady = fetch(`${BASE}/index.json`)
+    .then(r => r.json())
+    .then(data => { _tplIndex = data; })
+    .catch(e => console.warn('[canvas] index load failed:', e));
+  return _indexReady;
+}
+
+const FILE_MAP = {
+  'dyk::stat':            'dyk/tpl-dyk-stat.json',
+  'dyk::ratio':           'dyk/tpl-dyk-ratio.json',
+  'dyk::timeframe':       'dyk/tpl-dyk-timeframe.json',
+  'quote::portrait':      'quote/tpl-quote-portrait.json',
+  'quote::topic':         'quote/tpl-quote-topic.json',
+  'quote::split':         'quote/tpl-quote-split.json',
+  'tip::checklist':       'tip/tpl-tip-checklist.json',
+  'tip::do_dont':         'tip/tpl-tip-do-dont.json',
+  'tip::stat_tip':        'tip/tpl-tip-stat-tip.json',
+  'funfact::versus':      'funfact/tpl-funfact-versus.json',
+  'funfact::number_fact': 'funfact/tpl-funfact-number.json',
+  'funfact::mind_blown':  'funfact/tpl-funfact-mind-blown.json',
+};
+
+async function fetchTemplate(key) {
+  if (_tplCache[key]) return _tplCache[key];
+  await ensureIndex();
+  const entry = _tplIndex.find(t => t.key === key);
+  const file  = entry?.file || FILE_MAP[key];
+  if (!file) return null;
+  try {
+    const res = await fetch(`${BASE}/${file}`);
+    if (!res.ok) throw new Error(res.status);
+    _tplCache[key] = await res.json();
+    return _tplCache[key];
+  } catch(e) {
+    toast('Could not load template: ' + key);
+    return null;
+  }
+}
+
+
+
+
+/* ── Standard template keys (AI-generated content) ── */
+const AVAILABLE_KEYS = [
+  'dyk::stat', 'dyk::ratio', 'dyk::timeframe',
+  'quote::portrait', 'quote::topic', 'quote::split',
+  'tip::checklist', 'tip::do_dont', 'tip::stat_tip',
+  'funfact::versus', 'funfact::number_fact', 'funfact::mind_blown',
+  'editorial::cover',
+  'carousel::listicle', 'carousel::story_arc', 'carousel::step_by_step', 'carousel::comparison',
+];
+
+/* ── Market keyword signals ── */
+const MARKET_SIGNALS  = ['nifty','sensex','banknifty','nasdaq','s&p','sp500','dow','market','stock','index','share','equity','trading','bull','bear'];
+const MARKET_KEY_MAP  = {
+  'nifty50': 'NIFTY50', 'nifty': 'NIFTY50',
+  'sensex': 'SENSEX', 'bse': 'SENSEX',
+  'banknifty': 'BANKNIFTY',
+  'nasdaq': 'NASDAQ',
+  'sp500': 'SP500', 's&p': 'SP500', 'sp': 'SP500',
+  'dow': 'DOWJONES', 'dowjones': 'DOWJONES',
+};
+
+/* ── News keyword signals ── */
+const NEWS_SIGNALS    = ['news','headline','latest','breaking','today','update','current','happening'];
+const NEWS_FEED_MAP   = {
+  'tech': 'bbc_tech', 'technology': 'bbc_tech', 'ai': 'google_tech',
+  'india': 'google', 'world': 'bbc_world', 'global': 'bbc_world',
+};
+
+/* ── Detect market topic — returns { isMarket, marketKey } ── */
+function detectMarket(topic) {
+  const t = topic.toLowerCase();
+  if (!MARKET_SIGNALS.some(s => t.includes(s))) return { isMarket: false };
+  /* Try to find specific index */
+  for (const [word, key] of Object.entries(MARKET_KEY_MAP)) {
+    if (t.includes(word)) return { isMarket: true, marketKey: key };
+  }
+  return { isMarket: true, marketKey: 'NIFTY50' }; /* default */
+}
+
+/* ── Detect news topic — returns { isNews, feedKey } ── */
+function detectNews(topic) {
+  const t = topic.toLowerCase();
+  if (!NEWS_SIGNALS.some(s => t.includes(s))) return { isNews: false };
+  for (const [word, feed] of Object.entries(NEWS_FEED_MAP)) {
+    if (t.includes(word)) return { isNews: true, feedKey: feed };
+  }
+  return { isNews: true, feedKey: 'bbc_world' }; /* default */
+}
+
+/* ── Pick best format — returns { key, source, input } ── */
+function pickFormat(topic) {
+  /* 1 — Market / news keyword signals — always takes priority */
+  const market = detectMarket(topic);
+  if (market.isMarket) return { key: 'market::day_chart', source: 'market', input: { market: market.marketKey } };
+
+  const news = detectNews(topic);
+  if (news.isNews) return { key: 'news::headline', source: 'news', input: { feed: news.feedKey } };
+
+  /* 2 — Get allowed pool from user preferences */
+  const userKeys = getAllowedKeys();
+  const pool = userKeys ?? AVAILABLE_KEYS;
+  const source = window.AIClient?.hasKey() ? 'ai' : 'dummy';
+
+  /* 3 — Keyword → intent scoring */
+  const t = topic.toLowerCase();
+  const scores = { dyk: 0, quote: 0, tip: 0, funfact: 0, editorial: 0, carousel: 0 };
+
+  const SIGNALS = {
+    tip:       ['tip','how','guide','ritual','practice','routine','habit','technique','breathwork','steps','ways','daily','morning','exercise','sleep','calm','reset','method'],
+    quote:     ['wisdom','peace','soul','inner','gratitude','inspire','affirmation','mantra','healing','journey','mindful','reflect','believe','strength','love','purpose'],
+    dyk:       ['fact','science','research','study','found','percent','statistic','data','truth','know','discover','shows','report','survey','rate','number','people'],
+    funfact:   ['surprising','amazing','mind','actually','believe','versus','compare','reality','myth','secret','hidden','never','always','world','history','nature'],
+    editorial: ['insight','explore','story','perspective','transformation','future','why','what is','how does','impact','revolution','rise','era','age'],
+    carousel:  ['list','steps','habits','tips','ways','guide','compare','versus','how to','swipe','carousel','series','part','breakdown','mistakes','reasons','things'],
+  };
+
+  for (const [intent, words] of Object.entries(SIGNALS)) {
+    for (const word of words) {
+      if (t.includes(word)) scores[intent] += 1;
+    }
+  }
+
+  /* 4 — Base weights (fallback when scores are all 0) */
+  const BASE = { dyk: 4, tip: 3, quote: 2, funfact: 2, editorial: 1, carousel: 2 };
+  for (const intent of Object.keys(scores)) {
+    scores[intent] += BASE[intent] ?? 1;
+  }
+
+  /* 5 — Mode weights within each intent */
+  const MODE_WEIGHTS = {
+    'dyk::stat':            8,
+    'dyk::ratio':           4,
+    'dyk::timeframe':       3,
+    'quote::portrait':      4,
+    'quote::topic':         6,
+    'quote::split':         5,
+    'tip::checklist':       7,
+    'tip::do_dont':         5,
+    'tip::stat_tip':        4,
+    'funfact::versus':      4,
+    'funfact::number_fact': 5,
+    'funfact::mind_blown':  6,
+    'editorial::cover':     3,
+    'carousel::listicle':    6,
+    'carousel::story_arc':   5,
+    'carousel::step_by_step':5,
+    'carousel::comparison':  4,
+  };
+
+  const INTENT_OF = {
+    'dyk::stat':'dyk','dyk::ratio':'dyk','dyk::timeframe':'dyk',
+    'quote::portrait':'quote','quote::topic':'quote','quote::split':'quote',
+    'tip::checklist':'tip','tip::do_dont':'tip','tip::stat_tip':'tip',
+    'funfact::versus':'funfact','funfact::number_fact':'funfact','funfact::mind_blown':'funfact',
+    'editorial::cover':'editorial',
+    'carousel::listicle':'carousel','carousel::story_arc':'carousel',
+    'carousel::step_by_step':'carousel','carousel::comparison':'carousel',
+  };
+
+  /* 6 — Build weighted pool from allowed keys */
+  const weightedPool = [];
+  for (const key of pool) {
+    const intent = INTENT_OF[key] ?? 'dyk';
+    const intentScore = scores[intent] ?? 1;
+    const modeWeight  = MODE_WEIGHTS[key] ?? 3;
+    const totalWeight = Math.round(intentScore * modeWeight);
+    for (let i = 0; i < totalWeight; i++) weightedPool.push(key);
+  }
+
+  /* 7 — Weighted random pick */
+  const key = weightedPool.length > 0
+    ? weightedPool[Math.floor(Math.random() * weightedPool.length)]
+    : (pool[0] ?? 'dyk::stat');
+
+  return { key, source, input: { topic } };
+}
+
+
+
+
+/* ── Brand injection — hydrates template with OmPeace brand before render ── */
+function injectBrand(schema) {
+  const v = window.BrandContext?.brand_visuals;
+  if (!v) { console.warn('[injectBrand] brand_visuals missing — using template default colors'); toast('brand-context.js needs updating — brand colors not applied'); return schema; }
+  if (!schema?.brand) return schema;
+  schema.brand.logo   = v.logo;
+  schema.brand.colors = { ...schema.brand.colors, ...v.colors };
+  schema.brand.fonts  = { ...schema.brand.fonts,  ...v.fonts  };
+  console.log('[injectBrand] Brand hydrated —', v.logo, '| primary:', v.colors.primary);
+  return schema;
+}
+
+/* ── State ── */
+const posts = [];
+let postCount = 0;
+const cardPlayerMap = new Map();
+const feedObserver = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    const p = cardPlayerMap.get(e.target);
+    if (!p) return;
+    e.isIntersecting ? p.play() : p.pause();
+  });
+}, { threshold: 0.25 });
+
+/* ── Toast ── */
+function toast(msg) {
+  document.getElementById('toastMsg').textContent = msg;
+  const el = document.getElementById('toast');
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+
+/* ── Loader ── */
+function showLoader(msg = 'Generating content...', sub = 'powered by Claude', step = 0) {
+  document.getElementById('aiLoaderMsg').textContent = msg;
+  document.getElementById('aiLoaderSub').textContent = sub;
+  const loaderEl = document.getElementById('aiLoader');
+  loaderEl.classList.add('show');
+  loaderEl.style.opacity = '1'; /* force immediate — bypass any CSS transition */
+  loaderEl.style.pointerEvents = 'auto';
+  showLoader._shownAt = Date.now();
+  /* Update step dots: step 1/2/3 */
+  [1,2,3].forEach(n => {
+    const el = document.getElementById('aiStep' + n);
+    if (!el) return;
+    el.className = 'ai-loader-step' + (n < step ? ' done' : n === step ? ' active' : '');
+  });
+}
+function hideLoader() {
+  const elapsed = Date.now() - (showLoader._shownAt ?? 0);
+  const delay = Math.max(0, 200 - elapsed);
+  setTimeout(() => {
+    const el = document.getElementById('aiLoader');
+    el.classList.remove('show');
+    el.style.opacity = '';
+    el.style.pointerEvents = '';
+  }, delay);
+}
+
+/* ── Update UI ── */
+function updateUI() {
+  const n = posts.length;
+  document.getElementById('emptyState').style.display = n === 0 ? 'flex' : 'none';
+  document.getElementById('generateBar').classList.toggle('visible', n > 0);
+  const cnt = document.getElementById('postCount');
+  cnt.style.display = n === 0 ? 'none' : 'block';
+  cnt.textContent = n + (n === 1 ? ' post' : ' posts');
+}
+
+/* ── Add Post ── */
+async function addPost(topic = 'wellness') {
+  postCount++;
+  const id = postCount;
+  /* Step 1 — Pick format instantly via weighted algo */
+  const { key: KEY, source, input: pickedInput } = pickFormat(topic);
+  const step2Sub = source === 'ai' ? 'powered by Claude' : source === 'market' ? 'live market data' : source === 'news' ? 'live news feed' : 'generating content';
+  showLoader('Generating content…', step2Sub, 1);
+  const schema = await fetchTemplate(KEY);
+  if (!schema) { postCount--; hideLoader(); toast('Could not load template'); return; }
+  injectBrand(schema); /* hydrate template with OmPeace brand */
+
+  /* Build card shell immediately so user sees feedback */
+  const card = document.createElement('div');
+  card.className = 'post-card';
+  card.id = 'post-' + id;
+
+  const slot = document.createElement('div');
+  slot.className = 'card-canvas';
+  slot.style.aspectRatio = (schema.canvas.width || 1080) + '/' + (schema.canvas.height || 1350);
+  slot.id = 'slot-' + id;
+  slot.innerHTML = `<div style="position:absolute;inset:0;background:linear-gradient(90deg,var(--s) 25%,var(--s2) 50%,var(--s) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite"></div>`;
+
+  const footer = document.createElement('div');
+  footer.className = 'card-footer';
+  footer.innerHTML = `
+    <button class="footer-btn play-btn" id="fp-${id}" title="Play / Pause">
+      <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+    </button>
+    <div class="footer-spacer"></div>
+    <button class="footer-btn edit-btn" id="fe-${id}" title="Edit">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
+    <button class="footer-btn delete-btn" id="fd-${id}" title="Delete">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+    </button>
+  `;
+
+  const header = document.createElement('div');
+  header.className = 'card-header';
+  header.innerHTML = `<span class="card-topic" id="ft-${id}"></span>`;
+
+  card.appendChild(header);
+  card.appendChild(slot);
+  card.appendChild(footer);
+  document.getElementById('feed').appendChild(card);
+
+  const postEntry = { id, key: KEY, player: null, card, originalData: null, currentData: null };
+  posts.push(postEntry);
+  updateUI();
+  setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+  /* Step 2/3 — Build the post */
+  showLoader('Building your post…', 'almost ready', 2);
+  CanvasPlayer.loadFonts(schema);
+  /* Fire font load without blocking — player renders with fallback fonts immediately */
+  document.fonts.ready.catch(() => {});
+  slot.innerHTML = '';
+
+  const player = new CanvasPlayer('#slot-' + id, { playback: 'manual' });
+
+  let data;
+  try {
+    /* Pipeline: fetches data (dummy or AI) + maps + loads into player */
+    data = await Pipeline.loadAndRender({
+      key: KEY,
+      source,
+      input: pickedInput,
+      schema: JSON.parse(JSON.stringify(schema)),
+      player,
+      isFirst: true,
+    });
+  } catch(e) {
+    hideLoader();
+    toast('Error: ' + e.message);
+    card.remove();
+    posts.splice(posts.findIndex(p => p.id === id), 1);
+    postCount--;
+    updateUI();
+    return;
+  }
+  hideLoader();
+
+  postEntry.player = player;
+  postEntry.originalData = JSON.parse(JSON.stringify(data));
+  postEntry.currentData  = JSON.parse(JSON.stringify(data));
+  const topicTag = document.getElementById('ft-' + id);
+  if (topicTag) topicTag.textContent = topic;
+
+  cardPlayerMap.set(card, player);
+  feedObserver.observe(card);
+  player.play();
+
+  function syncPlay(playing) {
+    const btn = document.getElementById('fp-' + id);
+    if (!btn) return;
+    btn.classList.toggle('is-playing', playing);
+    btn.innerHTML = playing
+      ? `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
+      : `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>`;
+  }
+  player.onStateChange(s => syncPlay(s.playing));
+  player.onEnded(() => {
+    /* Carousel templates loop — all others stop */
+    if (KEY.startsWith('carousel::')) {
+      player.seek(0);
+      player.play();
+    } else {
+      syncPlay(false);
+    }
+  });
+
+  document.getElementById('fp-' + id).addEventListener('click', () => player.toggle());
+  document.getElementById('fe-' + id).addEventListener('click', () => openEditModal(id));
+  document.getElementById('fd-' + id).addEventListener('click', () => {
+    if (_emPostId === id) closeEditModal();
+    feedObserver.unobserve(card);
+    cardPlayerMap.delete(card);
+    player.destroy();
+    card.remove();
+    const i = posts.findIndex(p => p.id === id);
+    if (i !== -1) posts.splice(i, 1);
+    updateUI();
+    toast('Post removed');
+  });
+}
+
+/* ══ PREFERENCES SHEET ══════════════════════════════════════ */
+
+const INTENT_CONFIG = [
+  { id:'dyk',icon:'📊',name:'Did You Know',desc:'Facts, stats and surprising numbers',
+    modes:[{key:'dyk::stat',label:'Stat'},{key:'dyk::ratio',label:'Ratio'},{key:'dyk::timeframe',label:'Timeframe'}]},
+  { id:'quote',icon:'💬',name:'Quote',desc:'Inspiring words from people',
+    modes:[{key:'quote::portrait',label:'Portrait'},{key:'quote::topic',label:'Topic'},{key:'quote::split',label:'Split'}]},
+  { id:'tip',icon:'💡',name:'Tip',desc:'Actionable advice and guidance',
+    modes:[{key:'tip::checklist',label:'Checklist'},{key:'tip::do_dont',label:'Do / Dont'},{key:'tip::stat_tip',label:'Stat Tip'}]},
+  { id:'funfact',icon:'🤯',name:'Fun Fact',desc:'Mind-blowing facts and comparisons',
+    modes:[{key:'funfact::versus',label:'Versus'},{key:'funfact::number_fact',label:'Number Fact'},{key:'funfact::mind_blown',label:'Mind Blown'}]},
+  { id:'live',icon:'📰',name:'News & Market',desc:'Live headlines and market data',
+    modes:[{key:'news::headline',label:'News'},{key:'market::day_chart',label:'Market'}]},
+  { id:'editorial',icon:'🖼️',name:'Editorial',desc:'Full-image cover posts for LinkedIn',
+    modes:[{key:'editorial::cover',label:'Cover'}]},
+  { id:'carousel',icon:'🎠',name:'Carousel',desc:'Multi-slide swipeable posts',
+    modes:[{key:'carousel::listicle',label:'Listicle'},{key:'carousel::story_arc',label:'Story Arc'},{key:'carousel::step_by_step',label:'Step by Step'},{key:'carousel::comparison',label:'Comparison'}]},
+];
+
+/* Generation modes */
+const GEN_MODES = {
+  FULL_AUTO: 'full_auto',   /* AI picks topic + format */
+  AI_TOPIC:  'ai_topic',    /* User picks topic, AI picks format */
+  MANUAL:    'manual',      /* User picks topic + formats from prefs */
+};
+
+const PREFS_KEY = 'aifeed_content_prefs';
+function loadPrefs(){ try{const r=localStorage.getItem(PREFS_KEY);return r?JSON.parse(r):null;}catch(e){return null;} }
+function savePrefs(p){ try{localStorage.setItem(PREFS_KEY,JSON.stringify(p));}catch(e){} }
+
+function getGenMode(){ return loadPrefs()?.genMode ?? GEN_MODES.AI_TOPIC; }
+
+let _prefDraft = null;
+
+/* ── Topic history for AI topic picker (avoids repeats) ── */
+const _recentTopics = [];
+function recordTopic(topic) {
+  _recentTopics.unshift(topic);
+  if (_recentTopics.length > 5) _recentTopics.pop();
+}
+
+/* ── AI topic picker ── */
+async function pickTopic() {
+  /* Fallback — random from brand topics */
+  if (!window.AIClient?.hasKey()) {
+    return BRAND_TOPICS[Math.floor(Math.random() * BRAND_TOPICS.length)];
+  }
+  try {
+    const brand   = window.BrandContext;
+    const avoid   = _recentTopics.length ? 'Avoid these recently used topics: ' + _recentTopics.join(', ') + '.' : '';
+    const raw = await window.AIClient.call({
+      system: brand.getSystemPrompt(),
+      user: 'Suggest ONE specific social media post topic for ' + brand.brand_name + '. ' +
+            'It must be relevant to ' + brand.brand_niche + '. ' +
+            avoid + ' Reply with ONLY the topic, 2-4 words, nothing else.',
+      maxTokens: 20,
+    });
+    return raw.trim().replace(/^["']|["']$/g, '') || BRAND_TOPICS[Math.floor(Math.random() * BRAND_TOPICS.length)];
+  } catch(e) {
+    console.warn('[pickTopic] failed:', e.message);
+    return BRAND_TOPICS[Math.floor(Math.random() * BRAND_TOPICS.length)];
+  }
+}
+
+/* ── getAllowedKeys — used by pickFormat for Manual mode ── */
+function getAllowedKeys(){
+  const saved = loadPrefs();
+  if (!saved || saved.genMode !== GEN_MODES.MANUAL) return null;
+  const allowed = [];
+  INTENT_CONFIG.forEach(intent => {
+    if (saved.intents?.[intent.id] === false) return;
+    const modes = saved.modes?.[intent.id];
+    allowed.push(...(modes?.length ? modes : intent.modes.map(m => m.key)));
+  });
+  return allowed.length > 0 ? allowed : null;
+}
+
+/* ── Open sheet ── */
+function openPrefsSheet() {
+  const saved = loadPrefs();
+  _prefDraft = saved ? JSON.parse(JSON.stringify(saved)) : { genMode: GEN_MODES.AI_TOPIC, intents:{}, modes:{} };
+  renderPrefs();
+  document.getElementById('prefBackdrop').classList.add('open');
+  document.getElementById('prefSheet').classList.add('open');
+}
+function closePrefsSheet() {
+  document.getElementById('prefBackdrop').classList.remove('open');
+  document.getElementById('prefSheet').classList.remove('open');
+}
+
+/* ── Render sheet ── */
+function renderPrefs() {
+  const mode = _prefDraft.genMode ?? GEN_MODES.AI_TOPIC;
+
+  /* Highlight selected mode card */
+  document.querySelectorAll('.pref-mode-card').forEach(card => {
+    card.classList.toggle('selected', card.dataset.mode === mode);
+  });
+
+  /* Show format prefs only in Manual mode */
+  const isManual = mode === GEN_MODES.MANUAL;
+  document.getElementById('prefDivider').style.display = isManual ? 'flex' : 'none';
+  document.getElementById('prefCustom').style.display  = isManual ? 'flex' : 'none';
+  if (isManual) renderIntents();
+}
+
+/* ── Mode card clicks ── */
+document.querySelectorAll('.pref-mode-card').forEach(card => {
+  card.addEventListener('click', () => {
+    _prefDraft.genMode = card.dataset.mode;
+    renderPrefs();
+  });
+});
+
+/* ── Render intent + mode selector ── */
+function renderIntents() {
+  const container = document.getElementById('prefCustom');
+  container.innerHTML = '';
+  INTENT_CONFIG.forEach(intent => {
+    const intentOn = _prefDraft.intents?.[intent.id] !== false;
+    const block = document.createElement('div'); block.className = 'pref-intent-block';
+    const row   = document.createElement('div'); row.className = 'pref-intent-row' + (intentOn ? ' on' : '');
+    row.innerHTML = '<span class="pref-intent-icon">'+intent.icon+'</span><div class="pref-intent-info"><div class="pref-intent-name">'+intent.name+'</div><div class="pref-intent-desc">'+intent.desc+'</div></div><div class="pref-itoggle"></div>';
+    row.addEventListener('click', () => { _prefDraft.intents[intent.id] = !intentOn; renderIntents(); });
+    block.appendChild(row);
+    if (intentOn) {
+      const mr = document.createElement('div'); mr.className = 'pref-modes';
+      const sm = _prefDraft.modes?.[intent.id] ?? [];
+      intent.modes.forEach(mode => {
+        const isOn = sm.length === 0 || sm.includes(mode.key);
+        const chip = document.createElement('button');
+        chip.className = 'pref-mode-chip' + (isOn ? ' on' : '');
+        chip.textContent = mode.label;
+        chip.addEventListener('click', e => {
+          e.stopPropagation();
+          if (!_prefDraft.modes) _prefDraft.modes = {};
+          const arr = [...(_prefDraft.modes[intent.id] ?? intent.modes.map(m => m.key))];
+          const idx = arr.indexOf(mode.key);
+          _prefDraft.modes[intent.id] = idx === -1 ? [...arr, mode.key] : arr.filter(k => k !== mode.key);
+          if (_prefDraft.modes[intent.id].length === intent.modes.length) _prefDraft.modes[intent.id] = [];
+          chip.classList.toggle('on');
+        });
+        mr.appendChild(chip);
+      });
+      block.appendChild(mr);
+    }
+    container.appendChild(block);
+  });
+}
+
+/* ── Save ── */
+document.getElementById('prefSaveBtn').addEventListener('click', () => {
+  savePrefs(_prefDraft);
+  syncPrefsBtnUI();
+  closePrefsSheet();
+  const labels = { full_auto:'Full Auto saved', ai_topic:'AI + Your Topic saved', manual:'Manual preferences saved' };
+  toast((labels[_prefDraft.genMode] ?? 'Preferences saved') + ' ✓');
+});
+
+/* ── Backdrop + swipe ── */
+document.getElementById('prefBackdrop').addEventListener('click', closePrefsSheet);
+const _prefSheet  = document.getElementById('prefSheet');
+const _prefHandle = _prefSheet.querySelector('.pref-handle');
+_prefHandle.addEventListener('touchstart',e=>{ _prefSheet._ty=e.touches[0].clientY; _prefSheet._drag=true; },{passive:true});
+_prefHandle.addEventListener('touchmove', e=>{ if(!_prefSheet._drag)return; const dy=e.touches[0].clientY-_prefSheet._ty; if(dy>0)_prefSheet.style.transform='translateY('+dy+'px)'; },{passive:true});
+_prefHandle.addEventListener('touchend',  e=>{ if(!_prefSheet._drag)return; const dy=e.changedTouches[0].clientY-_prefSheet._ty; _prefSheet.style.transform=''; _prefSheet._drag=false; _prefSheet._ty=null; if(dy>80)closePrefsSheet(); });
+
+/* ── Wire prefs button ── */
+document.getElementById('prefsBtn').addEventListener('click', openPrefsSheet);
+
+function syncPrefsBtnUI() {
+  const btn  = document.getElementById('prefsBtn');
+  const mode = getGenMode();
+  const active = mode !== GEN_MODES.AI_TOPIC; /* highlight if not default */
+  btn.style.borderColor = active ? 'rgba(107,60,247,.4)' : '';
+  btn.style.color       = active ? 'var(--ac2)' : '';
+  btn.style.background  = active ? 'rgba(107,60,247,.1)' : '';
+}
+syncPrefsBtnUI();
+
+/* ══ TOPIC SHEET ═════════════════════════════════════════════ */
+
+/* Brand quick-pick chips */
+const BRAND_TOPICS = [
+  'Stress Relief', 'Inner Peace', 'Mindfulness', 'Meditation',
+  'Anxiety', 'Sleep & Rest', 'Morning Routine', 'Breathwork',
+  'Spiritual Growth', 'Mental Clarity', 'Self-Care', 'Gratitude',
+  'Emotional Balance', 'Healing', 'Daily Wellness', 'Focus',
+];
+
+/* Cache — lives for the page session, cleared on refresh */
+const _topicCache = {
+  aiTopics: null,   /* null = not fetched, [] or [...] = fetched */
+  lastTopic: '',    /* last selected/typed topic */
+  fetching: false,  /* true while in-flight */
+};
+
+let _selectedTopic = '';
+
+/* ── Prefetch AI topics silently in background ── */
+async function prefetchAiTopics() {
+  if (!window.AIClient?.hasKey()) return;
+  if (_topicCache.aiTopics !== null) return; /* already have them */
+  if (_topicCache.fetching) return;           /* already in-flight */
+  _topicCache.fetching = true;
+  try {
+    const brand  = window.BrandContext;
+    const result = await window.AIClient.callJSON({
+      system: brand.getSystemPrompt(),
+      user: `Suggest 8 specific, engaging social media post topics for ${brand.brand_name}.
+Each topic should be concise (2-4 words), specific, and relevant to ${brand.brand_niche}.
+Return ONLY a JSON array of 8 strings. Example: ["Morning Meditation", "Stress at Work"]`,
+      maxTokens: 200,
+    });
+    _topicCache.aiTopics = Array.isArray(result) ? result : [];
+  } catch(e) {
+    console.warn('[TopicSheet] Prefetch failed:', e.message);
+    _topicCache.aiTopics = []; /* mark as attempted so we don't retry endlessly */
+  } finally {
+    _topicCache.fetching = false;
+  }
+}
+
+/* ── Open sheet ── */
+function openTopicSheet() {
+  _selectedTopic = _topicCache.lastTopic;
+
+  const input = document.getElementById('tsInput');
+  input.value = _selectedTopic;
+  document.getElementById('tsClear').classList.toggle('show', !!_selectedTopic);
+
+  renderChips();
+  syncTopicBtn();
+
+  document.getElementById('tsBackdrop').classList.add('open');
+  document.getElementById('tsSheet').classList.add('open');
+  if (!_selectedTopic) setTimeout(() => input.focus(), 350);
+}
+
+function closeTopicSheet() {
+  document.getElementById('tsBackdrop').classList.remove('open');
+  document.getElementById('tsSheet').classList.remove('open');
+}
+
+/* ── Render chips — AI topics if ready, shimmer if loading, fallback if no key ── */
+function renderChips() {
+  const container  = document.getElementById('tsChips');
+  const refreshBtn = document.getElementById('tsRefreshBtn');
+  container.innerHTML = '';
+
+  /* No key — use brand fallback topics */
+  if (!window.AIClient?.hasKey()) {
+    refreshBtn.style.display = 'none';
+    BRAND_TOPICS.forEach(topic => {
+      const chip = makeChip(topic, container);
+      if (topic === _selectedTopic) chip.classList.add('selected');
+      container.appendChild(chip);
+    });
+    return;
+  }
+
+  /* Still fetching — show shimmer */
+  if (_topicCache.fetching || _topicCache.aiTopics === null) {
+    refreshBtn.style.display = 'none';
+    [120, 150, 100, 130, 110, 140, 90, 125].forEach(w => {
+      const s = document.createElement('div');
+      s.className = 'ts-chip-shimmer';
+      s.style.width = w + 'px';
+      container.appendChild(s);
+    });
+    const poll = setInterval(() => {
+      if (!_topicCache.fetching && _topicCache.aiTopics !== null) {
+        clearInterval(poll);
+        renderChips();
+      }
+    }, 200);
+    return;
+  }
+
+  /* AI topics ready */
+  refreshBtn.style.display = 'flex';
+  const topics = _topicCache.aiTopics.length > 0 ? _topicCache.aiTopics : BRAND_TOPICS;
+  topics.forEach(topic => {
+    const chip = makeChip(topic, container);
+    if (topic === _selectedTopic) chip.classList.add('selected');
+    container.appendChild(chip);
+  });
+}
+
+/* ── Make a chip element ── */
+function makeChip(topic, container) {
+  const chip = document.createElement('button');
+  chip.className = 'ts-chip';
+  chip.textContent = topic;
+  chip.addEventListener('click', () => {
+    /* Deselect all chips everywhere */
+    document.querySelectorAll('.ts-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    _selectedTopic = topic;
+    _topicCache.lastTopic = topic;
+    document.getElementById('tsInput').value = topic;
+    document.getElementById('tsClear').classList.add('show');
+    syncTopicBtn();
+  });
+  return chip;
+}
+
+/* ── Refresh button — bust cache and re-fetch ── */
+document.getElementById('tsRefreshBtn').addEventListener('click', async () => {
+  _topicCache.aiTopics = null;
+  _topicCache.fetching = false;
+  renderChips();           /* shows shimmer immediately */
+  await prefetchAiTopics();
+  renderChips();           /* re-render with new chips */
+});
+
+/* ── Text input ── */
+document.getElementById('tsInput').addEventListener('input', e => {
+  _selectedTopic = e.target.value;
+  _topicCache.lastTopic = _selectedTopic;
+  document.querySelectorAll('.ts-chip').forEach(c => c.classList.remove('selected'));
+  document.getElementById('tsClear').classList.toggle('show', !!e.target.value);
+  syncTopicBtn();
+});
+
+document.getElementById('tsClear').addEventListener('click', () => {
+  _selectedTopic = '';
+  _topicCache.lastTopic = '';
+  document.getElementById('tsInput').value = '';
+  document.getElementById('tsClear').classList.remove('show');
+  document.querySelectorAll('.ts-chip').forEach(c => c.classList.remove('selected'));
+  syncTopicBtn();
+  document.getElementById('tsInput').focus();
+});
+
+/* ── Sync generate button ── */
+function syncTopicBtn() {
+  const btn   = document.getElementById('tsGenerateBtn');
+  const label = document.getElementById('tsGenerateLabel');
+  const has   = _selectedTopic.trim().length > 0;
+  btn.classList.toggle('active', has);
+  label.textContent = 'Generate Post';
+}
+
+/* ── Generate ── */
+document.getElementById('tsGenerateBtn').addEventListener('click', () => {
+  if (!_selectedTopic.trim()) return;
+  showLoader('Generating content…', 'setting things up', 1);
+  closeTopicSheet();
+  const _t = _selectedTopic.trim();
+  recordTopic(_t);
+  setTimeout(() => addPost(_t), 50); /* yield to browser so loader paints first */
+});
+
+/* ── Backdrop dismiss ── */
+document.getElementById('tsBackdrop').addEventListener('click', closeTopicSheet);
+
+/* ── Swipe down to dismiss (handle only) ── */
+const _tsSheet  = document.getElementById('tsSheet');
+const _tsHandle = document.getElementById('tsSheet').querySelector('.ts-handle');
+_tsHandle.addEventListener('touchstart', e => {
+  _tsSheet._touchY   = e.touches[0].clientY;
+  _tsSheet._dragging = true;
+}, { passive: true });
+_tsHandle.addEventListener('touchmove', e => {
+  if (!_tsSheet._dragging) return;
+  const dy = e.touches[0].clientY - _tsSheet._touchY;
+  if (dy > 0) _tsSheet.style.transform = `translateY(${dy}px)`;
+}, { passive: true });
+_tsHandle.addEventListener('touchend', e => {
+  if (!_tsSheet._dragging) return;
+  const dy = e.changedTouches[0].clientY - _tsSheet._touchY;
+  _tsSheet.style.transform = '';
+  _tsSheet._dragging = false;
+  _tsSheet._touchY   = null;
+  if (dy > 80) closeTopicSheet();
+});
+
+/* ══ SETTINGS MODAL ══════════════════════════════════════════ */
+
+function syncSettingsUI() {
+  const hasKey = window.AIClient?.hasKey() ?? false;
+  const btn = document.getElementById('settingsBtn');
+  btn.classList.toggle('active', hasKey);
+  btn.title = hasKey ? 'AI Connected ✓' : 'Connect AI — add API key';
+}
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  document.getElementById('setKeyInput').value = window.AIClient?.hasKey() ? '••••••••••••••••••••••••' : '';
+  document.getElementById('setStatus').textContent = '';
+  document.getElementById('setStatus').className = 'set-status';
+  document.getElementById('setBackdrop').classList.add('open');
+  setTimeout(() => document.getElementById('setKeyInput').focus(), 200);
+});
+
+document.getElementById('setCancel').addEventListener('click', () =>
+  document.getElementById('setBackdrop').classList.remove('open'));
+
+document.getElementById('setBackdrop').addEventListener('click', e => {
+  if (e.target === document.getElementById('setBackdrop'))
+    document.getElementById('setBackdrop').classList.remove('open');
+});
+
+document.getElementById('setSave').addEventListener('click', async () => {
+  const input    = document.getElementById('setKeyInput').value.trim();
+  const statusEl = document.getElementById('setStatus');
+
+  if (!input || input.includes('•')) {
+    document.getElementById('setBackdrop').classList.remove('open');
+    return;
+  }
+
+  statusEl.textContent = 'Verifying key...';
+  statusEl.className = 'set-status';
+
+  try {
+    await window.AIClient.verifyKey(input);
+    window.AIClient.setKey(input);
+    statusEl.textContent = 'API key saved ✓';
+    statusEl.className = 'set-status ok';
+    syncSettingsUI();
+    prefetchAiTopics(); /* start fetching topics now that key is available */
+    setTimeout(() => document.getElementById('setBackdrop').classList.remove('open'), 1000);
+  } catch(e) {
+    statusEl.textContent = e.message;
+    statusEl.className = 'set-status err';
+  }
+});
+
+syncSettingsUI(); /* reflect saved key state on page load */
+
+/* ══ CAROUSEL EDIT MODAL ════════════════════════════════════ */
+
+let _cemPostId   = null;
+let _cemDraft    = null;
+let _cemSlideIdx = 0;
+
+function openCarouselEditModal(postId) {
+  const post = posts.find(p => p.id === postId);
+  if (!post) return;
+  _cemPostId   = postId;
+  _cemSlideIdx = 0;
+  const raw = post.currentData;
+  _cemDraft = JSON.parse(JSON.stringify(Array.isArray(raw) ? raw : [raw]));
+  document.getElementById('cemSubtitle').textContent = keyLabel(post.key);
+  renderCemTabs();
+  renderCemBody();
+  document.getElementById('cemBackdrop').classList.add('open');
+}
+
+function closeCarouselEditModal() {
+  document.getElementById('cemBackdrop').classList.remove('open');
+  _cemPostId = null;
+}
+
+function renderCemTabs() {
+  const tabs = document.getElementById('cemTabs');
+  tabs.innerHTML = '';
+  _cemDraft.forEach((slide, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'cem-tab' + (idx === _cemSlideIdx ? ' active' : '');
+    btn.textContent = slide.label ? (idx + 1) + ' · ' + slide.label : 'Slide ' + (idx + 1);
+    btn.addEventListener('click', () => { _cemSlideIdx = idx; renderCemTabs(); renderCemBody(); });
+    tabs.appendChild(btn);
+  });
+}
+
+function renderCemBody() {
+  const body  = document.getElementById('cemBody');
+  const slide = _cemDraft[_cemSlideIdx];
+  body.innerHTML = '';
+
+  body.appendChild(cemField('heading',  slide.heading  ?? '', 60,  'Slide headline',                    false, v => { _cemDraft[_cemSlideIdx].heading = v; }));
+  body.appendChild(cemField('body',     slide.body     ?? '', 120, 'Supporting text',                    true,  v => { _cemDraft[_cemSlideIdx].body    = v; }));
+  body.appendChild(cemField('label',    slide.label    ?? '', 20,  'e.g. Cover, Step 01, CTA',           false, v => { _cemDraft[_cemSlideIdx].label = v; renderCemTabs(); }));
+
+  const div = document.createElement('div'); div.className = 'cem-divider'; body.appendChild(div);
+
+  const sharedLabel = document.createElement('div'); sharedLabel.className = 'cem-section-label';
+  sharedLabel.textContent = 'Shared — all slides'; body.appendChild(sharedLabel);
+
+  body.appendChild(cemField('category', slide.category ?? '', 30,  'Topic tag',                          false, v => { _cemDraft.forEach(s => s.category = v); }));
+
+  const imgLabel = document.createElement('div'); imgLabel.className = 'cem-label';
+  imgLabel.style.marginTop = '4px'; imgLabel.textContent = 'Background Image'; body.appendChild(imgLabel);
+  const grid = document.createElement('div'); grid.className = 'em-img-grid';
+  const currentImg = slide.image ?? '';
+  IMG_EDITORIAL.forEach(url => {
+    const opt = document.createElement('div');
+    opt.className = 'em-img-opt' + (url === currentImg ? ' selected' : '');
+    const img = document.createElement('img'); img.src = url; img.alt = ''; img.loading = 'lazy';
+    opt.appendChild(img);
+    opt.addEventListener('click', () => {
+      grid.querySelectorAll('.em-img-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      _cemDraft.forEach(s => s.image = url);
+    });
+    grid.appendChild(opt);
+  });
+  body.appendChild(grid);
+}
+
+function cemField(field, value, maxLen, hint, isTextarea, onChange) {
+  const wrap = document.createElement('div'); wrap.className = 'cem-field';
+  const lbl  = document.createElement('div'); lbl.className = 'cem-label';
+  lbl.textContent = field.charAt(0).toUpperCase() + field.slice(1);
+  const inp = document.createElement(isTextarea ? 'textarea' : 'input');
+  inp.className = 'cem-input'; inp.value = value; inp.placeholder = hint;
+  if (isTextarea) { inp.rows = 3; inp.style.lineHeight = '1.5'; } else inp.type = 'text';
+  const meta = document.createElement('div'); meta.className = 'cem-meta';
+  const hintEl = document.createElement('div'); hintEl.className = 'cem-hint'; hintEl.textContent = hint;
+  const cnt = document.createElement('div'); cnt.className = 'cem-count';
+  const upd = () => { cnt.textContent = inp.value.length + ' / ' + maxLen; cnt.classList.toggle('over', inp.value.length > maxLen); onChange(inp.value); };
+  upd(); inp.addEventListener('input', upd);
+  meta.appendChild(hintEl); meta.appendChild(cnt);
+  wrap.appendChild(lbl); wrap.appendChild(inp); wrap.appendChild(meta);
+  return wrap;
+}
+
+async function applyCarouselChanges() {
+  const post = posts.find(p => p.id === _cemPostId);
+  if (!post) return;
+  post.currentData = JSON.parse(JSON.stringify(_cemDraft));
+  const newImg = _cemDraft[0]?.image;
+  if (newImg?.startsWith('http')) { try { await CanvasPlayer.imageCache.loadAll([newImg]); } catch(e) {} }
+  post.player.stop();
+  post.player.updateData(_cemDraft);
+  setTimeout(() => post.player.play(), 80);
+  closeCarouselEditModal();
+  toast('Changes applied ✓');
+}
+
+function resetCarouselEdit() {
+  const post = posts.find(p => p.id === _cemPostId);
+  if (!post?.originalData) return;
+  const raw = post.originalData;
+  _cemDraft = JSON.parse(JSON.stringify(Array.isArray(raw) ? raw : [raw]));
+  _cemSlideIdx = 0;
+  renderCemTabs(); renderCemBody();
+}
+
+document.getElementById('cemClose').addEventListener('click', closeCarouselEditModal);
+document.getElementById('cemBackdrop').addEventListener('click', e => { if (e.target === document.getElementById('cemBackdrop')) closeCarouselEditModal(); });
+document.getElementById('cemResetBtn').addEventListener('click', resetCarouselEdit);
+document.getElementById('cemApplyBtn').addEventListener('click', applyCarouselChanges);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && _cemPostId) closeCarouselEditModal(); });
+
+/* ══ EDIT MODAL ══════════════════════════════════════════════ */
+
+const IMG_PORTRAITS = [
+  'https://picsum.photos/id/1/400/400','https://picsum.photos/id/64/400/400',
+  'https://picsum.photos/id/91/400/400','https://picsum.photos/id/177/400/400',
+  'https://picsum.photos/id/433/400/400','https://picsum.photos/id/453/400/400',
+  'https://picsum.photos/id/583/400/400','https://picsum.photos/id/669/400/400',
+];
+const IMG_EDITORIAL = [
+  'https://picsum.photos/id/10/1080/1350','https://picsum.photos/id/11/1080/1350',
+  'https://picsum.photos/id/13/1080/1350','https://picsum.photos/id/15/1080/1350',
+  'https://picsum.photos/id/28/1080/1350','https://picsum.photos/id/42/1080/1350',
+  'https://picsum.photos/id/76/1080/1350','https://picsum.photos/id/96/1080/1350',
+];
+const SKIP_FIELDS = new Set(['direction','chart_items','article_url','open']);
+const IMG_FIELDS  = { author_image: 'portrait', image_url: 'editorial', image: 'editorial' };
+
+
+function keyLabel(key) {
+  const LABELS = {
+    'dyk::stat':           'Did You Know · Stat',
+    'dyk::ratio':          'Did You Know · Ratio',
+    'dyk::timeframe':      'Did You Know · Timeframe',
+    'quote::portrait':     'Quote · Portrait',
+    'quote::topic':        'Quote · Topic',
+    'quote::split':        'Quote · Split',
+    'tip::checklist':      'Tip · Checklist',
+    'tip::do_dont':        "Tip · Do / Don't",
+    'tip::stat_tip':       'Tip · Stat Tip',
+    'funfact::versus':     'Fun Fact · Versus',
+    'funfact::number_fact':'Fun Fact · Number',
+    'funfact::mind_blown': 'Fun Fact · Mind Blown',
+    'market::day_chart':   'Market · Day Chart',
+    'news::headline':       'News · Headline',
+    'editorial::cover':     'Editorial · Cover',
+    'carousel::listicle':    'Carousel · Listicle',
+    'carousel::story_arc':   'Carousel · Story Arc',
+    'carousel::step_by_step':'Carousel · Step by Step',
+    'carousel::comparison':  'Carousel · Comparison',
+  };
+  return LABELS[key] ?? key;
+}
+
+function humanise(key) {
+  return key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+let _emPostId   = null;
+let _emFormData = {};
+
+function openEditModal(postId) {
+  const post = posts.find(p => p.id === postId);
+  if (!post || !post.currentData) return;
+  /* Route carousel to its own modal */
+  if (post.key.startsWith('carousel::')) {
+    openCarouselEditModal(postId);
+    return;
+  }
+  _emPostId   = postId;
+  _emFormData = JSON.parse(JSON.stringify(post.currentData));
+  document.getElementById('emSubtitle').textContent = keyLabel(post.key);
+  renderEditFields(post.key, _emFormData);
+  document.getElementById('emBackdrop').classList.add('open');
+}
+
+function closeEditModal() {
+  document.getElementById('emBackdrop').classList.remove('open');
+  _emPostId = null;
+}
+
+function renderEditFields(key, data) {
+  const body   = document.getElementById('emBody');
+  const schema = window.FieldSchemas?.FIELD_SCHEMAS?.[key] ?? {};
+  body.innerHTML = '';
+  for (const [field, rules] of Object.entries(schema)) {
+    if (SKIP_FIELDS.has(field)) continue;
+    if (rules.type === 'array') continue;
+    const val = data[field] ?? '';
+    if (IMG_FIELDS[field]) {
+      body.appendChild(buildImagePicker(field, val, IMG_FIELDS[field] === 'portrait' ? IMG_PORTRAITS : IMG_EDITORIAL));
+      continue;
+    }
+    body.appendChild(buildTextField(field, rules, val));
+  }
+}
+
+function buildTextField(field, rules, value) {
+  const wrap = document.createElement('div');
+  wrap.className = 'em-field';
+
+  const label = document.createElement('label');
+  label.className = 'em-label';
+  label.textContent = humanise(field);
+  label.setAttribute('for', 'em_' + field);
+
+  const isTextarea = (rules.max ?? 0) > 60;
+  const input = document.createElement(isTextarea ? 'textarea' : 'input');
+  input.className = 'em-input';
+  input.id = 'em_' + field;
+  input.value = value;
+  input.placeholder = rules.example ?? '';
+  if (isTextarea) { input.rows = 3; input.style.lineHeight = '1.5'; }
+  else input.type = 'text';
+
+  const meta  = document.createElement('div'); meta.className = 'em-meta';
+  const hint  = document.createElement('div'); hint.className = 'em-hint'; hint.textContent = rules.hint ?? '';
+  const count = document.createElement('div'); count.className = 'em-count';
+  const errMsg = document.createElement('div'); errMsg.className = 'em-error-msg'; errMsg.style.display = 'none';
+
+  const updateCount = () => {
+    const len = input.value.length, max = rules.max;
+    count.textContent = max ? `${len} / ${max}` : `${len}`;
+    count.classList.toggle('over', max ? len > max : false);
+  };
+  updateCount();
+
+  input.addEventListener('input', () => {
+    _emFormData[field] = input.value;
+    updateCount();
+    if (rules.required && !input.value.trim()) {
+      input.classList.add('error');
+      errMsg.textContent = humanise(field) + ' is required';
+      errMsg.style.display = 'block';
+    } else {
+      input.classList.remove('error');
+      errMsg.style.display = 'none';
+    }
+  });
+
+  meta.appendChild(hint);
+  if (rules.max) meta.appendChild(count);
+  wrap.appendChild(label);
+  wrap.appendChild(input);
+  wrap.appendChild(meta);
+  if (rules.required) wrap.appendChild(errMsg);
+  return wrap;
+}
+
+function buildImagePicker(field, currentUrl, pool) {
+  const wrap  = document.createElement('div'); wrap.className = 'em-field';
+  const label = document.createElement('label'); label.className = 'em-label'; label.textContent = humanise(field);
+  const grid  = document.createElement('div'); grid.className = 'em-img-grid';
+  const hint  = document.createElement('div'); hint.className = 'em-hint'; hint.textContent = 'Tap an image to select it';
+
+  pool.forEach(url => {
+    const opt = document.createElement('div');
+    opt.className = 'em-img-opt' + (url === currentUrl ? ' selected' : '');
+    const img = document.createElement('img'); img.src = url; img.alt = ''; img.loading = 'lazy';
+    opt.appendChild(img);
+    opt.addEventListener('click', () => {
+      grid.querySelectorAll('.em-img-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      _emFormData[field] = url;
+    });
+    grid.appendChild(opt);
+  });
+
+  wrap.appendChild(label); wrap.appendChild(grid); wrap.appendChild(hint);
+  return wrap;
+}
+
+function validateEditForm(key) {
+  const schema = window.FieldSchemas?.FIELD_SCHEMAS?.[key] ?? {};
+  let valid = true;
+  for (const [field, rules] of Object.entries(schema)) {
+    if (SKIP_FIELDS.has(field) || rules.type === 'array' || IMG_FIELDS[field]) continue;
+    if (rules.required && !String(_emFormData[field] ?? '').trim()) {
+      valid = false;
+      const el = document.getElementById('em_' + field);
+      if (el) {
+        el.classList.add('error');
+        const errEl = el.parentElement.querySelector('.em-error-msg');
+        if (errEl) { errEl.textContent = humanise(field) + ' is required'; errEl.style.display = 'block'; }
+      }
+    }
+  }
+  return valid;
+}
+
+async function applyEditChanges() {
+  const post = posts.find(p => p.id === _emPostId);
+  if (!post) return;
+  if (!validateEditForm(post.key)) { toast('Please fill in all required fields'); return; }
+
+  post.currentData = JSON.parse(JSON.stringify(_emFormData));
+
+  const imgFields = ['image_url', 'author_image', 'image'];
+  const newImgs = imgFields.map(f => post.currentData[f]).filter(u => u && u.startsWith('http'));
+  if (newImgs.length > 0) {
+    try { await CanvasPlayer.imageCache.loadAll(newImgs); } catch(e) {}
+  }
+
+  post.player.updateData(post.currentData);
+  post.player.stop();
+  setTimeout(() => post.player.play(), 80);
+  closeEditModal();
+  toast('Changes applied ✓');
+}
+
+function resetEditForm() {
+  const post = posts.find(p => p.id === _emPostId);
+  if (!post || !post.originalData) return;
+  _emFormData = JSON.parse(JSON.stringify(post.originalData));
+  renderEditFields(post.key, _emFormData);
+}
+
+/* ── Wire modal ── */
+document.getElementById('emClose').addEventListener('click', closeEditModal);
+document.getElementById('emBackdrop').addEventListener('click', e => {
+  if (e.target === document.getElementById('emBackdrop')) closeEditModal();
+});
+document.getElementById('emResetBtn').addEventListener('click', resetEditForm);
+document.getElementById('emApplyBtn').addEventListener('click', applyEditChanges);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && _emPostId) closeEditModal(); });
+
+/* ── Wire feed buttons — respects generation mode ── */
+async function handleGenerate() {
+  const mode = getGenMode();
+  if (mode === GEN_MODES.FULL_AUTO) {
+    /* Skip topic sheet — system picks topic */
+    const topic = await pickTopic();
+    recordTopic(topic);
+    addPost(topic);
+  } else {
+    /* AI_TOPIC or MANUAL — open topic sheet */
+    openTopicSheet();
+  }
+}
+document.getElementById('emptyBtn').addEventListener('click', handleGenerate);
+document.getElementById('generateBtn').addEventListener('click', handleGenerate);
+
+updateUI();
+ensureIndex();        /* prefetch template index from GitHub on page load */
+prefetchAiTopics();   /* prefetch AI topic suggestions in background */
+/* Prefetch most common templates silently in background */
+setTimeout(() => {
+  ['dyk::stat', 'tip::checklist', 'quote::topic', 'funfact::mind_blown',
+   'carousel::listicle', 'carousel::story_arc', 'carousel::step_by_step', 'carousel::comparison',
+   'editorial::cover'].forEach(k => fetchTemplate(k));
+}, 1500);
+</script>
+</body>
+</html>

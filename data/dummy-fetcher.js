@@ -349,30 +349,44 @@ const DUMMY_POOLS = {
       title:       'The Future of Open Banking',
       description: 'APIs are reshaping financial services — unlocking new revenue streams and seamless connectivity for enterprises worldwide.',
       category:    'Open Banking',
-      image_url:   'https://picsum.photos/id/10/1080/1350',
+      image:       'https://picsum.photos/id/10/1080/1350',
       source:      'Cateina Insights',
     },
     {
       title:       'AI is Rewriting the Rules of Finance',
       description: 'From fraud detection to personalised banking — artificial intelligence is no longer optional for financial institutions.',
       category:    'Artificial Intelligence',
-      image_url:   'https://picsum.photos/id/11/1080/1350',
+      image:       'https://picsum.photos/id/11/1080/1350',
       source:      'Cateina Insights',
     },
     {
       title:       'Blockchain Beyond the Hype',
       description: 'Real-world enterprise applications of blockchain are delivering measurable ROI across payments, identity, and supply chains.',
       category:    'Blockchain',
-      image_url:   'https://picsum.photos/id/13/1080/1350',
+      image:       'https://picsum.photos/id/13/1080/1350',
       source:      'Cateina Insights',
     },
     {
       title:       'Why Legacy Systems Are the Biggest Risk in 2026',
       description: 'Outdated infrastructure is costing enterprises billions — digital transformation is no longer a choice but a survival strategy.',
       category:    'Digital Transformation',
-      image_url:   'https://picsum.photos/id/28/1080/1350',
+      image:       'https://picsum.photos/id/28/1080/1350',
       source:      'Cateina Insights',
     },
+  ],
+
+  /* ── Carousel ─────────────────────────────────────────────── */
+  'carousel::listicle': [
+    { heading:'5 habits that changed my mornings', body:'Swipe to see each one.', label:'Cover', category:'Wellness', image:'https://picsum.photos/id/10/1080/1350' },
+  ],
+  'carousel::story_arc': [
+    { heading:'I used to dread Monday mornings', body:'Tired, anxious, and never prepared.', label:'Hook', category:'Mindfulness', image:'https://picsum.photos/id/11/1080/1350' },
+  ],
+  'carousel::step_by_step': [
+    { heading:'A simple morning ritual', body:'Repeatable calm, every single day.', label:'Intro', category:'Wellness', image:'https://picsum.photos/id/13/1080/1350' },
+  ],
+  'carousel::comparison': [
+    { heading:'Meditation vs medication', body:'Both help — but they work differently.', label:'Setup', category:'Mental Health', image:'https://picsum.photos/id/28/1080/1350' },
   ],
 
 };

@@ -44,13 +44,15 @@ const Pipeline = (() => {
     manual: async (_key, input) => input ?? {},
 
     /* ── ai ────────────────────────────────────────────────────
-       Stub — replace with AIFetcher.fetchRaw(key, input) later.
-       Intentionally falls back to dummy so the UI never breaks.
+       Brand-aware content via Claude API.
+       Requires: ai-client.js, brand-context.js, content-generator.js
+       input: { topic: 'string' }
     ──────────────────────────────────────────────────────────── */
-    ai: async (key, _input) => {
-      console.warn('[Pipeline] AI source not yet implemented — using dummy for:', key);
-      if (!window.DummyFetcher) return null;
-      return window.DummyFetcher.fetchRaw(key);
+    ai: async (key, input) => {
+      if (!window.ContentGenerator) throw new Error('ContentGenerator not loaded');
+      if (!window.AIClient?.hasKey()) throw new Error('No API key — open Settings to add your Anthropic key');
+      const topic = input?.topic ?? 'general wellness';
+      return await window.ContentGenerator.generate({ key, topic });
     },
 
     /* ── market ────────────────────────────────────────────────
@@ -106,10 +108,13 @@ const Pipeline = (() => {
 
     /* 3 — Map raw -> template data shape */
     if (!window.Mappers) throw new Error('Mappers not loaded — add mappers.js to page');
-    const data = window.Mappers.map(key, source, raw ?? {});
+    /* Carousel AI returns array directly — skip mapper which only handles single objects */
+    const data = (key && key.startsWith('carousel::') && Array.isArray(raw))
+      ? raw
+      : window.Mappers.map(key, source, raw ?? {});
 
-    /* 4 — Validate against field schema (non-blocking warnings only) */
-    if (window.FieldSchemas) {
+    /* 4 — Validate against field schema (non-blocking, skip for carousel arrays) */
+    if (window.FieldSchemas && !Array.isArray(data)) {
       const result = window.FieldSchemas.validateData(key, data);
       if (!result.valid) {
         console.warn('[Pipeline] Validation warnings for "' + key + '":', result.errors);
@@ -123,6 +128,16 @@ const Pipeline = (() => {
      loadAndRender  —  convenience: getData + player in one call
   ══════════════════════════════════════════════════════════════*/
   async function loadAndRender({ key, source = 'dummy', input = {}, schema, player, isFirst = false }) {
+    const isCarousel = key && key.startsWith('carousel::');
+
+    /* Carousel + dummy — skip data fetch entirely, use template data array */
+    if (isCarousel && source === 'dummy') {
+      if (isFirst) {
+        await player.load(schema); /* schema.data is already the full slides array */
+      }
+      return Array.isArray(schema.data) ? schema.data : [schema.data];
+    }
+
     const data = await getData({ key, source, input });
 
     /* For market templates — patch accent colour based on direction */
@@ -133,7 +148,12 @@ const Pipeline = (() => {
 
     if (isFirst) {
       const patched = JSON.parse(JSON.stringify(finalSchema));
-      patched.data = data;
+      /* Carousel + AI — data is already an array from content generator */
+      if (isCarousel) {
+        patched.data = Array.isArray(data) ? data : [data];
+      } else {
+        patched.data = data;
+      }
       await player.load(patched);
     } else {
       player.updateData(data);

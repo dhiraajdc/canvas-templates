@@ -184,7 +184,7 @@ const MAP_FNS = {
         category:    raw?.category    ?? 'News',
         source_name: raw?.source_name ?? 'Reuters',
         published:   raw?.published   ?? new Date().toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'}),
-        image:       raw?.image       ?? raw?.image_url ?? 'https://picsum.photos/id/10/1080/1350',
+        image_url:   raw?.image_url   ?? 'https://picsum.photos/id/10/1080/1350',
         article_url: raw?.article_url ?? '',
       };
     }
@@ -195,7 +195,7 @@ const MAP_FNS = {
       category:    raw?.category    ?? 'Energy',
       source_name: raw?.source_name ?? 'The Hindu',
       published:   raw?.published   ?? 'May 30, 2026',
-      image:       raw?.image       ?? raw?.image_url ?? 'https://picsum.photos/id/10/1080/1350',
+      image_url:   raw?.image_url   ?? 'https://picsum.photos/id/10/1080/1350',
       article_url: raw?.article_url ?? '',
     };
   },
@@ -208,18 +208,10 @@ const MAP_FNS = {
       title:       raw?.title       ?? 'The Future of Open Banking',
       description: raw?.description ?? 'How APIs are reshaping financial services globally.',
       category:    raw?.category    ?? 'Technology',
-      image:       raw?.image       ?? raw?.image_url ?? 'https://picsum.photos/id/10/1080/1350',
+      image_url:   raw?.image_url   ?? 'https://picsum.photos/id/10/1080/1350',
       source:      raw?.source      ?? 'Insights',
     };
   },
-
-
-  /* ── Carousel ─────────────────────────────────────────────── */
-
-  'carousel::listicle'(raw, source)    { if(source==='manual')return raw; return { heading:raw?.heading??'5 Morning Habits', body:raw?.body??'Swipe to see each one.', label:raw?.label??'Cover', category:raw?.category??'Wellness', image:raw?.image??'https://picsum.photos/id/10/1080/1350' }; },
-  'carousel::story_arc'(raw, source)   { if(source==='manual')return raw; return { heading:raw?.heading??'My Story', body:raw?.body??'It started with one small change.', label:raw?.label??'Hook', category:raw?.category??'Mindfulness', image:raw?.image??'https://picsum.photos/id/11/1080/1350' }; },
-  'carousel::step_by_step'(raw, source){ if(source==='manual')return raw; return { heading:raw?.heading??'Morning Ritual', body:raw?.body??'A repeatable ritual beats motivation.', label:raw?.label??'Intro', category:raw?.category??'Wellness', image:raw?.image??'https://picsum.photos/id/13/1080/1350' }; },
-  'carousel::comparison'(raw, source)  { if(source==='manual')return raw; return { heading:raw?.heading??'Two Approaches', body:raw?.body??'Both work — differently.', label:raw?.label??'Setup', category:raw?.category??'Mental Health', image:raw?.image??'https://picsum.photos/id/28/1080/1350' }; },
 
 
 };

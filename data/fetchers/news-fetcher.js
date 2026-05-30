@@ -11,7 +11,7 @@
  *   Google News — fallback, images inside description HTML
  */
 
-const CORS_PROXY = 'https://corsproxy.io/?';
+const NEWS_CORS_PROXY = 'https://corsproxy.io/?';
 
 /* ── Feed registry ─────────────────────────────────────────────
    Add any RSS feed URL here. The fetcher handles all of them
@@ -108,7 +108,7 @@ function cleanText(str) {
 /* ── Main fetch function ─────────────────────────────────────── */
 async function fetchRaw(feedKey = DEFAULT_FEED, options = {}) {
   const feedUrl = RSS_FEEDS[feedKey] ?? feedKey; /* allow raw URL too */
-  const proxyUrl = CORS_PROXY + encodeURIComponent(feedUrl);
+  const proxyUrl = NEWS_CORS_PROXY + encodeURIComponent(feedUrl);
 
   let xmlText;
   try {

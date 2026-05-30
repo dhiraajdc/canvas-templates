@@ -8,6 +8,7 @@
   { "key": "quote::topic",           "intent": "quote",   "mode": "topic",        "status": "ready", "file": "quote/tpl-quote-topic.json" },
   { "key": "quote::split",           "intent": "quote",   "mode": "split",        "status": "ready", "file": "quote/tpl-quote-split.json" },
   { "key": "quote::classic",         "intent": "quote",   "mode": "classic",      "status": "soon",  "file": null },
+  
 
   { "key": "tip::checklist",         "intent": "tip",     "mode": "checklist",    "status": "ready", "file": "tip/tpl-tip-checklist.json" },
   { "key": "tip::do_dont",           "intent": "tip",     "mode": "do_dont",      "status": "ready", "file": "tip/tpl-tip-do-dont.json" },

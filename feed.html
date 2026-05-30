@@ -15,7 +15,7 @@
   --card-max:420px;--radius:16px;--radius-sm:10px;
 }
 html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--tx);overscroll-behavior:none}
-.app-header{position:sticky;top:0;z-index:30;width:100%;background:rgba(8,8,11,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--b);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.app-header{position:sticky;top:0;z-index:30;width:100%;background:rgba(8,8,11,0.96);border-bottom:1px solid var(--b);padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:8px}
 .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--ac);box-shadow:0 0 12px var(--ac-glow)}
 .logo-text{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase}
@@ -41,7 +41,7 @@ html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif
 .footer-btn.like-btn.liked svg{fill:var(--pink)}
 .footer-btn.delete-btn:hover{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--red)}
 .footer-spacer{flex:1}
-.generate-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:30;padding:12px 16px;background:rgba(8,8,11,0.9);backdrop-filter:blur(16px);border-top:1px solid var(--b)}
+.generate-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:30;padding:12px 16px;background:rgba(8,8,11,0.97);border-top:1px solid var(--b)}
 .generate-bar.visible{display:block}
 .generate-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:var(--card-max);margin:0 auto;padding:14px;border-radius:50px;background:var(--ac);border:none;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;box-shadow:0 4px 24px var(--ac-glow)}
 .generate-btn:hover{background:var(--ac2)}
@@ -54,13 +54,13 @@ html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif
 .cs-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
 .cs-backdrop.open{opacity:1;pointer-events:auto}
 .cs-sheet{position:fixed;bottom:0;left:0;right:0;z-index:41;background:var(--s);border-top:1px solid var(--b);border-radius:20px 20px 0 0;max-height:92vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);touch-action:none}
-.cs-sheet.open{transform:translateY(0)}
+.cs-sheet.open{transform:translateY(0);min-height:75vh}
 .cs-handle{padding:12px 0 4px;display:flex;justify-content:center;flex-shrink:0;cursor:grab}
 .cs-handle-bar{width:36px;height:4px;border-radius:2px;background:var(--b2)}
 .cs-header{padding:4px 20px 14px;flex-shrink:0;border-bottom:1px solid var(--b)}
 .cs-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--tx);margin-bottom:2px}
 .cs-sub{font-size:12px;color:var(--mt2)}
-.cs-body{flex:1;overflow-y:auto;padding:16px 16px 0;-webkit-overflow-scrolling:touch}
+.cs-body{flex:1;overflow-y:auto;padding:16px 16px 0;min-height:0}
 .cs-tabs{display:flex;gap:3px;background:var(--s2);border:1px solid var(--b);border-radius:9px;padding:3px;margin-bottom:16px;overflow-x:auto;scrollbar-width:none}
 .cs-tabs::-webkit-scrollbar{display:none}
 .cs-tab{flex:0 0 auto;padding:7px 13px;border-radius:6px;font-size:12px;font-weight:500;color:var(--mt2);cursor:pointer;transition:all .15s;white-space:nowrap;border:1px solid transparent}
@@ -126,12 +126,162 @@ html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif
 .cs-confirm-btn.active:active{transform:scale(.98)}
 .cs-confirm-btn svg{width:16px;height:16px;flex-shrink:0}
 @media(min-width:600px){.cs-grid{grid-template-columns:repeat(4,1fr)}}
+/* ── AI Picks section in creator sheet ── */
+.cs-ai-section{margin-bottom:14px}
+.cs-ai-section-title{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--mt2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.cs-ai-section-title::after{content:'';flex:1;height:1px;background:var(--b)}
+.cs-ai-picks-row{display:flex;gap:8px;margin-bottom:12px}
+.cs-ai-pick{flex:1;background:var(--s2);border:1.5px solid var(--b);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .15s;user-select:none;position:relative;-webkit-tap-highlight-color:transparent}
+.cs-ai-pick:hover{border-color:var(--b2)}
+.cs-ai-pick.selected{border-color:var(--tx);background:var(--b)}
+.cs-ai-pick .cs-check{position:absolute;top:5px;right:5px;width:16px;height:16px;border-radius:50%;background:var(--tx);display:none;align-items:center;justify-content:center;z-index:2}
+.cs-ai-pick.selected .cs-check{display:flex}
+.cs-ai-pick .cs-check svg{width:9px;height:9px;color:var(--bg)}
+.cs-ai-pick .cs-ai-badge{position:absolute;top:5px;left:5px;font-size:7px;font-weight:700;letter-spacing:.5px;background:var(--ac);color:#fff;border-radius:3px;padding:2px 4px;text-transform:uppercase;z-index:2}
+.cs-ai-pick-thumb{aspect-ratio:4/5;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cs-ai-pick-label{padding:5px 7px 7px;font-size:10px;font-weight:500;color:var(--tx);text-align:center;line-height:1.3}
+/* Skeleton */
+.cs-ai-pick.skeleton .cs-ai-pick-thumb{background:linear-gradient(90deg,var(--s) 25%,var(--s2) 50%,var(--s) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite}
+.cs-ai-pick.skeleton .cs-ai-pick-label{background:var(--b);border-radius:4px;height:12px;width:60%;margin:6px auto}
+/* Expand/collapse toggle */
+.cs-expand-toggle{display:flex;align-items:center;gap:6px;color:var(--mt2);font-size:12px;cursor:pointer;background:none;border:none;padding:4px 0;transition:color .15s;font-family:'DM Sans',sans-serif;width:100%}
+.cs-expand-toggle:hover{color:var(--tx)}
+.cs-expand-toggle svg{width:13px;height:13px;transition:transform .2s}
+.cs-expand-toggle.expanded svg{transform:rotate(180deg)}
+/* All formats section */
+.cs-all-section{overflow:hidden;transition:max-height .3s cubic-bezier(.4,0,.2,1);max-height:0}
+.cs-all-section.open{max-height:2000px}
+.cs-all-section-inner{padding-top:12px}
+
+/* ── Generate bar inner layout ── */
+.generate-bar-inner{display:flex;align-items:center;gap:8px;width:100%;max-width:var(--card-max);margin:0 auto}
+.gear-btn{width:36px;height:36px;border-radius:8px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;flex-shrink:0}
+.gear-btn:hover{border-color:var(--b2);color:var(--tx)}
+.gear-btn.active{background:rgba(107,60,247,.12);border-color:rgba(107,60,247,.3);color:var(--ac2)}
+.gear-btn svg{width:15px;height:15px}
+.generate-btn{flex:1}
+
+/* ── Topic Sheet ── */
+.ts-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
+.ts-backdrop.open{opacity:1;pointer-events:auto}
+.ts-sheet{position:fixed;bottom:0;left:0;right:0;z-index:41;background:var(--s);border-radius:20px 20px 0 0;max-height:92vh;display:flex;flex-direction:column;transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1)}
+.ts-sheet.open{transform:translateY(0);min-height:75vh}
+.ts-handle{padding:12px 0 4px;display:flex;justify-content:center;flex-shrink:0}
+.ts-handle-bar{width:36px;height:4px;border-radius:2px;background:var(--b2)}
+.ts-header{padding:4px 20px 14px;flex-shrink:0;border-bottom:1px solid var(--b)}
+.ts-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.ts-sub{font-size:12px;color:var(--mt2)}
+.ts-body{flex:1;overflow-y:auto;padding:16px;min-height:0}
+.ts-footer{padding:12px 16px 24px;border-top:1px solid var(--b);flex-shrink:0;background:var(--s)}
+/* Topic suggestions */
+.ts-loading{display:flex;align-items:center;gap:10px;color:var(--mt2);font-size:13px;padding:12px 0}
+.ts-spinner{width:16px;height:16px;border:2px solid var(--b);border-top-color:var(--ac);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ts-topics{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.ts-topic-item{padding:12px 14px;background:var(--s2);border:1.5px solid var(--b);border-radius:10px;cursor:pointer;transition:all .15s;position:relative}
+.ts-topic-item:hover{border-color:var(--b2)}
+.ts-topic-item.selected{border-color:var(--ac);background:rgba(107,60,247,.08)}
+.ts-topic-text{font-size:13px;font-weight:500;color:var(--tx);margin-bottom:3px}
+.ts-topic-rationale{font-size:11px;color:var(--mt2);line-height:1.4}
+.ts-topic-item.selected .ts-topic-text{color:var(--ac2)}
+/* Custom input */
+.ts-divider{display:flex;align-items:center;gap:10px;margin:8px 0}
+.ts-divider-line{flex:1;height:1px;background:var(--b)}
+.ts-divider-text{font-size:11px;color:var(--mt2);white-space:nowrap}
+.ts-custom-input{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:10px;padding:11px 14px;color:var(--tx);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
+.ts-custom-input:focus{border-color:var(--ac)}
+.ts-custom-input::placeholder{color:var(--mt)}
+.ts-refresh{display:flex;align-items:center;gap:6px;color:var(--mt2);font-size:12px;cursor:pointer;background:none;border:none;padding:0;transition:color .15s;align-self:flex-start}
+.ts-refresh:hover{color:var(--tx)}
+/* ── Full-page AI loader ── */
+.ai-loader{position:fixed;inset:0;background:rgba(8,8,11,0.82);backdrop-filter:blur(8px);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity .25s;padding:40px}
+.ai-loader.show{opacity:1;pointer-events:auto}
+.ai-loader-ring{width:44px;height:44px;border:3px solid var(--b);border-top-color:var(--ac);border-radius:50%;animation:spin 0.8s linear infinite;flex-shrink:0}
+.ai-loader-msg{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:500;color:var(--tx);letter-spacing:.2px;text-align:center}
+.ai-loader-sub{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;text-align:center;max-width:220px;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.ts-refresh svg{width:13px;height:13px}
+.ts-error{font-size:12px;color:var(--red);padding:8px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px}
+/* Footer */
+
+.ts-continue-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:50px;background:var(--b2);border:none;color:var(--mt2);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .2s}
+.ts-continue-btn.active{background:var(--ac);color:#fff;box-shadow:0 4px 20px var(--ac-glow);cursor:pointer}
+.ts-continue-btn.active:hover{background:var(--ac2)}
+.ts-continue-btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* ── AI badge on creator sheet cards ── */
+.cs-ai-badge{position:absolute;top:7px;left:7px;font-size:7px;font-weight:700;letter-spacing:.5px;background:var(--ac);color:#fff;border-radius:4px;padding:2px 5px;text-transform:uppercase;z-index:2}
+
+/* ── Settings modal ── */
+.set-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.set-backdrop.open{opacity:1;pointer-events:auto}
+.set-modal{background:var(--s);border:1px solid var(--b);border-radius:16px;width:100%;max-width:380px;padding:24px;display:flex;flex-direction:column;gap:16px;transform:scale(.96) translateY(8px);transition:transform .2s cubic-bezier(.34,1.4,.64,1)}
+.set-backdrop.open .set-modal{transform:scale(1) translateY(0)}
+.set-modal h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--tx)}
+.set-modal p{font-size:12px;color:var(--mt2);line-height:1.6}
+.set-modal a{color:var(--ac2)}
+.set-input{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:8px;padding:10px 12px;color:var(--tx);font-size:12px;font-family:'DM Mono',monospace;outline:none;transition:border-color .15s}
+.set-input:focus{border-color:var(--ac)}
+.set-input::placeholder{color:var(--mt)}
+.set-status{font-size:11px;min-height:16px;font-family:'DM Mono',monospace}
+.set-status.ok{color:var(--green)}
+.set-status.err{color:var(--red)}
+.set-footer{display:flex;gap:8px;justify-content:flex-end}
+.set-cancel{padding:8px 16px;border-radius:8px;border:1px solid var(--b);background:transparent;color:var(--mt2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.set-cancel:hover{border-color:var(--b2);color:var(--tx)}
+.set-save{padding:8px 16px;border-radius:8px;border:none;background:var(--ac);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all .15s}
+.set-save:hover{background:var(--ac2)}
+
+/* ════════════════════════════════════════════════
+   EDIT MODAL
+════════════════════════════════════════════════*/
+.em-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:9999;opacity:0;pointer-events:none;transition:opacity .25s;display:flex;align-items:center;justify-content:center;padding:20px}
+.em-backdrop.open{opacity:1;pointer-events:auto}
+.em-modal{background:var(--s);border:1px solid var(--b);border-radius:20px;width:100%;max-width:480px;max-height:88vh;display:flex;flex-direction:column;transform:scale(.95) translateY(12px);transition:transform .25s cubic-bezier(.34,1.4,.64,1);overflow:hidden}
+.em-backdrop.open .em-modal{transform:scale(1) translateY(0)}
+.em-header{padding:18px 20px 14px;border-bottom:1px solid var(--b);flex-shrink:0;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.em-header-text{display:flex;flex-direction:column;gap:3px}
+.em-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;color:var(--tx)}
+.em-subtitle{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;letter-spacing:.5px;text-transform:uppercase}
+.em-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s}
+.em-close:hover{border-color:var(--b2);color:var(--tx)}
+.em-close svg{width:14px;height:14px}
+.em-body{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px;-webkit-overflow-scrolling:touch}
+.em-field{display:flex;flex-direction:column;gap:6px}
+.em-label{font-size:12px;font-weight:500;color:var(--tx);letter-spacing:.2px}
+.em-input{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:10px;padding:10px 12px;color:var(--tx);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s;resize:none}
+.em-input:focus{border-color:var(--ac)}
+.em-input.error{border-color:var(--red)}
+.em-input::placeholder{color:var(--mt)}
+.em-meta{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.em-hint{font-size:11px;color:var(--mt2);line-height:1.4;flex:1}
+.em-count{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;flex-shrink:0;white-space:nowrap}
+.em-count.over{color:var(--red)}
+.em-error-msg{font-size:11px;color:var(--red)}
+/* Image picker */
+.em-img-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.em-img-opt{aspect-ratio:1;border-radius:8px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .15s;position:relative}
+.em-img-opt img{width:100%;height:100%;object-fit:cover;display:block}
+.em-img-opt.selected{border-color:var(--ac)}
+.em-img-opt.selected::after{content:'';position:absolute;inset:0;background:rgba(107,60,247,.2);border-radius:6px}
+.em-img-opt.selected::before{content:'✓';position:absolute;top:4px;right:4px;width:16px;height:16px;border-radius:50%;background:var(--ac);color:#fff;font-size:9px;display:flex;align-items:center;justify-content:center;z-index:1;line-height:16px;text-align:center}
+/* Footer */
+.em-footer{padding:14px 20px;border-top:1px solid var(--b);flex-shrink:0;display:flex;gap:8px}
+.em-reset-btn{padding:12px 18px;border-radius:50px;border:1px solid var(--b);background:transparent;color:var(--mt2);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
+.em-reset-btn:hover{border-color:var(--b2);color:var(--tx)}
+.em-apply-btn{flex:1;padding:12px 20px;border-radius:50px;border:none;background:var(--ac);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;box-shadow:0 4px 16px var(--ac-glow)}
+.em-apply-btn:hover{background:var(--ac2)}
+.em-apply-btn:active{transform:scale(.98)}
+
 </style>
 </head>
 <body>
 <header class="app-header">
   <div class="logo"><div class="logo-dot"></div><div class="logo-text">Canvas Feed</div></div>
   <div class="post-count" id="postCount">0 posts</div>
+  <button class="gear-btn" id="settingsBtn" title="AI Settings" style="margin-left:8px">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </button>
 </header>
 <div class="feed" id="feed">
   <div class="empty-state" id="emptyState">
@@ -161,7 +311,7 @@ html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif
 <div class="generate-bar" id="generateBar">
   <button class="generate-btn" id="generateBtn">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    Generate Post
+    What to post?
   </button>
 </div>
 <!-- CREATOR SHEET -->
@@ -173,12 +323,28 @@ html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif
     <div class="cs-sub">Select one or more — up to 3 posts generated at once</div>
   </div>
   <div class="cs-body" id="csBody">
+    <!-- AI picks section — shown when AI has scored templates -->
+    <div class="cs-ai-section" id="csAiSection" style="display:none">
+      <div class="cs-ai-section-title">Best picks for your topic</div>
+      <div class="cs-ai-picks-row" id="csAiPicksRow"></div>
+      <button class="cs-expand-toggle" id="csExpandToggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Show all formats
+      </button>
+    </div>
+
+    <!-- All formats section — hidden by default, expands on toggle -->
+    <div class="cs-all-section" id="csAllSection">
+      <div class="cs-all-section-inner">
+
     <div class="cs-tabs" id="csTabs">
       <div class="cs-tab active" data-tab="dyk">Did You Know</div>
       <div class="cs-tab" data-tab="quote">Quote</div>
       <div class="cs-tab" data-tab="tip">Tip</div>
       <div class="cs-tab" data-tab="carousel">Carousel</div>
       <div class="cs-tab" data-tab="funfact">Fun Fact</div>
+      <div class="cs-tab" data-tab="market">Market</div>
+      <div class="cs-tab" data-tab="news">News</div>
     </div>
     <div class="cs-cap-warn" id="csCapWarn">Max 3 posts — only 3 of your selections will be used</div>
     <!-- DYK -->
@@ -216,23 +382,201 @@ html,body{min-height:100vh;background:var(--bg);font-family:'DM Sans',sans-serif
       <div class="cs-card" data-key="funfact::number_fact"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-space"><div class="t-badge">FUN FACT</div><div style="display:flex;align-items:baseline;gap:3px;margin-top:4px"><div class="t-bignum">10</div><div style="font-size:16px;font-weight:700;font-family:'Bebas Neue',sans-serif;color:var(--mt2);opacity:.6">M</div></div><div class="t-rule" style="width:60%;margin:3px auto"></div><div class="t-line" style="width:94%;opacity:.5"></div><div class="t-line" style="width:80%;opacity:.5"></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Number Fact</div><div class="cs-card-desc">A surprising number styled playfully.</div></div></div>
       <div class="cs-card" data-key="funfact::mind_blown"><div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div><div class="cs-thumb"><div class="t-space"><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px"><div class="t-setup-line" style="width:96%"></div><div class="t-setup-line" style="width:82%"></div><div class="t-setup-line" style="width:68%"></div></div><div style="display:flex;align-items:center;gap:4px;margin:3px 0"><div style="flex:1;height:1px;background:var(--b2)"></div><div class="t-diamond"></div><div style="flex:1;height:1px;background:var(--b2)"></div></div><div style="width:100%;display:flex;flex-direction:column;gap:3px;padding:0 2px"><div class="t-twist-line" style="width:92%"></div><div class="t-twist-line" style="width:76%"></div><div class="t-twist-line" style="width:58%"></div></div></div><div class="t-brand"></div></div><div class="cs-card-body"><div class="cs-card-title">Mind Blown</div><div class="cs-card-desc">Setup then twist delivers the punchline.</div></div></div>
     </div></div>
+
+    <!-- Market -->
+    <div class="cs-panel" id="panel-market" style="display:none"><div class="cs-grid">
+      <div class="cs-card" data-key="market::day_chart" data-source="market">
+        <div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="cs-thumb">
+          <div class="t-space">
+            <div class="t-badge">MARKET</div>
+            <div style="display:flex;align-items:baseline;gap:4px;margin-top:4px">
+              <div class="t-tnum" style="font-size:24px">22,419</div>
+              <div style="font-size:8px;font-weight:700;color:#22c55e;font-family:'Space Grotesk',sans-serif">+1.24%</div>
+            </div>
+            <div style="width:100%;height:44px;margin-top:3px">
+              <svg viewBox="0 0 120 44" style="width:100%;height:100%">
+                <defs><linearGradient id="glg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#22c55e" stop-opacity="0.25"/><stop offset="100%" stop-color="#22c55e" stop-opacity="0"/></linearGradient></defs>
+                <polyline points="0,38 15,30 30,34 45,20 60,26 75,12 90,16 120,6 120,44 0,44" fill="url(#glg)"/>
+                <polyline points="0,38 15,30 30,34 45,20 60,26 75,12 90,16 120,6" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+              </svg>
+            </div>
+            <div style="display:flex;justify-content:space-between;width:100%;padding:0 2px">
+              <div style="font-size:7px;color:var(--mt2);font-family:monospace">H 22,526</div>
+              <div style="font-size:7px;color:var(--mt2);font-family:monospace">L 22,198</div>
+            </div>
+          </div>
+          <div class="t-brand"></div>
+        </div>
+        <div class="cs-card-body"><div class="cs-card-title">Day Chart</div><div class="cs-card-desc">Live intraday market movement with key stats.</div></div>
+      </div>
+      <div class="cs-card coming-soon" data-key="market::week_chart"><div class="cs-soon">Soon</div>
+        <div class="cs-thumb"><div class="t-space"><div class="t-badge">MARKET</div><div style="width:100%;height:44px;margin-top:6px;opacity:.35"><svg viewBox="0 0 120 44" style="width:100%;height:100%"><polyline points="0,38 24,32 48,26 72,30 96,16 120,10" fill="none" stroke="var(--mt2)" stroke-width="2" stroke-linecap="round"/></svg></div></div><div class="t-brand"></div></div>
+        <div class="cs-card-body"><div class="cs-card-title">Week Chart</div><div class="cs-card-desc">5-day trend with weekly summary.</div></div>
+      </div>
+      <div class="cs-card coming-soon" data-key="market::gainers"><div class="cs-soon">Soon</div>
+        <div class="cs-thumb"><div class="t-space"><div class="t-badge">MARKET</div><div style="width:100%;display:flex;flex-direction:column;gap:5px;margin-top:6px;opacity:.35"><div style="display:flex;justify-content:space-between;align-items:center"><div class="t-line" style="width:55%;margin:0"></div><div style="font-size:7px;color:#22c55e;font-family:monospace">+4.2%</div></div><div style="display:flex;justify-content:space-between;align-items:center"><div class="t-line" style="width:55%;margin:0"></div><div style="font-size:7px;color:#22c55e;font-family:monospace">+3.1%</div></div><div style="display:flex;justify-content:space-between;align-items:center"><div class="t-line" style="width:55%;margin:0"></div><div style="font-size:7px;color:#22c55e;font-family:monospace">+2.8%</div></div></div></div><div class="t-brand"></div></div>
+        <div class="cs-card-body"><div class="cs-card-title">Top Gainers</div><div class="cs-card-desc">Biggest movers up for the day.</div></div>
+      </div>
+      <div class="cs-card coming-soon" data-key="market::movers"><div class="cs-soon">Soon</div>
+        <div class="cs-thumb"><div class="t-space"><div class="t-badge">MARKET</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;margin-top:6px;opacity:.35"><div class="t-hl" style="width:90%"></div><div class="t-hl" style="width:75%"></div><div class="t-hl" style="width:60%"></div></div></div><div class="t-brand"></div></div>
+        <div class="cs-card-body"><div class="cs-card-title">Top Movers</div><div class="cs-card-desc">Highest volume stocks of the session.</div></div>
+      </div>
+    </div></div>
+
+    <!-- News -->
+    <div class="cs-panel" id="panel-news" style="display:none"><div class="cs-grid">
+      <div class="cs-card" data-key="news::headline" data-source="news">
+        <div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>
+        <div class="cs-thumb" style="background:#F0EFEB;padding:0;overflow:hidden">
+          <div style="width:100%;height:42%;background:#D1CFC9;flex-shrink:0;position:relative">
+            <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(transparent,#F0EFEB)"></div>
+          </div>
+          <div style="padding:6px 8px 8px;display:flex;flex-direction:column;gap:4px;flex:1">
+            <div style="height:7px;background:#0F172A;border-radius:3px;width:38%;opacity:.18"></div>
+            <div style="height:4.5px;background:#0D0D0F;border-radius:2px;width:97%;opacity:.55"></div>
+            <div style="height:4.5px;background:#0D0D0F;border-radius:2px;width:84%;opacity:.55"></div>
+            <div style="height:4.5px;background:#0D0D0F;border-radius:2px;width:72%;opacity:.55"></div>
+            <div style="height:1px;background:#0D0D0F;opacity:.1;margin:2px 0"></div>
+            <div style="height:3px;background:#6B7280;border-radius:2px;width:50%;opacity:.45"></div>
+          </div>
+        </div>
+        <div class="cs-card-body"><div class="cs-card-title">Headline</div><div class="cs-card-desc">Live news article with image from RSS feed.</div></div>
+      </div>
+      <div class="cs-card coming-soon" data-key="news::briefing"><div class="cs-soon">Soon</div>
+        <div class="cs-thumb" style="background:#F0EFEB"><div class="t-space"><div class="t-badge" style="background:#E5E7EB;color:#374151;border-color:#D1D5DB">BRIEFING</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;margin-top:4px;opacity:.35"><div style="height:4px;background:#374151;border-radius:2px;width:90%"></div><div style="height:4px;background:#374151;border-radius:2px;width:76%"></div><div style="height:4px;background:#374151;border-radius:2px;width:83%"></div></div></div><div class="t-brand" style="background:#374151;opacity:.2"></div></div>
+        <div class="cs-card-body"><div class="cs-card-title">Briefing</div><div class="cs-card-desc">Top 3 headlines as a daily briefing card.</div></div>
+      </div>
+      <div class="cs-card coming-soon" data-key="news::opinion"><div class="cs-soon">Soon</div>
+        <div class="cs-thumb" style="background:#F0EFEB"><div class="t-space"><div class="t-qmark" style="color:#374151;opacity:.3">"</div><div style="width:100%;display:flex;flex-direction:column;gap:4px;padding:0 2px;opacity:.35"><div class="t-hl" style="background:#374151;width:96%"></div><div class="t-hl" style="background:#374151;width:80%"></div></div><div style="height:3.5px;background:#374151;border-radius:2px;width:45%;opacity:.3;margin-top:4px"></div></div><div class="t-brand" style="background:#374151;opacity:.2"></div></div>
+        <div class="cs-card-body"><div class="cs-card-title">Opinion</div><div class="cs-card-desc">Editorial quote with author attribution.</div></div>
+      </div>
+      <div class="cs-card coming-soon" data-key="news::timeline"><div class="cs-soon">Soon</div>
+        <div class="cs-thumb" style="background:#F0EFEB"><div class="t-space"><div style="width:100%;display:flex;flex-direction:column;gap:6px;padding:0 4px;opacity:.35"><div style="display:flex;gap:6px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#374151;flex-shrink:0"></div><div style="height:3.5px;background:#374151;border-radius:2px;flex:1"></div></div><div style="display:flex;gap:6px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#374151;flex-shrink:0"></div><div style="height:3.5px;background:#374151;border-radius:2px;flex:1;width:80%"></div></div><div style="display:flex;gap:6px;align-items:center"><div style="width:6px;height:6px;border-radius:50%;background:#374151;flex-shrink:0"></div><div style="height:3.5px;background:#374151;border-radius:2px;flex:1;width:65%"></div></div></div></div><div class="t-brand" style="background:#374151;opacity:.2"></div></div>
+        <div class="cs-card-body"><div class="cs-card-title">Timeline</div><div class="cs-card-desc">Story progression across key moments.</div></div>
+      </div>
+    </div></div>
+
   </div>
-  <div class="cs-footer">
-    <button class="cs-confirm-btn" id="csConfirmBtn" disabled>
+  <div class="cs-footer" style="padding:12px 16px;border-top:1px solid var(--b);flex-shrink:0;background:var(--s)">
+    <button class="cs-confirm-btn" id="csConfirmBtn" disabled style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:50px;background:var(--b2);border:none;color:var(--mt2);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:not-allowed;transition:all .2s">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       <span id="csConfirmLabel">Select a format</span>
     </button>
   </div>
 </div>
-<div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
+<!-- TOPIC SHEET -->
+<div class="ts-backdrop" id="tsBackdrop"></div>
+<div class="ts-sheet" id="tsSheet">
+  <div style="padding:12px 0 4px;display:flex;justify-content:center;flex-shrink:0">
+    <div style="width:36px;height:4px;border-radius:2px;background:var(--b2)"></div>
+  </div>
+  <div class="ts-header">
+    <div class="ts-title">What do you want to post about?</div>
+    <div class="ts-sub">Pick a topic or write your own</div>
+  </div>
+  <div class="ts-body" id="tsBody">
+    <div id="tsLoading" class="ts-loading">
+      <div class="ts-spinner"></div>
+      <span>Generating topics for your brand...</span>
+    </div>
+    <div id="tsTopics" class="ts-topics" style="display:none"></div>
+    <div id="tsError" class="ts-error" style="display:none"></div>
+    <button id="tsRefresh" class="ts-refresh" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>
+      Refresh suggestions
+    </button>
+    <div class="ts-divider">
+      <div class="ts-divider-line"></div>
+      <div class="ts-divider-text">or write your own</div>
+      <div class="ts-divider-line"></div>
+    </div>
+    <input class="ts-custom-input" id="tsCustomInput" type="text" placeholder="e.g. Benefits of morning meditation for busy professionals" maxlength="120">
+  </div>
+  <div class="ts-footer" style="background:var(--s);padding:12px 16px 24px;border-top:1px solid var(--b);flex-shrink:0">
+    <button class="ts-continue-btn" id="tsContinueBtn" disabled style="display:flex;align-items:center;justify-content:center;width:100%;padding:14px;border-radius:50px;background:var(--b2);border:none;color:var(--mt2);font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600">
+      <span id="tsContinueLabel">Select a topic to continue</span>
+    </button>
+  </div>
+</div>
 
+
+<!-- SETTINGS MODAL -->
+<div class="set-backdrop" id="setBackdrop">
+  <div class="set-modal">
+    <h3>AI Settings</h3>
+    <p>Add your Anthropic API key to enable AI-powered topic suggestions and brand-aware content generation.</p>
+    <p>Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys</p>
+    <input class="set-input" id="setKeyInput" type="password" placeholder="sk-ant-xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+    <div class="set-status" id="setStatus"></div>
+    <div class="set-footer">
+      <button class="set-cancel" id="setCancel">Cancel</button>
+      <button class="set-save" id="setSave">Save Key</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- EDIT MODAL -->
+<div class="em-backdrop" id="emBackdrop">
+  <div class="em-modal" id="emModal">
+    <div class="em-header">
+      <div class="em-header-text">
+        <div class="em-title">Edit Post</div>
+        <div class="em-subtitle" id="emSubtitle">Did You Know · Stat</div>
+      </div>
+      <div class="em-close" id="emClose">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+    <div class="em-body" id="emBody"></div>
+    <div class="em-footer">
+      <button class="em-reset-btn" id="emResetBtn">Reset to original</button>
+      <button class="em-apply-btn" id="emApplyBtn">Apply Changes →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- AI LOADER -->
+<div class="ai-loader" id="aiLoader">
+  <div class="ai-loader-ring"></div>
+  <div class="ai-loader-msg" id="aiLoaderMsg">Generating content...</div>
+  <div class="ai-loader-sub" id="aiLoaderSub">powered by Claude</div>
+</div>
+
+<div class="toast" id="toast"><div class="toast-dot"></div><span id="toastMsg"></span></div>
+<script src="data/brand-context.js"></script>
+<script src="data/ai-client.js"></script>
+<script src="data/topic-engine.js"></script>
+<script src="data/content-generator.js"></script>
 <script src="data/field-schemas.js"></script>
 <script src="data/mappers.js"></script>
 <script src="data/fetchers/dummy-fetcher.js"></script>
+<script src="data/fetchers/market-fetcher.js"></script>
+<script src="data/fetchers/news-fetcher.js"></script>
 <script src="data/pipeline.js"></script>
 <script src="player-lite.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+
+/* ══ AI LOADER ═══════════════════════════════════════════════════ */
+function showLoader(msg = 'Generating content...', sub = 'powered by Claude') {
+  document.getElementById('aiLoaderMsg').textContent = msg;
+  document.getElementById('aiLoaderSub').textContent = sub;
+  document.getElementById('aiLoader').classList.add('show');
+  showLoader._shownAt = Date.now();
+}
+function hideLoader() {
+  const shown = showLoader._shownAt ?? 0;
+  const elapsed = Date.now() - shown;
+  const minDisplay = 600;
+  if (elapsed < minDisplay) {
+    setTimeout(() => document.getElementById('aiLoader').classList.remove('show'), minDisplay - elapsed);
+  } else {
+    document.getElementById('aiLoader').classList.remove('show');
+  }
+}
 
 /* ══ REMOTE TEMPLATE STORE ══════════════════════════════════════
    All templates fetched from GitHub on demand.
@@ -269,6 +613,8 @@ const FILE_MAP = {
   'funfact::versus':      'funfact/tpl-funfact-versus.json',
   'funfact::number_fact': 'funfact/tpl-funfact-number.json',
   'funfact::mind_blown':  'funfact/tpl-funfact-mind-blown.json',
+  'market::day_chart':    'market/tpl-market-day-chart.json',
+  'news::headline':       'news/tpl-news-headline.json',
 };
 
 async function fetchTemplate(key) {
@@ -327,6 +673,18 @@ function openSheet() {
 function closeSheet() {
   document.getElementById('csBackdrop').classList.remove('open');
   document.getElementById('csSheet').classList.remove('open');
+  /* Reset AI picks section inline — hideAiPicksSection defined later */
+  const aiSec = document.getElementById('csAiSection');
+  const allSec = document.getElementById('csAllSection');
+  const row = document.getElementById('csAiPicksRow');
+  const lbl = document.getElementById('csExpandLabel');
+  const tog = document.getElementById('csExpandToggle');
+  if (aiSec)  aiSec.style.display  = 'none';
+  if (allSec) allSec.classList.remove('open');
+  if (row)    row.style.display    = '';
+  if (lbl)    lbl.textContent      = 'Show all formats';
+  if (tog)    tog.classList.remove('expanded');
+  if (typeof _showingAllFormats !== 'undefined') _showingAllFormats = false;
 }
 
 function syncSheetUI() {
@@ -343,11 +701,19 @@ function updateConfirmBtn() {
   const btn = document.getElementById('csConfirmBtn');
   const lbl = document.getElementById('csConfirmLabel');
   if (n === 0) {
-    btn.disabled = true; btn.classList.remove('active');
-    lbl.textContent = 'Select a format';
+    btn.setAttribute('disabled', '');
+    btn.style.background = 'var(--b2)';
+    btn.style.color = 'var(--mt2)';
+    btn.style.cursor = 'not-allowed';
+    btn.style.boxShadow = 'none';
+    if (lbl) lbl.textContent = 'Select a format';
   } else {
-    btn.disabled = false; btn.classList.add('active');
-    lbl.textContent = show === 1 ? 'Generate 1 post →' : `Generate ${show} posts →`;
+    btn.removeAttribute('disabled');
+    btn.style.background = 'var(--ac)';
+    btn.style.color = '#fff';
+    btn.style.cursor = 'pointer';
+    btn.style.boxShadow = '0 4px 20px var(--ac-glow)';
+    if (lbl) lbl.textContent = show === 1 ? 'Generate 1 post \u2192' : `Generate ${show} posts \u2192`;
   }
 }
 
@@ -373,23 +739,6 @@ document.querySelectorAll('.cs-card:not(.coming-soon)').forEach(card => {
     updateConfirmBtn();
     updateCapWarn();
   });
-});
-
-/* Confirm — fetch schema + pipeline data, then generate */
-document.getElementById('csConfirmBtn').addEventListener('click', async () => {
-  if (!selectedKeys.size) return;
-  closeSheet();
-  let keys = [...selectedKeys];
-  if (keys.length > 3) keys = keys.sort(() => Math.random() - 0.5).slice(0, 3);
-  for (const key of keys) {
-    const schema = await fetchTemplate(key);
-    if (!schema) continue;
-    /* Get fresh data from pipeline — random dummy pick each time */
-    const data = await Pipeline.getData({ key, source: 'dummy' });
-    const fresh = JSON.parse(JSON.stringify(schema));
-    fresh.data = data;
-    await addPost(fresh);
-  }
 });
 
 /* Backdrop dismiss */
@@ -432,6 +781,9 @@ async function addPost(schema) {
     <button class="footer-btn like-btn" id="fl-${id}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
     </button>
+    <button class="footer-btn edit-btn" id="fe-${id}" title="Edit content">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
     <button class="footer-btn share-btn" id="fs-${id}">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
     </button>
@@ -445,13 +797,14 @@ async function addPost(schema) {
 
   /* Push immediately so updateUI() sees the correct count
      before the async player load completes */
-  posts.push({ id, player: null, card });
+  posts.push({ id, key: _postKey, player: null, card, originalData: null, currentData: null });
   updateUI();
   setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
 
   /* Fonts first — wait for them before player draws frame 0 */
   CanvasPlayer.loadFonts(schema);
   await document.fonts.ready;
+  await new Promise(r => setTimeout(r, 300));
 
   /* Clear shimmer now — player will append canvas into the empty slot */
   slot.innerHTML = '';
@@ -482,6 +835,7 @@ async function addPost(schema) {
   player.onEnded(() => syncPlay(false));
 
   document.getElementById('fp-' + id).addEventListener('click', () => player.toggle());
+  document.getElementById('fe-' + id).addEventListener('click', () => openEditModal(id));
   document.getElementById('fl-' + id).addEventListener('click', function() { this.classList.toggle('liked'); });
   document.getElementById('fs-' + id).addEventListener('click', async () => {
     const blob = await player.captureBlob(); if (!blob) return;
@@ -494,15 +848,750 @@ async function addPost(schema) {
     }
   });
   document.getElementById('fd-' + id).addEventListener('click', () => {
-    feedObserver.unobserve(card); cardPlayerMap.delete(card); player.destroy(); card.remove();
-    const i = posts.findIndex(p => p.id === id); if (i !== -1) posts.splice(i, 1);
-    updateUI(); toast('Post removed');
+    /* If edit modal is open for this card, close it first */
+    if (_emPostId === id) closeEditModal();
+    feedObserver.unobserve(card);
+    cardPlayerMap.delete(card);
+    player.destroy();
+    card.remove();
+    const i = posts.findIndex(p => p.id === id);
+    if (i !== -1) posts.splice(i, 1);
+    updateUI();
+    toast('Post removed');
   });
 
   /* Update the posts entry with the real player now it's ready */
   const entry = posts.find(p => p.id === id);
   if (entry) entry.player = player;
+  return entry;
 }
+
+
+/* ══════════════════════════════════════════════════════════════
+   EDIT MODAL ENGINE
+══════════════════════════════════════════════════════════════*/
+
+/* Image preset pools — category-matched */
+const IMG_PORTRAITS = [
+  'https://picsum.photos/id/1/400/400',
+  'https://picsum.photos/id/64/400/400',
+  'https://picsum.photos/id/91/400/400',
+  'https://picsum.photos/id/177/400/400',
+  'https://picsum.photos/id/433/400/400',
+  'https://picsum.photos/id/453/400/400',
+  'https://picsum.photos/id/583/400/400',
+  'https://picsum.photos/id/669/400/400',
+];
+
+const IMG_EDITORIAL = [
+  'https://picsum.photos/id/10/1080/1350',
+  'https://picsum.photos/id/11/1080/1350',
+  'https://picsum.photos/id/13/1080/1350',
+  'https://picsum.photos/id/15/1080/1350',
+  'https://picsum.photos/id/28/1080/1350',
+  'https://picsum.photos/id/42/1080/1350',
+  'https://picsum.photos/id/76/1080/1350',
+  'https://picsum.photos/id/96/1080/1350',
+];
+
+/* Fields to skip — not user-editable */
+const SKIP_FIELDS = new Set([
+  'direction', 'chart_items', 'article_url',
+  'open', /* market field derived */
+]);
+
+/* Image picker fields — by field name */
+const IMG_FIELDS = { author_image: 'portrait', image_url: 'editorial' };
+
+/* Humanise field name: stat_desc → Stat Description */
+function humanise(key) {
+  return key.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+}
+
+/* Intent·mode → display label */
+function keyLabel(key) {
+  const LABELS = {
+    'dyk::stat':          'Did You Know · Stat',
+    'dyk::ratio':         'Did You Know · Ratio',
+    'dyk::timeframe':     'Did You Know · Timeframe',
+    'quote::portrait':    'Quote · Portrait',
+    'quote::topic':       'Quote · Topic',
+    'quote::split':       'Quote · Split',
+    'tip::checklist':     'Tip · Checklist',
+    'tip::do_dont':       "Tip \u00B7 Do / Don't",
+    'tip::stat_tip':      'Tip · Stat Tip',
+    'funfact::versus':    'Fun Fact · Versus',
+    'funfact::number_fact':'Fun Fact · Number',
+    'funfact::mind_blown':'Fun Fact · Mind Blown',
+    'market::day_chart':  'Market · Day Chart',
+    'news::headline':     'News · Headline',
+  };
+  return LABELS[key] ?? key;
+}
+
+/* State */
+let _emPostId    = null;  /* which post is being edited */
+let _emFormData  = {};    /* live form values */
+
+/* ── Open modal ─────────────────────────────────────────────── */
+function openEditModal(postId) {
+  const post = posts.find(p => p.id === postId);
+  if (!post || !post.currentData) return;
+
+  _emPostId   = postId;
+  _emFormData = JSON.parse(JSON.stringify(post.currentData));
+
+  /* Set subtitle */
+  document.getElementById('emSubtitle').textContent = keyLabel(post.key);
+
+  /* Build fields */
+  renderEditFields(post.key, _emFormData);
+
+  /* Open */
+  document.getElementById('emBackdrop').classList.add('open');
+}
+
+/* ── Close modal ─────────────────────────────────────────────── */
+function closeEditModal() {
+  document.getElementById('emBackdrop').classList.remove('open');
+  _emPostId = null;
+}
+
+/* ── Render fields dynamically from FIELD_SCHEMAS ───────────── */
+function renderEditFields(key, data) {
+  const body    = document.getElementById('emBody');
+  const schema  = window.FieldSchemas?.FIELD_SCHEMAS?.[key] ?? {};
+  body.innerHTML = '';
+
+  for (const [field, rules] of Object.entries(schema)) {
+    if (SKIP_FIELDS.has(field)) continue;
+    if (rules.type === 'array')  continue;
+
+    const val = data[field] ?? '';
+
+    /* Image picker field */
+    if (IMG_FIELDS[field]) {
+      body.appendChild(buildImagePicker(field, val, IMG_FIELDS[field] === 'portrait' ? IMG_PORTRAITS : IMG_EDITORIAL));
+      continue;
+    }
+
+    /* Text input / textarea */
+    body.appendChild(buildTextField(field, rules, val));
+  }
+}
+
+/* ── Build a text field ─────────────────────────────────────── */
+function buildTextField(field, rules, value) {
+  const wrap = document.createElement('div');
+  wrap.className = 'em-field';
+
+  const label = document.createElement('label');
+  label.className = 'em-label';
+  label.textContent = humanise(field);
+  label.setAttribute('for', 'em_' + field);
+
+  const isTextarea = (rules.max ?? 0) > 60;
+  const input = document.createElement(isTextarea ? 'textarea' : 'input');
+  input.className = 'em-input';
+  input.id = 'em_' + field;
+  input.value = value;
+  input.placeholder = rules.example ?? '';
+  if (isTextarea) { input.rows = 3; input.style.lineHeight = '1.5'; }
+  else input.type = 'text';
+
+  const meta  = document.createElement('div');
+  meta.className = 'em-meta';
+
+  const hint  = document.createElement('div');
+  hint.className = 'em-hint';
+  hint.textContent = rules.hint ?? '';
+
+  const count = document.createElement('div');
+  count.className = 'em-count';
+
+  const updateCount = () => {
+    const len = input.value.length;
+    const max = rules.max;
+    count.textContent = max ? `${len} / ${max}` : `${len}`;
+    count.classList.toggle('over', max ? len > max : false);
+  };
+  updateCount();
+
+  const errMsg = document.createElement('div');
+  errMsg.className = 'em-error-msg';
+  errMsg.style.display = 'none';
+
+  input.addEventListener('input', () => {
+    _emFormData[field] = input.value;
+    updateCount();
+    if (rules.required && !input.value.trim()) {
+      input.classList.add('error');
+      errMsg.textContent = humanise(field) + ' is required';
+      errMsg.style.display = 'block';
+    } else {
+      input.classList.remove('error');
+      errMsg.style.display = 'none';
+    }
+  });
+
+  meta.appendChild(hint);
+  if (rules.max) meta.appendChild(count);
+  wrap.appendChild(label);
+  wrap.appendChild(input);
+  wrap.appendChild(meta);
+  if (rules.required) wrap.appendChild(errMsg);
+  return wrap;
+}
+
+/* ── Build an image picker ──────────────────────────────────── */
+function buildImagePicker(field, currentUrl, pool) {
+  const wrap = document.createElement('div');
+  wrap.className = 'em-field';
+
+  const label = document.createElement('label');
+  label.className = 'em-label';
+  label.textContent = humanise(field);
+
+  const grid = document.createElement('div');
+  grid.className = 'em-img-grid';
+
+  pool.forEach(url => {
+    const opt = document.createElement('div');
+    opt.className = 'em-img-opt' + (url === currentUrl ? ' selected' : '');
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = '';
+    img.loading = 'lazy';
+    opt.appendChild(img);
+    opt.addEventListener('click', () => {
+      grid.querySelectorAll('.em-img-opt').forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      _emFormData[field] = url;
+    });
+    grid.appendChild(opt);
+  });
+
+  const hint = document.createElement('div');
+  hint.className = 'em-hint';
+  hint.textContent = 'Tap an image to select it';
+
+  wrap.appendChild(label);
+  wrap.appendChild(grid);
+  wrap.appendChild(hint);
+  return wrap;
+}
+
+/* ── Validate form ──────────────────────────────────────────── */
+function validateEditForm(key) {
+  const schema = window.FieldSchemas?.FIELD_SCHEMAS?.[key] ?? {};
+  const errors = [];
+  for (const [field, rules] of Object.entries(schema)) {
+    if (SKIP_FIELDS.has(field) || rules.type === 'array') continue;
+    if (IMG_FIELDS[field]) continue;
+    const val = _emFormData[field] ?? '';
+    if (rules.required && !String(val).trim()) {
+      errors.push(field);
+      const el = document.getElementById('em_' + field);
+      if (el) {
+        el.classList.add('error');
+        const errEl = el.parentElement.querySelector('.em-error-msg');
+        if (errEl) { errEl.textContent = humanise(field) + ' is required'; errEl.style.display = 'block'; }
+      }
+    }
+  }
+  return errors.length === 0;
+}
+
+/* ── Apply changes ──────────────────────────────────────────── */
+async function applyEditChanges() {
+  const post = posts.find(p => p.id === _emPostId);
+  if (!post) return;
+
+  if (!validateEditForm(post.key)) {
+    toast('Please fill in all required fields');
+    return;
+  }
+
+  /* Update currentData on the post */
+  post.currentData = JSON.parse(JSON.stringify(_emFormData));
+
+  /* Preload any new image URLs before updateData —
+     updateData skips image loading so new URLs return null
+     from imgCache unless we load them into SharedImageCache first */
+  const imgFields = ['image_url', 'author_image'];
+  const newImgUrls = imgFields
+    .map(f => post.currentData[f])
+    .filter(url => url && typeof url === 'string' && url.startsWith('http'));
+
+  if (newImgUrls.length > 0) {
+    try {
+      await CanvasPlayer.imageCache.loadAll(newImgUrls);
+    } catch(e) {
+      console.warn('[Edit] Image preload failed:', e);
+    }
+  }
+
+  /* Apply to player and replay */
+  post.player.updateData(post.currentData);
+  post.player.stop();
+  setTimeout(() => post.player.play(), 80);
+
+  closeEditModal();
+  toast('Changes applied \u2713');
+}
+
+/* ── Reset to original ──────────────────────────────────────── */
+function resetEditForm() {
+  const post = posts.find(p => p.id === _emPostId);
+  if (!post || !post.originalData) return;
+  _emFormData = JSON.parse(JSON.stringify(post.originalData));
+  renderEditFields(post.key, _emFormData);
+}
+
+/* ── Wire modal controls ────────────────────────────────────── */
+document.getElementById('emClose').addEventListener('click', closeEditModal);
+document.getElementById('emBackdrop').addEventListener('click', e => {
+  if (e.target === document.getElementById('emBackdrop')) closeEditModal();
+});
+document.getElementById('emResetBtn').addEventListener('click', resetEditForm);
+document.getElementById('emApplyBtn').addEventListener('click', () => applyEditChanges());
+
+/* Close on Escape */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('emBackdrop').classList.contains('open')) {
+    closeEditModal();
+  }
+});
+
+
+/* ══════════════════════════════════════════════════════════════
+   SETTINGS MODAL — API Key management
+══════════════════════════════════════════════════════════════*/
+/* AI PICKS SECTION ─────────────────────────────────────────── */
+
+const AI_PICK_LABELS = {
+  'dyk::stat':'Stat','dyk::ratio':'Ratio','dyk::timeframe':'Timeframe',
+  'quote::portrait':'Portrait','quote::topic':'Topic','quote::split':'Split',
+  'tip::checklist':'Checklist','tip::stat_tip':'Stat Tip',
+  'funfact::versus':'Versus','funfact::number_fact':'Number Fact','funfact::mind_blown':'Mind Blown',
+  'market::day_chart':'Day Chart','news::headline':'Headline',
+};
+
+function getPickThumb(key) {
+  const card = document.querySelector('.cs-card[data-key="' + key + '"]');
+  if (!card) return '';
+  const thumb = card.querySelector('.cs-thumb');
+  return thumb ? thumb.outerHTML : '';
+}
+
+let _showingAllFormats = false;
+
+function showAiPicksSkeleton() {
+  document.getElementById('csAiSection').style.display = '';
+  const row = document.getElementById('csAiPicksRow');
+  row.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const el = document.createElement('div');
+    el.className = 'cs-ai-pick skeleton';
+    el.innerHTML = '<div class="cs-ai-pick-thumb"></div><div class="cs-ai-pick-label"></div>';
+    row.appendChild(el);
+  }
+}
+
+function populateAiPicks(keys) {
+  const row = document.getElementById('csAiPicksRow');
+  row.innerHTML = '';
+  keys.forEach(function(key) {
+    const el = document.createElement('div');
+    el.className = 'cs-ai-pick' + (selectedKeys.has(key) ? ' selected' : '');
+    el.dataset.key = key;
+    const chk = '<div class="cs-check"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2,6 5,9 10,3"/></svg></div>';
+    el.innerHTML = chk +
+      '<div class="cs-ai-badge">AI</div>' +
+      '<div class="cs-ai-pick-thumb">' + getPickThumb(key) + '</div>' +
+      '<div class="cs-ai-pick-label">' + (AI_PICK_LABELS[key] || key) + '</div>';
+    el.addEventListener('click', function() {
+      const k = el.dataset.key;
+      if (selectedKeys.has(k)) selectedKeys.delete(k); else selectedKeys.add(k);
+      el.classList.toggle('selected', selectedKeys.has(k));
+      const gc = document.querySelector('.cs-card[data-key="' + k + '"]');
+      if (gc) gc.classList.toggle('selected', selectedKeys.has(k));
+      updateConfirmBtn();
+      updateCapWarn();
+    });
+    row.appendChild(el);
+  });
+}
+
+function hideAiPicksSection() {
+  document.getElementById('csAiSection').style.display = 'none';
+  document.getElementById('csAllSection').classList.remove('open');
+  _showingAllFormats = false;
+  const t = document.getElementById('csExpandToggle');
+  if (t) t.classList.remove('expanded');
+  const r = document.getElementById('csAiPicksRow');
+  if (r) r.style.display = '';
+  const l = document.getElementById('csExpandLabel');
+  if (l) l.textContent = 'Show all formats';
+}
+
+document.getElementById('csExpandToggle').addEventListener('click', function() {
+  _showingAllFormats = !_showingAllFormats;
+  document.getElementById('csAllSection').classList.toggle('open', _showingAllFormats);
+  document.getElementById('csExpandToggle').classList.toggle('expanded', _showingAllFormats);
+  document.getElementById('csAiPicksRow').style.display = _showingAllFormats ? 'none' : '';
+  const l = document.getElementById('csExpandLabel');
+  if (l) l.textContent = _showingAllFormats ? 'Show fewer' : 'Show all formats';
+});
+
+function syncSettingsUI() {
+  const hasKey = AIClient.hasKey();
+  document.getElementById('settingsBtn').classList.toggle('active', hasKey);
+  document.getElementById('settingsBtn').title = hasKey ? 'AI Connected' : 'Connect AI — add API key';
+}
+
+document.getElementById('settingsBtn').addEventListener('click', () => {
+  document.getElementById('setKeyInput').value = AIClient.hasKey() ? '••••••••••••••••••••••••' : '';
+  document.getElementById('setStatus').textContent = '';
+  document.getElementById('setStatus').className = 'set-status';
+  document.getElementById('setBackdrop').classList.add('open');
+  setTimeout(() => document.getElementById('setKeyInput').focus(), 200);
+});
+
+document.getElementById('setCancel').addEventListener('click', () =>
+  document.getElementById('setBackdrop').classList.remove('open'));
+
+document.getElementById('setBackdrop').addEventListener('click', e => {
+  if (e.target === document.getElementById('setBackdrop'))
+    document.getElementById('setBackdrop').classList.remove('open');
+});
+
+document.getElementById('setSave').addEventListener('click', async () => {
+  const input   = document.getElementById('setKeyInput').value.trim();
+  const statusEl = document.getElementById('setStatus');
+
+  /* No change — close */
+  if (!input || input.includes('•')) {
+    document.getElementById('setBackdrop').classList.remove('open');
+    return;
+  }
+
+  statusEl.textContent = 'Verifying key...';
+  statusEl.className = 'set-status';
+
+  try {
+    await AIClient.verifyKey(input);
+    AIClient.setKey(input);
+    statusEl.textContent = 'API key saved ✓';
+    statusEl.className = 'set-status ok';
+    syncSettingsUI();
+    setTimeout(() => document.getElementById('setBackdrop').classList.remove('open'), 1000);
+  } catch(e) {
+    statusEl.textContent = e.message;
+    statusEl.className = 'set-status err';
+  }
+});
+
+/* ══════════════════════════════════════════════════════════════
+   TOPIC SHEET ENGINE
+══════════════════════════════════════════════════════════════*/
+let _selectedTopic  = null;  /* string — the chosen topic */
+let _topicSheetMode = 'full'; /* 'full' = topic+creator, 'auto' = empty state auto */
+
+/* ── Open ────────────────────────────────────────────────── */
+function openTopicSheet(mode = 'full') {
+  _topicSheetMode  = mode;
+  _selectedTopic   = null;
+  document.getElementById('tsCustomInput').value = '';
+  updateTopicContinueBtn();
+  document.getElementById('tsBackdrop').classList.add('open');
+  document.getElementById('tsSheet').classList.add('open');
+  loadTopicSuggestions();
+}
+
+function closeTopicSheet() {
+  document.getElementById('tsBackdrop').classList.remove('open');
+  document.getElementById('tsSheet').classList.remove('open');
+}
+
+/* ── Load suggestions ────────────────────────────────────── */
+async function loadTopicSuggestions(forceRefresh = false) {
+  const loading = document.getElementById('tsLoading');
+  const topics  = document.getElementById('tsTopics');
+  const errEl   = document.getElementById('tsError');
+  const refresh = document.getElementById('tsRefresh');
+
+  loading.style.display = 'flex';
+  topics.style.display  = 'none';
+  errEl.style.display   = 'none';
+
+  /* If no API key — show message and skip */
+  if (!AIClient.hasKey()) {
+    loading.style.display = 'none';
+    errEl.textContent = 'Add your Anthropic API key in Settings (gear icon) to get AI topic suggestions.';
+    errEl.style.display = 'block';
+    refresh.style.display = 'none';
+    return;
+  }
+
+  try {
+    const suggestions = await TopicEngine.getSuggestions({ forceRefresh });
+    loading.style.display = 'none';
+    if (!suggestions || suggestions.length === 0) {
+      errEl.textContent = 'Could not generate topics. Please try refreshing.';
+      errEl.style.display = 'block';
+      refresh.style.display = 'flex';
+      return;
+    }
+    topics.style.display  = '';
+    refresh.style.display = 'flex';
+    errEl.style.display   = 'none';
+    renderTopicItems(suggestions);
+  } catch(e) {
+    loading.style.display = 'none';
+    errEl.textContent = 'Could not generate topics: ' + e.message;
+    errEl.style.display = 'block';
+    refresh.style.display = 'flex';
+  }
+}
+
+/* ── Render topic cards ──────────────────────────────────── */
+function renderTopicItems(suggestions) {
+  const container = document.getElementById('tsTopics');
+  container.innerHTML = '';
+  suggestions.forEach(({ topic, rationale }) => {
+    const item = document.createElement('div');
+    item.className = 'ts-topic-item';
+    item.innerHTML = `<div class="ts-topic-text">${topic}</div><div class="ts-topic-rationale">${rationale}</div>`;
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.ts-topic-item').forEach(i => i.classList.remove('selected'));
+      item.classList.add('selected');
+      /* Put topic in custom input so user can refine */
+      document.getElementById('tsCustomInput').value = topic;
+      _selectedTopic = topic;
+      updateTopicContinueBtn();
+    });
+    container.appendChild(item);
+  });
+}
+
+/* ── Custom input sync ───────────────────────────────────── */
+document.getElementById('tsCustomInput').addEventListener('input', e => {
+  const val = e.target.value.trim();
+  _selectedTopic = val || null;
+  /* Deselect suggestion cards if user is typing custom */
+  if (val) {
+    /* Check if val matches a suggestion — keep selected, else clear */
+    const matched = [...document.querySelectorAll('.ts-topic-text')]
+      .some(el => el.textContent === val);
+    if (!matched) {
+      document.querySelectorAll('.ts-topic-item').forEach(i => i.classList.remove('selected'));
+    }
+  }
+  updateTopicContinueBtn();
+});
+
+/* ── Continue button state ───────────────────────────────── */
+function updateTopicContinueBtn() {
+  const btn = document.getElementById('tsContinueBtn');
+  if (!btn) return;
+  const lbl = document.getElementById('tsContinueLabel');
+  const has = !!(_selectedTopic && _selectedTopic.trim());
+  if (has) {
+    btn.removeAttribute('disabled');
+    btn.style.background = 'var(--ac)';
+    btn.style.color = '#fff';
+    btn.style.cursor = 'pointer';
+    btn.style.boxShadow = '0 4px 20px var(--ac-glow)';
+    if (lbl) lbl.textContent = 'Continue \u2192';
+  } else {
+    btn.setAttribute('disabled', '');
+    btn.style.background = 'var(--b2)';
+    btn.style.color = 'var(--mt2)';
+    btn.style.cursor = 'not-allowed';
+    btn.style.boxShadow = 'none';
+    if (lbl) lbl.textContent = 'Select a topic to continue';
+  }
+}
+
+/* ── Refresh ─────────────────────────────────────────────── */
+document.getElementById('tsRefresh').addEventListener('click', () => {
+  TopicEngine.clearCache();
+  _selectedTopic = null;
+  updateTopicContinueBtn();
+  loadTopicSuggestions(true);
+});
+
+/* ── Backdrop dismiss ────────────────────────────────────── */
+document.getElementById('tsBackdrop').addEventListener('click', closeTopicSheet);
+
+/* ── Continue → next step ────────────────────────────────── */
+document.getElementById('tsContinueBtn').addEventListener('click', async () => {
+  if (!_selectedTopic) return;
+  closeTopicSheet();
+
+  if (_topicSheetMode === 'auto') {
+    /* Empty state flow — AI picks best template, generates, adds post */
+    await handleAutoGenerate(_selectedTopic);
+  } else {
+    /* Full flow — open creator sheet with AI pre-selections */
+    await handleCreatorSheetOpen(_selectedTopic);
+  }
+});
+
+/* ══════════════════════════════════════════════════════════════
+   AUTO GENERATE — empty state path
+   AI picks best template, generates content, adds one post
+══════════════════════════════════════════════════════════════*/
+async function handleAutoGenerate(topic) {
+  try {
+    showLoader('Finding the best format...', 'analysing your topic');
+    /* Pick best template */
+    let key = 'dyk::stat';
+    if (AIClient.hasKey()) {
+      try { key = await TopicEngine.pickBestTemplate(topic); }
+      catch(e) { console.warn('Template scoring failed, using default:', e.message); }
+    }
+
+    const schema = await fetchTemplate(key);
+    if (!schema) { hideLoader(); toast('Could not load template'); return; }
+
+    /* Generate content */
+    showLoader('Writing brand content...', topic);
+    let data;
+    if (AIClient.hasKey()) {
+      try {
+        data = await ContentGenerator.generate({ key, topic });
+      } catch(e) {
+        console.warn('AI content failed, using dummy:', e.message);
+        data = await Pipeline.getData({ key, source: 'dummy' });
+      }
+    } else {
+      data = await Pipeline.getData({ key, source: 'dummy' });
+    }
+
+    const fresh = JSON.parse(JSON.stringify(schema));
+    if (data.direction && window.MarketFetcher) {
+      const color = MarketFetcher.getDirectionColor(data.direction);
+      fresh.brand.colors.primary = color;
+    }
+    fresh.data = data;
+    _postKey = key;
+    const post = await addPost(fresh);
+    if (post) {
+      post.originalData = JSON.parse(JSON.stringify(data));
+      post.currentData  = JSON.parse(JSON.stringify(data));
+    }
+  } catch(e) {
+    hideLoader();
+    toast('Error: ' + e.message);
+    console.error(e);
+  } finally {
+    hideLoader();
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CREATOR SHEET — open with AI pre-selections
+══════════════════════════════════════════════════════════════*/
+let _aiSuggestedKeys = []; /* keys AI recommended for current topic */
+
+async function handleCreatorSheetOpen(topic) {
+  _aiSuggestedKeys = [];
+
+  /* Reset expand state */
+  _showingAllFormats = false;
+
+  /* Open creator sheet with default dyk::stat selected */
+  selectedKeys = new Set(['dyk::stat']);
+  openSheet();
+
+  if (!AIClient.hasKey()) {
+    /* No AI — just show full grid as before */
+    hideAiPicksSection();
+    syncSheetUI();
+    return;
+  }
+
+  /* Show skeleton picks immediately while AI scores */
+  showAiPicksSkeleton();
+
+  try {
+    _aiSuggestedKeys = await TopicEngine.scoreTemplates(topic);
+    /* Pre-select the AI picks */
+    selectedKeys = new Set(_aiSuggestedKeys);
+    populateAiPicks(_aiSuggestedKeys);
+    /* Sync full grid selections */
+    syncSheetUI();
+  } catch(e) {
+    console.warn('Template scoring failed:', e.message);
+    hideAiPicksSection();
+    syncSheetUI();
+  }
+}
+
+/* applyAIBadges replaced by populateAiPicks */
+
+/* ══════════════════════════════════════════════════════════════
+   REWIRE CONFIRM BUTTON — use AI content generation
+══════════════════════════════════════════════════════════════*/
+
+/* ══════════════════════════════════════════════════════════════
+   REWIRED CONFIRM BUTTON — AI content generation per template
+══════════════════════════════════════════════════════════════*/
+/* Confirm — fetch schema + AI content, then generate */
+document.getElementById('csConfirmBtn').addEventListener('click', async () => {
+  if (!selectedKeys.size) return;
+  closeSheet();
+  let keys = [...selectedKeys];
+  if (keys.length > 3) keys = keys.sort(() => Math.random() - 0.5).slice(0, 3);
+
+  /* Generate AI content for all non-market/news keys in parallel */
+  const topic  = _selectedTopic ?? 'general wellness';
+  const aiKeys = keys.filter(k => !['market','news'].includes(k.split('::')[0]));
+  const useAI  = AIClient.hasKey() && aiKeys.length > 0;
+
+  let aiResults = {};
+  if (useAI) {
+    showLoader('Writing brand content...', topic);
+    try {
+      aiResults = await ContentGenerator.generateBatch({ keys: aiKeys, topic });
+    } catch(e) {
+      console.warn('Batch AI generation failed, using dummy:', e.message);
+    } finally {
+      hideLoader();
+    }
+  }
+
+  for (const key of keys) {
+    const schema = await fetchTemplate(key);
+    if (!schema) continue;
+    const intent = key.split('::')[0];
+    let data;
+    if (intent === 'market') {
+      data = await Pipeline.getData({ key, source:'market', input:{ market:'NIFTY50' } });
+    } else if (intent === 'news') {
+      data = await Pipeline.getData({ key, source:'news', input:{ feed:'bbc_world' } });
+    } else if (useAI && aiResults[key]) {
+      data = aiResults[key];
+    } else {
+      data = await Pipeline.getData({ key, source:'dummy' });
+    }
+    const fresh = JSON.parse(JSON.stringify(schema));
+    if (data.direction && window.MarketFetcher) {
+      const color = MarketFetcher.getDirectionColor(data.direction);
+      fresh.brand.colors.primary = color;
+      fresh.brand.colors.accent  = color;
+    }
+    fresh.data = data;
+    _postKey = key;
+    const post = await addPost(fresh);
+    if (post) {
+      post.originalData = JSON.parse(JSON.stringify(data));
+      post.currentData  = JSON.parse(JSON.stringify(data));
+    }
+  }
+});
 
 /* ══ UI STATE ═══════════════════════════════════════════════════ */
 function updateUI() {
@@ -514,22 +1603,11 @@ function updateUI() {
   cnt.textContent = n + (n === 1 ? ' post' : ' posts');
 }
 
+let _postKey = 'dyk::stat'; /* tracks which key is being generated, passed into addPost */
+
 /* ══ WIRING ═════════════════════════════════════════════════════ */
-document.getElementById('emptyBtn').addEventListener('click', async () => {
-  const btn = document.getElementById('emptyBtn');
-  btn.disabled = true;
-  btn.style.opacity = '0.6';
-  const schema = await fetchTemplate('dyk::stat');
-  btn.disabled = false;
-  btn.style.opacity = '';
-  if (!schema) return;
-  /* Fresh data from pipeline — random pick from dummy pool */
-  const data = await Pipeline.getData({ key: 'dyk::stat', source: 'dummy' });
-  const fresh = JSON.parse(JSON.stringify(schema));
-  fresh.data = data;
-  await addPost(fresh);
-});
-document.getElementById('generateBtn').addEventListener('click', openSheet);
+document.getElementById('emptyBtn').addEventListener('click', () => openTopicSheet('auto'));
+document.getElementById('generateBtn').addEventListener('click', () => openTopicSheet('full'));
 
 /* ══ INIT ═══════════════════════════════════════════════════════ */
 /* Add shimmer keyframe to page */

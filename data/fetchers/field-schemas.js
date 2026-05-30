@@ -133,19 +133,12 @@ const FIELD_SCHEMAS = {
     article_url: { type:'string', required:false, max:300, hint:'Full article URL',             example:'https://bbc.com/news/...' },
   },
 
-
-  /* ── Carousel (shared schema for all modes) ────────────────── */
-  'carousel::listicle':     { heading:{ type:'string',required:true, max:80,  hint:'Slide headline',     example:'5 habits that changed my mornings' }, body:{ type:'string',required:true, max:160, hint:'Supporting text',     example:'Swipe to see each one.' }, label:{ type:'string',required:false,max:20,  hint:'Slide label/number', example:'Cover' }, category:{ type:'string',required:false,max:30, hint:'Topic tag', example:'Wellness' }, image:{ type:'string',required:false,max:300,hint:'Background image URL', example:'https://picsum.photos/id/10/1080/1350' } },
-  'carousel::story_arc':    { heading:{ type:'string',required:true, max:80,  hint:'Slide headline',     example:'I used to dread Mondays' }, body:{ type:'string',required:true, max:160, hint:'Supporting text',     example:'Tired, anxious, never prepared.' }, label:{ type:'string',required:false,max:20,  hint:'Story beat label',   example:'Hook' }, category:{ type:'string',required:false,max:30, hint:'Topic tag', example:'Mindfulness' }, image:{ type:'string',required:false,max:300,hint:'Background image URL', example:'https://picsum.photos/id/11/1080/1350' } },
-  'carousel::step_by_step': { heading:{ type:'string',required:true, max:80,  hint:'Slide headline',     example:'Pick one task' }, body:{ type:'string',required:true, max:160, hint:'Supporting text',     example:'Write it down. Ambiguity kills focus.' }, label:{ type:'string',required:false,max:20,  hint:'Step label',         example:'Step 01' }, category:{ type:'string',required:false,max:30, hint:'Topic tag', example:'Productivity' }, image:{ type:'string',required:false,max:300,hint:'Background image URL', example:'https://picsum.photos/id/13/1080/1350' } },
-  'carousel::comparison':   { heading:{ type:'string',required:true, max:80,  hint:'Slide headline',     example:'To-do lists' }, body:{ type:'string',required:true, max:160, hint:'Supporting text',     example:'Endless and quietly overwhelming.' }, label:{ type:'string',required:false,max:20,  hint:'Comparison label',   example:'Side A' }, category:{ type:'string',required:false,max:30, hint:'Topic tag', example:'Productivity' }, image:{ type:'string',required:false,max:300,hint:'Background image URL', example:'https://picsum.photos/id/28/1080/1350' } },
-
   /* Editorial Cover */
   'editorial::cover': {
     title:       { type:'string', required:true,  max:80,  hint:'Bold headline',              example:'The Future of Open Banking' },
     description: { type:'string', required:true,  max:160, hint:'Supporting sentence or two',  example:'How APIs are reshaping finance globally.' },
     category:    { type:'string', required:true,  max:30,  hint:'Topic tag label',             example:'Open Banking' },
-    image:       { type:'string', required:false, max:300, hint:'Full bleed background image', example:'https://picsum.photos/id/10/1080/1350' },
+    image_url:   { type:'string', required:false, max:300, hint:'Full bleed background image', example:'https://picsum.photos/id/10/1080/1350' },
     source:      { type:'string', required:false, max:40,  hint:'Credit or publication name',  example:'Cateina Insights' },
   },
 

@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Template Editor</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Bebas+Neue&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07080C;--s:#0D0E14;--s2:#12131A;--b:#1A1B24;--b2:#24263200;
+  --tx:#E8E9F0;--mt:#3A3C4A;--mt2:#6A6C80;
+  --ac:#6B3CF7;--ac2:#8B5CF6;--ac-glow:rgba(107,60,247,0.25);
+  --red:#EF4444;--green:#22C55E;
+  --left:200px;--right:300px;--header:52px;
+}
+html,body{height:100vh;overflow:hidden;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--tx);font-size:13px}
+
+/* ── Header ── */
+.hdr{height:var(--header);background:var(--s);border-bottom:1px solid var(--b);display:flex;align-items:center;padding:0 16px;gap:10px;flex-shrink:0;z-index:20}
+.hdr-logo{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:1.5px;color:var(--mt2);text-transform:uppercase;white-space:nowrap;margin-right:4px}
+.hdr-sep{width:1px;height:20px;background:var(--b);flex-shrink:0}
+.tpl-select{flex:1;max-width:320px;background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:7px 12px;color:var(--tx);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236A6C80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.tpl-select:focus{border-color:var(--ac)}
+.hdr-spacer{flex:1}
+.hdr-status{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;white-space:nowrap}
+.hdr-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:'DM Sans',sans-serif}
+.hdr-btn:hover{border-color:var(--b2);color:var(--tx)}
+.hdr-btn.primary{background:var(--ac);border-color:var(--ac);color:#fff;box-shadow:0 2px 12px var(--ac-glow)}
+.hdr-btn.primary:hover{background:var(--ac2)}
+.hdr-btn svg{width:13px;height:13px;flex-shrink:0}
+
+/* ── Layout ── */
+.layout{display:flex;height:calc(100vh - var(--header));overflow:hidden}
+
+/* ── Left panel ── */
+.left{width:var(--left);flex-shrink:0;background:var(--s);border-right:1px solid var(--b);display:flex;flex-direction:column;overflow:hidden}
+.panel-title{padding:10px 14px 6px;font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--mt2);flex-shrink:0}
+.layer-list{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--b) transparent;padding:0 0 8px}
+.layer-list::-webkit-scrollbar{width:3px}
+.layer-list::-webkit-scrollbar-track{background:transparent}
+.layer-list::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px}
+.layer-section{margin-bottom:6px}
+.layer-section-hdr{display:flex;align-items:center;gap:6px;padding:6px 14px 4px;cursor:pointer;user-select:none}
+.layer-section-hdr span{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--mt2)}
+.layer-section-hdr svg{width:10px;height:10px;color:var(--mt2);transition:transform .15s;flex-shrink:0}
+.layer-section-hdr.collapsed svg{transform:rotate(-90deg)}
+.layer-item{display:flex;align-items:center;gap:6px;padding:5px 14px;cursor:pointer;border-left:2px solid transparent;transition:all .1s;user-select:none}
+.layer-item:hover{background:var(--s2)}
+.layer-item.selected{background:rgba(107,60,247,.1);border-left-color:var(--ac)}
+.layer-item.hidden{opacity:.4}
+.layer-name{flex:1;font-size:11px;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.layer-type{font-size:9px;font-family:'DM Mono',monospace;color:var(--mt2);background:var(--b);border-radius:3px;padding:1px 4px;flex-shrink:0;white-space:nowrap}
+.layer-eye{width:16px;height:16px;flex-shrink:0;color:var(--mt2);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:3px;transition:color .1s}
+.layer-eye:hover{color:var(--tx)}
+.layer-eye svg{width:12px;height:12px;pointer-events:none}
+
+/* ── Centre panel ── */
+.centre{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.preview-area{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;padding:24px}
+.canvas-wrap{position:relative;height:100%;max-height:100%;aspect-ratio:4/5;flex-shrink:0}
+.canvas-wrap canvas{border-radius:12px;box-shadow:0 24px 64px rgba(0,0,0,.6)}
+#playerSlot{width:100%;height:100%}
+.timeline-bar{flex-shrink:0;padding:10px 20px 12px;background:var(--s);border-top:1px solid var(--b);display:flex;align-items:center;gap:12px}
+.tl-controls{display:flex;gap:4px;flex-shrink:0}
+.tl-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--b);background:var(--s2);color:var(--mt2);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.tl-btn:hover{border-color:var(--b2);color:var(--tx)}
+.tl-btn svg{width:12px;height:12px;pointer-events:none}
+.tl-btn.playing{background:rgba(107,60,247,.12);border-color:rgba(107,60,247,.3);color:var(--ac2)}
+.tl-scrubber{flex:1;display:flex;align-items:center;gap:8px}
+input[type=range].scrubber{flex:1;accent-color:var(--ac);height:3px;cursor:pointer}
+.tl-frame{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;white-space:nowrap;min-width:64px;text-align:right}
+.speed-btns{display:flex;gap:2px;flex-shrink:0}
+.spd{padding:4px 8px;border-radius:5px;border:1px solid var(--b);background:transparent;color:var(--mt2);font-size:10px;font-family:'DM Mono',monospace;cursor:pointer;transition:all .1s}
+.spd:hover{color:var(--tx);border-color:var(--b2)}
+.spd.active{background:var(--b);color:var(--tx)}
+
+/* ── Right panel ── */
+.right{width:var(--right);flex-shrink:0;background:var(--s);border-left:1px solid var(--b);display:flex;flex-direction:column;overflow:hidden}
+.right-tabs{display:flex;border-bottom:1px solid var(--b);flex-shrink:0}
+.right-tab{flex:1;padding:10px 8px;font-size:11px;font-weight:500;color:var(--mt2);cursor:pointer;text-align:center;border-bottom:2px solid transparent;transition:all .15s}
+.right-tab.active{color:var(--tx);border-bottom-color:var(--ac)}
+.right-body{flex:1;overflow-y:auto;padding:14px;scrollbar-width:thin;scrollbar-color:var(--b) transparent;display:flex;flex-direction:column;gap:12px}
+.right-body::-webkit-scrollbar{width:3px}
+.right-body::-webkit-scrollbar-thumb{background:var(--b);border-radius:2px}
+.right-footer{padding:12px 14px;border-top:1px solid var(--b);flex-shrink:0;display:flex;gap:8px}
+.apply-btn{flex:1;padding:10px;border-radius:8px;border:none;background:var(--ac);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;box-shadow:0 2px 10px var(--ac-glow)}
+.apply-btn:hover{background:var(--ac2)}
+.apply-btn:active{transform:scale(.98)}
+.reset-btn{padding:10px 14px;border-radius:8px;border:1px solid var(--b);background:transparent;color:var(--mt2);font-size:12px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.reset-btn:hover{border-color:var(--b2);color:var(--tx)}
+
+/* ── Property rows ── */
+.prop-section{display:flex;flex-direction:column;gap:8px}
+.prop-section-title{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--mt2);padding-bottom:4px;border-bottom:1px solid var(--b)}
+.prop-row{display:flex;flex-direction:column;gap:4px}
+.prop-label{font-size:11px;color:var(--mt2)}
+.prop-input{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:6px 9px;color:var(--tx);font-size:12px;font-family:'DM Mono',monospace;outline:none;transition:border-color .15s}
+.prop-input:focus{border-color:var(--ac)}
+.prop-input.wide{font-family:'DM Sans',sans-serif}
+.prop-row-inline{display:flex;gap:6px;align-items:center}
+.prop-row-inline .prop-label{min-width:80px;flex-shrink:0}
+.prop-row-inline .prop-input{flex:1}
+.prop-select{width:100%;background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:6px 9px;color:var(--tx);font-size:12px;outline:none;appearance:none;cursor:pointer;font-family:'DM Sans',sans-serif;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236A6C80' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px}
+.prop-select:focus{border-color:var(--ac)}
+.prop-color-row{display:flex;gap:6px;align-items:center}
+.prop-color-swatch{width:28px;height:28px;border-radius:6px;border:1px solid var(--b);cursor:pointer;flex-shrink:0;overflow:hidden;position:relative}
+.prop-color-swatch input[type=color]{position:absolute;inset:-4px;width:calc(100%+8px);height:calc(100%+8px);border:none;cursor:pointer;opacity:0}
+.prop-color-swatch-bg{position:absolute;inset:0;border-radius:5px}
+.prop-slider-row{display:flex;gap:8px;align-items:center}
+.prop-slider-row input[type=range]{flex:1;accent-color:var(--ac);height:3px;cursor:pointer}
+.prop-slider-val{font-size:11px;color:var(--mt2);font-family:'DM Mono',monospace;width:32px;text-align:right;flex-shrink:0}
+.no-selection{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:var(--mt2)}
+.no-selection svg{width:32px;height:32px;opacity:.3}
+.no-selection p{font-size:12px;text-align:center;line-height:1.5;max-width:160px}
+.anim-row{background:var(--s2);border:1px solid var(--b);border-radius:8px;padding:10px}
+.anim-prop{font-size:11px;font-family:'DM Mono',monospace;color:var(--ac2);margin-bottom:8px}
+.anim-fields{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.anim-field label{font-size:10px;color:var(--mt2);display:block;margin-bottom:3px}
+.no-anims{font-size:11px;color:var(--mt2);text-align:center;padding:20px 0}
+/* Loading / empty states */
+.loading-state{display:flex;align-items:center;justify-content:center;height:100%;color:var(--mt2);flex-direction:column;gap:12px}
+.loading-state svg{width:36px;height:36px;opacity:.2;animation:spin 1.5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* GitHub token modal */
+.gh-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.gh-backdrop.open{opacity:1;pointer-events:auto}
+.gh-modal{background:var(--s);border:1px solid var(--b);border-radius:16px;width:100%;max-width:380px;padding:24px;display:flex;flex-direction:column;gap:16px;transform:scale(.96) translateY(8px);transition:transform .2s cubic-bezier(.34,1.4,.64,1)}
+.gh-backdrop.open .gh-modal{transform:scale(1) translateY(0)}
+.gh-modal h3{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:600;color:var(--tx)}
+.gh-modal p{font-size:12px;color:var(--mt2);line-height:1.6}
+.gh-modal a{color:var(--ac2);text-decoration:none}
+.gh-modal a:hover{text-decoration:underline}
+.gh-token-input{width:100%;background:var(--s2);border:1.5px solid var(--b);border-radius:8px;padding:10px 12px;color:var(--tx);font-size:12px;font-family:'DM Mono',monospace;outline:none;transition:border-color .15s}
+.gh-token-input:focus{border-color:var(--ac)}
+.gh-token-input::placeholder{color:var(--mt)}
+.gh-modal-footer{display:flex;gap:8px;justify-content:flex-end}
+.gh-cancel{padding:8px 16px;border-radius:8px;border:1px solid var(--b);background:transparent;color:var(--mt2);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.gh-cancel:hover{border-color:var(--b2);color:var(--tx)}
+.gh-save-token{padding:8px 16px;border-radius:8px;border:none;background:var(--ac);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:all .15s}
+.gh-save-token:hover{background:var(--ac2)}
+.gh-status{font-size:11px;min-height:16px;text-align:center;font-family:'DM Mono',monospace}
+.gh-status.ok{color:var(--green)}
+.gh-status.err{color:var(--red)}
+.hdr-btn.gh-connected{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.3);color:var(--green)}
+.hdr-btn.gh-connected:hover{background:rgba(34,197,94,.2)}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="hdr">
+  <div class="hdr-logo">Template Editor</div>
+  <div class="hdr-sep"></div>
+  <select class="tpl-select" id="tplSelect">
+    <option value="">— Select a template —</option>
+  </select>
+  <div class="hdr-spacer"></div>
+  <div class="hdr-status" id="hdrStatus"></div>
+  <div class="hdr-sep"></div>
+  <button class="hdr-btn" id="btnDownload" disabled>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download JSON
+  </button>
+  <button class="hdr-btn" id="btnGitHub" disabled>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    <span id="btnGitHubLabel">Save to GitHub</span>
+  </button>
+  <button class="hdr-btn" id="btnGhToken" title="Configure GitHub token">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+    <span id="btnGhTokenLabel">Connect GitHub</span>
+  </button>
+</div>
+
+<!-- GitHub token modal -->
+<div class="gh-backdrop" id="ghBackdrop">
+  <div class="gh-modal">
+    <h3>Connect to GitHub</h3>
+    <p>A Personal Access Token lets the editor save templates directly to your repo — no terminal needed.</p>
+    <p>
+      1. Go to <a href="https://github.com/settings/tokens/new" target="_blank">github.com/settings/tokens/new</a><br>
+      2. Note: <code style="font-family:DM Mono,monospace;font-size:11px;color:var(--ac2)">canvas-templates editor</code><br>
+      3. Expiration: 90 days<br>
+      4. Scope: tick <strong>repo</strong><br>
+      5. Click Generate token and paste below
+    </p>
+    <input class="gh-token-input" id="ghTokenInput" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+    <div class="gh-status" id="ghModalStatus"></div>
+    <div class="gh-modal-footer">
+      <button class="gh-cancel" id="ghCancel">Cancel</button>
+      <button class="gh-save-token" id="ghSaveToken">Save Token</button>
+    </div>
+  </div>
+</div>
+
+<!-- Layout -->
+<div class="layout">
+
+  <!-- Left: Layer tree -->
+  <div class="left">
+    <div id="layerTree" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+      <div class="loading-state" id="leftEmpty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <p>Select a template to begin</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Centre: Preview + timeline -->
+  <div class="centre">
+    <div class="preview-area">
+      <div class="canvas-wrap" id="canvasWrap">
+        <div class="loading-state" id="previewEmpty" style="position:absolute;inset:0;background:var(--s2);border-radius:12px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <p>Preview will appear here</p>
+        </div>
+        <div id="playerSlot" style="width:100%;height:100%;display:none"></div>
+      </div>
+    </div>
+    <div class="timeline-bar">
+      <div class="tl-controls">
+        <div class="tl-btn" id="btnPlay" title="Play / Pause">
+          <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+        <div class="tl-btn" id="btnStop" title="Stop">
+          <svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+        </div>
+        <div class="tl-btn" id="btnReplay" title="Replay">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.8"/></svg>
+        </div>
+      </div>
+      <div class="tl-scrubber">
+        <input type="range" class="scrubber" id="scrubber" min="0" max="270" value="0" step="1">
+        <div class="tl-frame" id="frameCounter">0 / 0</div>
+      </div>
+      <div class="speed-btns">
+        <button class="spd" data-spd="0.5">0.5×</button>
+        <button class="spd active" data-spd="1">1×</button>
+        <button class="spd" data-spd="2">2×</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Properties -->
+  <div class="right">
+    <div class="right-tabs">
+      <div class="right-tab active" data-tab="layer">Layer</div>
+      <div class="right-tab" data-tab="anim">Animation</div>
+      <div class="right-tab" data-tab="brand">Brand</div>
+    </div>
+    <div class="right-body" id="rightBody">
+      <div class="no-selection">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+        <p>Select a layer from the left panel to edit its properties</p>
+      </div>
+    </div>
+    <div class="right-footer">
+      <button class="reset-btn" id="btnReset" disabled>Reset</button>
+      <button class="apply-btn" id="btnApply" disabled>Apply Changes</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="player-lite.js"></script>
+<script>
+(async () => {
+
+/* ══════════════════════════════════════════════════════════════
+   CONFIG
+══════════════════════════════════════════════════════════════*/
+const BASE = 'https://raw.githubusercontent.com/dhiraajdc/canvas-templates/master/templates';
+const READY_KEYS = [
+  'dyk::stat','dyk::ratio','dyk::timeframe',
+  'quote::portrait','quote::topic','quote::split',
+  'tip::checklist','tip::do_dont','tip::stat_tip',
+  'funfact::versus','funfact::number_fact','funfact::mind_blown',
+  'market::day_chart','news::headline',
+];
+const FILE_MAP = {
+  'dyk::stat':            'dyk/tpl-dyk-stat.json',
+  'dyk::ratio':           'dyk/tpl-dyk-ratio.json',
+  'dyk::timeframe':       'dyk/tpl-dyk-timeframe.json',
+  'quote::portrait':      'quote/tpl-quote-portrait.json',
+  'quote::topic':         'quote/tpl-quote-topic.json',
+  'quote::split':         'quote/tpl-quote-split.json',
+  'tip::checklist':       'tip/tpl-tip-checklist.json',
+  'tip::do_dont':         'tip/tpl-tip-do-dont.json',
+  'tip::stat_tip':        'tip/tpl-tip-stat-tip.json',
+  'funfact::versus':      'funfact/tpl-funfact-versus.json',
+  'funfact::number_fact': 'funfact/tpl-funfact-number.json',
+  'funfact::mind_blown':  'funfact/tpl-funfact-mind-blown.json',
+  'market::day_chart':    'market/tpl-market-day-chart.json',
+  'news::headline':       'news/tpl-news-headline.json',
+};
+const KEY_LABELS = {
+  'dyk::stat':'Did You Know · Stat','dyk::ratio':'Did You Know · Ratio',
+  'dyk::timeframe':'Did You Know · Timeframe','quote::portrait':'Quote · Portrait',
+  'quote::topic':'Quote · Topic','quote::split':'Quote · Split',
+  'tip::checklist':'Tip · Checklist','tip::do_dont':'Tip · Do / Don\'t',
+  'tip::stat_tip':'Tip · Stat Tip','funfact::versus':'Fun Fact · Versus',
+  'funfact::number_fact':'Fun Fact · Number Fact','funfact::mind_blown':'Fun Fact · Mind Blown',
+  'market::day_chart':'Market · Day Chart','news::headline':'News · Headline',
+};
+
+/* Property types — determines which input to render */
+const COLOR_PROPS = new Set(['color','color_start','color_end','bg_color','stroke_color','dot_color','line_color','bar_color','gradient_start','gradient_end','baseline_color']);
+const SLIDER_PROPS = new Set(['opacity','color_opacity','opacity_start','opacity_end','fill_opacity','bg_opacity','border_opacity','stroke_opacity']);
+const SELECT_PROPS = {
+  easing: ['ease_out','ease_in','ease_in_out','elastic_out','linear'],
+  align:  ['left','center','right'],
+  baseline: ['alphabetic','middle','top','bottom','hanging'],
+  fit:    ['cover','contain','fill'],
+  tick_style: ['box','circle','line'],
+  gradient_angle: ['0','45','90'],
+};
+const SKIP_LAYER_PROPS  = new Set(['id','type','opacity']); /* shown separately */
+const SKIP_ANIM_PROPS   = new Set(['layer_id']);
+
+/* ══ STATE ══════════════════════════════════════════════════*/
+let activeSchema      = null;  /* live editable copy */
+let originalSchema    = null;  /* pristine loaded copy */
+let activeKey         = null;
+let selectedLayerId   = null;
+let activeTab         = 'layer';
+let player            = null;
+let hiddenLayers      = new Set();
+
+/* ══ POPULATE DROPDOWN ══════════════════════════════════════*/
+const sel = document.getElementById('tplSelect');
+READY_KEYS.forEach(k => {
+  const o = document.createElement('option');
+  o.value = k; o.textContent = KEY_LABELS[k]; sel.appendChild(o);
+});
+
+/* ══ LOAD TEMPLATE ══════════════════════════════════════════*/
+sel.addEventListener('change', () => loadTemplate(sel.value));
+
+async function loadTemplate(key) {
+  if (!key) return;
+  setStatus('Loading...');
+  activeKey = key;
+  selectedLayerId = null;
+  hiddenLayers.clear();
+
+  try {
+    const url = `${BASE}/${FILE_MAP[key]}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const schema = await res.json();
+    originalSchema = JSON.parse(JSON.stringify(schema));
+    activeSchema   = JSON.parse(JSON.stringify(schema));
+
+    CanvasPlayer.loadFonts(activeSchema);
+    await document.fonts.ready;
+    await new Promise(r => setTimeout(r, 200));
+
+    buildLayerTree();
+    await initPlayer();
+    renderRightPanel();
+
+    document.getElementById('btnDownload').disabled = false;
+    document.getElementById('btnApply').disabled    = false;
+    document.getElementById('btnReset').disabled    = false;
+    syncGhUI(); /* enable Save to GitHub if token is set */
+    setStatus(KEY_LABELS[key]);
+  } catch(e) {
+    setStatus('Error: ' + e.message);
+    console.error(e);
+  }
+}
+
+/* ══ PLAYER ══════════════════════════════════════════════════*/
+async function initPlayer() {
+  if (player) { player.destroy(); player = null; }
+
+  document.getElementById('previewEmpty').style.display = 'none';
+  const slot = document.getElementById('playerSlot');
+  slot.style.display = 'block';
+  slot.innerHTML = '';
+
+  player = new CanvasPlayer('#playerSlot', { playback:'manual' });
+  await player.load(activeSchema);
+  player.play();
+
+  /* Update scrubber */
+  const total = player.getState().totalFrames;
+  const scrubber = document.getElementById('scrubber');
+  scrubber.max = total - 1;
+  updateFrameCounter();
+
+  player.onStateChange(s => {
+    syncPlayBtn(s.playing);
+    scrubber.value = Math.round(s.frame);
+    updateFrameCounter();
+  });
+  player.onFrame(s => {
+    scrubber.value = Math.round(s.frame);
+    updateFrameCounter();
+  });
+  player.onEnded(() => syncPlayBtn(false));
+}
+
+async function applyAndReload() {
+  if (!activeSchema || !player) return;
+  setStatus('Applying...');
+  /* Reapply hidden layers */
+  activeSchema.layers.forEach(l => {
+    if (hiddenLayers.has(l.id)) l._hidden = true;
+    else delete l._hidden;
+  });
+  CanvasPlayer.loadFonts(activeSchema);
+  await document.fonts.ready;
+  player.stop();
+  await player.load(activeSchema);
+  player.play();
+  setStatus(KEY_LABELS[activeKey] + ' · edited');
+}
+
+/* ══ LAYER TREE ══════════════════════════════════════════════*/
+function buildLayerTree() {
+  const tree = document.getElementById('layerTree');
+  tree.innerHTML = '';
+
+  const layers = activeSchema?.layers ?? [];
+
+  /* Brand section */
+  tree.appendChild(makeSection('Brand', [
+    makeFakeLayer('brand', 'brand', '⬡')
+  ]));
+
+  /* Layers section */
+  tree.appendChild(makeSection('Layers', layers.map(l => makeLayerItem(l))));
+}
+
+function makeSection(title, items) {
+  const sec = document.createElement('div');
+  sec.className = 'layer-section';
+
+  const hdr = document.createElement('div');
+  hdr.className = 'layer-section-hdr';
+  hdr.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg><span>${title}</span>`;
+
+  const body = document.createElement('div');
+  body.className = 'layer-section-body';
+  items.forEach(i => body.appendChild(i));
+
+  hdr.addEventListener('click', () => {
+    hdr.classList.toggle('collapsed');
+    body.style.display = hdr.classList.contains('collapsed') ? 'none' : '';
+  });
+
+  sec.appendChild(hdr);
+  sec.appendChild(body);
+  return sec;
+}
+
+function makeFakeLayer(id, type, icon) {
+  const el = document.createElement('div');
+  el.className = 'layer-item' + (selectedLayerId === id ? ' selected' : '');
+  el.dataset.id = id;
+  el.innerHTML = `<div class="layer-name">${icon ?? ''} ${id}</div><div class="layer-type">${type}</div>`;
+  el.addEventListener('click', () => selectLayer(id));
+  return el;
+}
+
+function makeLayerItem(layer) {
+  const el = document.createElement('div');
+  el.className = 'layer-item' + (selectedLayerId === layer.id ? ' selected' : '') + (hiddenLayers.has(layer.id) ? ' hidden' : '');
+  el.dataset.id = layer.id;
+
+  const name = document.createElement('div');
+  name.className = 'layer-name';
+  name.textContent = layer.id;
+
+  const type = document.createElement('div');
+  type.className = 'layer-type';
+  type.textContent = layer.type;
+
+  const eye = document.createElement('div');
+  eye.className = 'layer-eye';
+  eye.title = 'Toggle visibility';
+  eye.innerHTML = hiddenLayers.has(layer.id)
+    ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`
+    : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+
+  eye.addEventListener('click', e => {
+    e.stopPropagation();
+    if (hiddenLayers.has(layer.id)) hiddenLayers.delete(layer.id);
+    else hiddenLayers.add(layer.id);
+    /* Toggle opacity in schema */
+    const l = activeSchema.layers.find(x => x.id === layer.id);
+    if (l) l.opacity = hiddenLayers.has(layer.id) ? 0 : (originalSchema.layers.find(x => x.id === layer.id)?.opacity ?? 1);
+    buildLayerTree();
+    selectLayer(selectedLayerId);
+  });
+
+  el.appendChild(name);
+  el.appendChild(type);
+  el.appendChild(eye);
+  el.addEventListener('click', () => selectLayer(layer.id));
+  return el;
+}
+
+function selectLayer(id) {
+  selectedLayerId = id;
+  /* Highlight in tree */
+  document.querySelectorAll('.layer-item').forEach(el => {
+    el.classList.toggle('selected', el.dataset.id === id);
+  });
+  renderRightPanel();
+}
+
+/* ══ RIGHT PANEL ══════════════════════════════════════════════*/
+function renderRightPanel() {
+  const body = document.getElementById('rightBody');
+  body.innerHTML = '';
+
+  if (!activeSchema) return;
+
+  if (activeTab === 'brand') {
+    renderBrandPanel(body);
+    return;
+  }
+
+  if (!selectedLayerId) {
+    body.innerHTML = `<div class="no-selection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg><p>Select a layer from the left panel</p></div>`;
+    return;
+  }
+
+  if (selectedLayerId === 'brand') {
+    renderBrandPanel(body);
+    return;
+  }
+
+  const layer = activeSchema.layers.find(l => l.id === selectedLayerId);
+  if (!layer) return;
+
+  if (activeTab === 'layer') renderLayerProps(body, layer);
+  if (activeTab === 'anim')  renderAnimProps(body, layer);
+}
+
+/* ── Layer properties ─────────────────────────────────────── */
+function renderLayerProps(body, layer) {
+  /* Type badge */
+  const typeSec = document.createElement('div');
+  typeSec.className = 'prop-section';
+  typeSec.innerHTML = `<div class="prop-section-title">${layer.id} <span style="color:var(--ac2);font-size:9px;font-family:DM Mono,monospace">${layer.type}</span></div>`;
+  body.appendChild(typeSec);
+
+  /* Opacity — always first */
+  if ('opacity' in layer) {
+    body.appendChild(makePropSection('Visibility', [
+      makeSliderRow('opacity', layer.opacity ?? 1, 0, 1, 0.01, v => { layer.opacity = parseFloat(v); })
+    ]));
+  }
+
+  /* Group remaining props */
+  const posProps    = ['x','y','x1','y1','x2','y2','cx','cy','width','height','radius','size','inner_radius','outer_radius'];
+  const styleProps  = ['color','color_start','color_end','stroke_color','stroke_width','corner_radius','fill','fit'];
+  const textProps   = ['font','size','weight','letter_spacing','line_height','align','baseline','color_opacity'];
+  const contentProp = ['content','content_ref','src','value_ref'];
+
+  const grouped = {
+    'Content':   contentProp.filter(k => k in layer),
+    'Position':  posProps.filter(k => k in layer),
+    'Style':     styleProps.filter(k => k in layer),
+    'Typography':textProps.filter(k => k in layer),
+  };
+
+  for (const [title, keys] of Object.entries(grouped)) {
+    if (!keys.length) continue;
+    const rows = keys.map(k => makePropRow(k, layer[k], v => {
+      layer[k] = isNaN(v) || String(v).includes('@') || String(v).includes('$') ? v : (v === '' ? v : (Number.isInteger(parseFloat(v)) ? parseInt(v) : parseFloat(v)));
+    }));
+    body.appendChild(makePropSection(title, rows));
+  }
+
+  /* Any remaining unlisted props */
+  const allHandled = new Set([...Object.values(grouped).flat(), 'id','type','opacity']);
+  const remaining  = Object.keys(layer).filter(k => !allHandled.has(k) && !k.startsWith('_'));
+  if (remaining.length) {
+    const rows = remaining.map(k => makePropRow(k, layer[k], v => {
+      layer[k] = isNaN(v) || String(v).includes('@') || String(v).includes('$') ? v : (v === '' ? v : parseFloat(v));
+    }));
+    body.appendChild(makePropSection('Other', rows));
+  }
+}
+
+/* ── Animation properties ─────────────────────────────────── */
+function renderAnimProps(body, layer) {
+  const anims = (activeSchema.animations ?? []).filter(a => a.layer_id === layer.id);
+
+  if (!anims.length) {
+    body.innerHTML = '<div class="no-anims">No animations for this layer</div>';
+    return;
+  }
+
+  anims.forEach(anim => {
+    const card = document.createElement('div');
+    card.className = 'anim-row';
+
+    const propLabel = document.createElement('div');
+    propLabel.className = 'anim-prop';
+    propLabel.textContent = anim.property;
+    card.appendChild(propLabel);
+
+    const grid = document.createElement('div');
+    grid.className = 'anim-fields';
+
+    const fields = [
+      ['From',  'from_value'],
+      ['To',    'to_value'],
+      ['Start', 'start_frame'],
+      ['End',   'end_frame'],
+    ];
+
+    fields.forEach(([lbl, key]) => {
+      const wrap = document.createElement('div');
+      const label = document.createElement('label');
+      label.textContent = lbl;
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = 'prop-input';
+      input.value = anim[key] ?? '';
+      input.addEventListener('input', () => { anim[key] = isNaN(input.value) ? input.value : parseFloat(input.value); });
+      wrap.appendChild(label);
+      wrap.appendChild(input);
+      grid.appendChild(wrap);
+    });
+
+    /* Easing select */
+    const easingWrap = document.createElement('div');
+    easingWrap.style.gridColumn = '1 / -1';
+    const easingLabel = document.createElement('label');
+    easingLabel.textContent = 'Easing';
+    const easingSel = makeSelect(SELECT_PROPS.easing, anim.easing ?? 'ease_out', v => { anim.easing = v; });
+    easingWrap.appendChild(easingLabel);
+    easingWrap.appendChild(easingSel);
+    grid.appendChild(easingWrap);
+
+    card.appendChild(grid);
+    body.appendChild(card);
+  });
+}
+
+/* ── Brand panel ──────────────────────────────────────────── */
+function renderBrandPanel(body) {
+  const brand = activeSchema.brand;
+  if (!brand) return;
+
+  /* Logo */
+  body.appendChild(makePropSection('Identity', [
+    makePropRow('logo', brand.logo, v => { brand.logo = v; })
+  ]));
+
+  /* Colors */
+  const colorRows = Object.keys(brand.colors).map(k =>
+    makeColorRow(k, brand.colors[k], v => { brand.colors[k] = v; })
+  );
+  body.appendChild(makePropSection('Colors', colorRows));
+
+  /* Fonts */
+  const fontRows = Object.keys(brand.fonts).map(k =>
+    makePropRow(k, brand.fonts[k], v => { brand.fonts[k] = v; })
+  );
+  body.appendChild(makePropSection('Fonts', fontRows));
+}
+
+/* ══ PROP BUILDERS ══════════════════════════════════════════*/
+function makePropSection(title, rows) {
+  const sec = document.createElement('div');
+  sec.className = 'prop-section';
+  const t = document.createElement('div');
+  t.className = 'prop-section-title';
+  t.textContent = title;
+  sec.appendChild(t);
+  rows.forEach(r => sec.appendChild(r));
+  return sec;
+}
+
+function makePropRow(key, value, onChange) {
+  /* Skip objects and arrays */
+  if (typeof value === 'object' && value !== null) return document.createElement('div');
+
+  const row = document.createElement('div');
+  row.className = 'prop-row';
+
+  const label = document.createElement('div');
+  label.className = 'prop-label';
+  label.textContent = key;
+  row.appendChild(label);
+
+  /* Color picker */
+  if (COLOR_PROPS.has(key) && typeof value === 'string' && value.startsWith('#')) {
+    row.appendChild(makeColorRow(key, value, onChange).querySelector('.prop-color-row'));
+    return row;
+  }
+
+  /* Opacity slider */
+  if (SLIDER_PROPS.has(key)) {
+    row.appendChild(makeSliderRow(key, value, 0, 1, 0.01, onChange));
+    return row;
+  }
+
+  /* Select */
+  if (SELECT_PROPS[key]) {
+    row.appendChild(makeSelect(SELECT_PROPS[key], value, onChange));
+    return row;
+  }
+
+  /* Bool */
+  if (typeof value === 'boolean') {
+    const sel = makeSelect(['true','false'], String(value), v => onChange(v === 'true'));
+    row.appendChild(sel);
+    return row;
+  }
+
+  /* Default — text input */
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'prop-input' + (typeof value === 'string' && value.length > 20 ? ' wide' : '');
+  input.value = value ?? '';
+  input.addEventListener('input', () => onChange(input.value));
+  row.appendChild(input);
+  return row;
+}
+
+function makeColorRow(key, value, onChange) {
+  const row = document.createElement('div');
+  row.className = 'prop-row';
+  const label = document.createElement('div');
+  label.className = 'prop-label';
+  label.textContent = key;
+
+  const colorRow = document.createElement('div');
+  colorRow.className = 'prop-color-row';
+
+  const swatch = document.createElement('div');
+  swatch.className = 'prop-color-swatch';
+  const swatchBg = document.createElement('div');
+  swatchBg.className = 'prop-color-swatch-bg';
+  swatchBg.style.background = value;
+  const colorIn = document.createElement('input');
+  colorIn.type = 'color';
+  colorIn.value = value?.startsWith('#') ? value : '#6B3CF7';
+  swatch.appendChild(swatchBg);
+  swatch.appendChild(colorIn);
+
+  const hexIn = document.createElement('input');
+  hexIn.type = 'text';
+  hexIn.className = 'prop-input';
+  hexIn.style.flex = '1';
+  hexIn.value = value ?? '';
+
+  colorIn.addEventListener('input', () => {
+    hexIn.value = colorIn.value;
+    swatchBg.style.background = colorIn.value;
+    onChange(colorIn.value);
+  });
+  hexIn.addEventListener('input', () => {
+    const v = hexIn.value;
+    if (/^#[0-9A-Fa-f]{6}$/.test(v)) { colorIn.value = v; swatchBg.style.background = v; }
+    onChange(v);
+  });
+
+  colorRow.appendChild(swatch);
+  colorRow.appendChild(hexIn);
+  row.appendChild(label);
+  row.appendChild(colorRow);
+  return row;
+}
+
+function makeSliderRow(key, value, min, max, step, onChange) {
+  const row = document.createElement('div');
+  row.className = 'prop-slider-row';
+  const slider = document.createElement('input');
+  slider.type = 'range';
+  slider.min = min; slider.max = max; slider.step = step;
+  slider.value = value ?? 1;
+  const val = document.createElement('div');
+  val.className = 'prop-slider-val';
+  val.textContent = parseFloat(slider.value).toFixed(2);
+  slider.addEventListener('input', () => {
+    val.textContent = parseFloat(slider.value).toFixed(2);
+    onChange(slider.value);
+  });
+  row.appendChild(slider);
+  row.appendChild(val);
+  return row;
+}
+
+function makeSelect(options, current, onChange) {
+  const sel = document.createElement('select');
+  sel.className = 'prop-select';
+  options.forEach(o => {
+    const opt = document.createElement('option');
+    opt.value = o; opt.textContent = o;
+    if (String(o) === String(current)) opt.selected = true;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener('change', () => onChange(sel.value));
+  return sel;
+}
+
+/* ══ TABS ══════════════════════════════════════════════════*/
+document.querySelectorAll('.right-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    activeTab = tab.dataset.tab;
+    document.querySelectorAll('.right-tab').forEach(t => t.classList.toggle('active', t === tab));
+    renderRightPanel();
+  });
+});
+
+/* ══ PLAYER CONTROLS ══════════════════════════════════════*/
+function syncPlayBtn(playing) {
+  const btn = document.getElementById('btnPlay');
+  btn.classList.toggle('playing', playing);
+  btn.innerHTML = playing
+    ? `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`
+    : `<svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>`;
+}
+function updateFrameCounter() {
+  if (!player) return;
+  const s = player.getState();
+  document.getElementById('frameCounter').textContent = `${Math.round(s.frame)} / ${s.totalFrames}`;
+}
+
+document.getElementById('btnPlay').addEventListener('click', () => player?.toggle());
+document.getElementById('btnStop').addEventListener('click', () => { player?.stop(); syncPlayBtn(false); });
+document.getElementById('btnReplay').addEventListener('click', () => { player?.stop(); player?.play(); });
+
+document.getElementById('scrubber').addEventListener('input', e => {
+  if (!player) return;
+  player.pause();
+  player.seekToFrame(parseInt(e.target.value));
+  updateFrameCounter();
+});
+
+document.querySelectorAll('.spd').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const spd = parseFloat(btn.dataset.spd);
+    player?.setSpeed(spd);
+    document.querySelectorAll('.spd').forEach(b => b.classList.toggle('active', b === btn));
+  });
+});
+
+/* ══ APPLY + RESET ══════════════════════════════════════════*/
+document.getElementById('btnApply').addEventListener('click', applyAndReload);
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  if (!originalSchema) return;
+  activeSchema   = JSON.parse(JSON.stringify(originalSchema));
+  selectedLayerId = null;
+  hiddenLayers.clear();
+  buildLayerTree();
+  renderRightPanel();
+  applyAndReload();
+});
+
+/* ══ DOWNLOAD JSON ══════════════════════════════════════════*/
+document.getElementById('btnDownload').addEventListener('click', () => {
+  if (!activeSchema) return;
+  /* Clean up hidden layer markers */
+  const clean = JSON.parse(JSON.stringify(activeSchema));
+  clean.layers.forEach(l => delete l._hidden);
+  const blob = new Blob([JSON.stringify(clean, null, 2)], { type:'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (clean.meta?.template_id ?? activeKey.replace('::','-')) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  setStatus('Downloaded \u2713');
+});
+
+/* ══ GITHUB SAVE — PHASE 2 ═══════════════════════════════════
+   Saves updated schema directly to GitHub via the Contents API.
+   Token stored in localStorage — never sent anywhere else.
+══════════════════════════════════════════════════════════════*/
+const GH_OWNER = 'dhiraajdc';
+const GH_REPO  = 'canvas-templates';
+const GH_BRANCH = 'master';
+
+/* ── Token management ─────────────────────────────────────── */
+let ghToken = localStorage.getItem('gh_editor_token') ?? '';
+
+function syncGhUI() {
+  const connected = !!ghToken;
+  const tokenBtn  = document.getElementById('btnGhToken');
+  const saveBtn   = document.getElementById('btnGitHub');
+  const tokenLbl  = document.getElementById('btnGhTokenLabel');
+
+  tokenBtn.classList.toggle('gh-connected', connected);
+  tokenLbl.textContent = connected ? 'GitHub Connected' : 'Connect GitHub';
+  saveBtn.disabled = !activeSchema || !connected;
+}
+
+/* Open token modal */
+document.getElementById('btnGhToken').addEventListener('click', () => {
+  document.getElementById('ghTokenInput').value = ghToken ? '••••••••••••••••••••' : '';
+  document.getElementById('ghModalStatus').textContent = '';
+  document.getElementById('ghModalStatus').className = 'gh-status';
+  document.getElementById('ghBackdrop').classList.add('open');
+  setTimeout(() => document.getElementById('ghTokenInput').focus(), 200);
+});
+
+/* Cancel */
+document.getElementById('ghCancel').addEventListener('click', () => {
+  document.getElementById('ghBackdrop').classList.remove('open');
+});
+document.getElementById('ghBackdrop').addEventListener('click', e => {
+  if (e.target === document.getElementById('ghBackdrop'))
+    document.getElementById('ghBackdrop').classList.remove('open');
+});
+
+/* Save token */
+document.getElementById('ghSaveToken').addEventListener('click', async () => {
+  const input = document.getElementById('ghTokenInput').value.trim();
+  const statusEl = document.getElementById('ghModalStatus');
+
+  if (!input || input.includes('•')) {
+    /* No change — keep existing token */
+    document.getElementById('ghBackdrop').classList.remove('open');
+    return;
+  }
+
+  /* Verify token works by calling GitHub API */
+  statusEl.textContent = 'Verifying token...';
+  statusEl.className = 'gh-status';
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GH_OWNER}/${GH_REPO}`, {
+      headers: { 'Authorization': `token ${input}`, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (!res.ok) throw new Error('Invalid token or no repo access (HTTP ' + res.status + ')');
+    const repo = await res.json();
+    if (!repo.permissions?.push) throw new Error('Token needs repo write access');
+
+    ghToken = input;
+    localStorage.setItem('gh_editor_token', ghToken);
+    statusEl.textContent = 'Connected to ' + repo.full_name + ' ✓';
+    statusEl.className = 'gh-status ok';
+    syncGhUI();
+    setTimeout(() => document.getElementById('ghBackdrop').classList.remove('open'), 1200);
+  } catch(e) {
+    statusEl.textContent = e.message;
+    statusEl.className = 'gh-status err';
+  }
+});
+
+/* ── Save to GitHub ─────────────────────────────────────────
+   1. Read current file SHA from GitHub (required for PUT)
+   2. PUT updated content
+   File is live as soon as GitHub responds 200.
+─────────────────────────────────────────────────────────── */
+document.getElementById('btnGitHub').addEventListener('click', async () => {
+  if (!activeSchema || !ghToken) return;
+
+  const btn = document.getElementById('btnGitHub');
+  const lbl = document.getElementById('btnGitHubLabel');
+  btn.disabled = true;
+  lbl.textContent = 'Saving...';
+  setStatus('Pushing to GitHub...');
+
+  /* Build file path from FILE_MAP */
+  const filePath = `templates/${FILE_MAP[activeKey]}`;
+
+  /* Clean schema — remove internal editor markers */
+  const clean = JSON.parse(JSON.stringify(activeSchema));
+  clean.layers.forEach(l => delete l._hidden);
+  const content = JSON.stringify(clean, null, 2);
+  const contentB64 = btoa(unescape(encodeURIComponent(content))); /* UTF-8 safe base64 */
+
+  try {
+    /* Step 1 — get current SHA */
+    const shaRes = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filePath}?ref=${GH_BRANCH}`,
+      { headers: { 'Authorization': `token ${ghToken}`, 'Accept': 'application/vnd.github.v3+json' } }
+    );
+    if (!shaRes.ok) throw new Error('Could not read file SHA (HTTP ' + shaRes.status + ')');
+    const { sha } = await shaRes.json();
+
+    /* Step 2 — push updated content */
+    const pushRes = await fetch(
+      `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${filePath}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${ghToken}`,
+          'Accept':        'application/vnd.github.v3+json',
+          'Content-Type':  'application/json'
+        },
+        body: JSON.stringify({
+          message: `Update ${activeKey} via Template Editor`,
+          content: contentB64,
+          sha,
+          branch: GH_BRANCH
+        })
+      }
+    );
+    if (!pushRes.ok) {
+      const err = await pushRes.json();
+      throw new Error(err.message ?? 'Push failed (HTTP ' + pushRes.status + ')');
+    }
+
+    setStatus(KEY_LABELS[activeKey] + ' · saved to GitHub \u2713');
+    lbl.textContent = 'Saved \u2713';
+    setTimeout(() => { lbl.textContent = 'Save to GitHub'; btn.disabled = false; }, 2500);
+
+  } catch(e) {
+    setStatus('GitHub error: ' + e.message);
+    lbl.textContent = 'Save to GitHub';
+    btn.disabled = false;
+    console.error('[GitHub save]', e);
+  }
+});
+
+/* Init GitHub UI on load */
+syncGhUI();
+
+/* Keep Save button in sync with template load */
+const _origLoad = loadTemplate;
+// patch: after template loads, re-sync GitHub button state
+const origBtnApply = document.getElementById('btnApply');
+
+/* ══ HELPERS ══════════════════════════════════════════════*/
+function setStatus(msg) {
+  document.getElementById('hdrStatus').textContent = msg;
+}
+
+/* Re-sync GH save button whenever a template loads */
+document.getElementById('tplSelect').addEventListener('change', () => {
+  setTimeout(syncGhUI, 500);
+});
+
+})();
+</script>
+</body>
+</html>
