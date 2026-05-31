@@ -7,28 +7,78 @@
         "mode": "stat",
         "label": "Stat",
         "templates": [
-          { "id": "dyk-stat-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "dyk/stat/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "countup"] }
+          {
+            "id": "dyk-stat-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "dyk/stat/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "countup"
+            ],
+            "best_frame": 180
+          }
         ]
       },
       {
         "mode": "ratio",
         "label": "Ratio",
         "templates": [
-          { "id": "dyk-ratio-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "dyk/ratio/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+          {
+            "id": "dyk-ratio-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "dyk/ratio/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "timeframe",
         "label": "Timeframe",
         "templates": [
-          { "id": "dyk-timeframe-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "dyk/timeframe/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+          {
+            "id": "dyk-timeframe-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "dyk/timeframe/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "statement",
         "label": "Statement",
         "templates": [
-          { "id": "dyk-statement-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "dyk/statement/tpl-dark-feed.json", "status": "soon", "tags": [] }
+          {
+            "id": "dyk-statement-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "dyk/statement/tpl-dark-feed.json",
+            "status": "soon",
+            "tags": []
+          }
         ]
       }
     ]
@@ -41,29 +91,93 @@
         "mode": "portrait",
         "label": "Portrait",
         "templates": [
-          { "id": "quote-portrait-dark-feed",  "size": "feed",  "style": "dark", "aspect": "4:5",  "width": 1080, "height": 1350, "file": "quote/portrait/tpl-dark-feed.json",  "status": "ready", "tags": ["animated", "author-photo"] },
-          { "id": "quote-portrait-dark-story", "size": "story", "style": "dark", "aspect": "9:16", "width": 1080, "height": 1920, "file": "quote/portrait/tpl-dark-story.json", "status": "ready", "tags": ["animated", "author-photo"] }
+          {
+            "id": "quote-portrait-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "quote/portrait/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "author-photo"
+            ],
+            "best_frame": 162
+          },
+          {
+            "id": "quote-portrait-dark-story",
+            "size": "story",
+            "style": "dark",
+            "aspect": "9:16",
+            "width": 1080,
+            "height": 1920,
+            "file": "quote/portrait/tpl-dark-story.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "author-photo"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "topic",
         "label": "Topic",
         "templates": [
-          { "id": "quote-topic-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "quote/topic/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+          {
+            "id": "quote-topic-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "quote/topic/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "split",
         "label": "Split",
         "templates": [
-          { "id": "quote-split-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "quote/split/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+          {
+            "id": "quote-split-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "quote/split/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "classic",
         "label": "Classic",
         "templates": [
-          { "id": "quote-classic-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "quote/classic/tpl-dark-feed.json", "status": "soon", "tags": [] }
+          {
+            "id": "quote-classic-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "quote/classic/tpl-dark-feed.json",
+            "status": "soon",
+            "tags": []
+          }
         ]
       }
     ]
@@ -76,28 +190,79 @@
         "mode": "checklist",
         "label": "Checklist",
         "templates": [
-          { "id": "tip-checklist-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "tip/checklist/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "checklist"] }
+          {
+            "id": "tip-checklist-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "tip/checklist/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "checklist"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "do_dont",
         "label": "Do / Don't",
         "templates": [
-          { "id": "tip-do-dont-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "tip/do_dont/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+          {
+            "id": "tip-do-dont-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "tip/do_dont/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "stat_tip",
         "label": "Stat + Tip",
         "templates": [
-          { "id": "tip-stat-tip-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "tip/stat_tip/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "stat"] }
+          {
+            "id": "tip-stat-tip-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "tip/stat_tip/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "stat"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "single",
         "label": "Single",
         "templates": [
-          { "id": "tip-single-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "tip/single/tpl-dark-feed.json", "status": "soon", "tags": [] }
+          {
+            "id": "tip-single-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "tip/single/tpl-dark-feed.json",
+            "status": "soon",
+            "tags": []
+          }
         ]
       }
     ]
@@ -110,28 +275,78 @@
         "mode": "versus",
         "label": "Versus",
         "templates": [
-          { "id": "funfact-versus-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "funfact/versus/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+          {
+            "id": "funfact-versus-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "funfact/versus/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "number_fact",
         "label": "Number Fact",
         "templates": [
-          { "id": "funfact-number-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "funfact/number_fact/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "countup"] }
+          {
+            "id": "funfact-number-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "funfact/number_fact/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "countup"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "mind_blown",
         "label": "Mind Blown",
         "templates": [
-          { "id": "funfact-mind-blown-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "funfact/mind_blown/tpl-dark-feed.json", "status": "ready", "tags": ["animated"] }
+          {
+            "id": "funfact-mind-blown-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "funfact/mind_blown/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
         "mode": "curiosity",
         "label": "Curiosity",
         "templates": [
-          { "id": "funfact-curiosity-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "funfact/curiosity/tpl-dark-feed.json", "status": "soon", "tags": [] }
+          {
+            "id": "funfact-curiosity-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "funfact/curiosity/tpl-dark-feed.json",
+            "status": "soon",
+            "tags": []
+          }
         ]
       }
     ]
@@ -144,7 +359,21 @@
         "mode": "cover",
         "label": "Cover",
         "templates": [
-          { "id": "editorial-cover-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "editorial/cover/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "image-bg"] }
+          {
+            "id": "editorial-cover-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "editorial/cover/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "image-bg"
+            ],
+            "best_frame": 144
+          }
         ]
       }
     ]
@@ -157,28 +386,84 @@
         "mode": "listicle",
         "label": "Listicle",
         "templates": [
-          { "id": "carousel-listicle-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "carousel/listicle/tpl-dark-feed.json", "status": "ready", "tags": ["carousel", "multi-slide"] }
+          {
+            "id": "carousel-listicle-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "carousel/listicle/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "carousel",
+              "multi-slide"
+            ],
+            "best_frame": 42
+          }
         ]
       },
       {
         "mode": "story_arc",
         "label": "Story Arc",
         "templates": [
-          { "id": "carousel-story-arc-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "carousel/story_arc/tpl-dark-feed.json", "status": "ready", "tags": ["carousel", "multi-slide"] }
+          {
+            "id": "carousel-story-arc-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "carousel/story_arc/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "carousel",
+              "multi-slide"
+            ],
+            "best_frame": 42
+          }
         ]
       },
       {
         "mode": "step_by_step",
         "label": "Step by Step",
         "templates": [
-          { "id": "carousel-step-by-step-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "carousel/step_by_step/tpl-dark-feed.json", "status": "ready", "tags": ["carousel", "multi-slide"] }
+          {
+            "id": "carousel-step-by-step-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "carousel/step_by_step/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "carousel",
+              "multi-slide"
+            ],
+            "best_frame": 44
+          }
         ]
       },
       {
         "mode": "comparison",
         "label": "Comparison",
         "templates": [
-          { "id": "carousel-comparison-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "carousel/comparison/tpl-dark-feed.json", "status": "ready", "tags": ["carousel", "multi-slide"] }
+          {
+            "id": "carousel-comparison-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "carousel/comparison/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "carousel",
+              "multi-slide"
+            ],
+            "best_frame": 46
+          }
         ]
       }
     ]
@@ -191,16 +476,57 @@
         "mode": "day_chart",
         "label": "Day Chart",
         "templates": [
-          { "id": "market-day-chart-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "market/day_chart/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "chart", "live-data"] }
+          {
+            "id": "market-day-chart-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "market/day_chart/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "chart",
+              "live-data"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
-        "mode": "week_chart", "label": "Week Chart",
-        "templates": [{ "id": "market-week-chart-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "market/week_chart/tpl-dark-feed.json", "status": "soon", "tags": [] }]
+        "mode": "week_chart",
+        "label": "Week Chart",
+        "templates": [
+          {
+            "id": "market-week-chart-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "market/week_chart/tpl-dark-feed.json",
+            "status": "soon",
+            "tags": []
+          }
+        ]
       },
       {
-        "mode": "gainers", "label": "Gainers",
-        "templates": [{ "id": "market-gainers-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "market/gainers/tpl-dark-feed.json", "status": "soon", "tags": [] }]
+        "mode": "gainers",
+        "label": "Gainers",
+        "templates": [
+          {
+            "id": "market-gainers-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "market/gainers/tpl-dark-feed.json",
+            "status": "soon",
+            "tags": []
+          }
+        ]
       }
     ]
   },
@@ -212,16 +538,56 @@
         "mode": "headline",
         "label": "Headline",
         "templates": [
-          { "id": "news-headline-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "news/headline/tpl-dark-feed.json", "status": "ready", "tags": ["animated", "live-data"] }
+          {
+            "id": "news-headline-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "news/headline/tpl-dark-feed.json",
+            "status": "ready",
+            "tags": [
+              "animated",
+              "live-data"
+            ],
+            "best_frame": 162
+          }
         ]
       },
       {
-        "mode": "briefing", "label": "Briefing",
-        "templates": [{ "id": "news-briefing-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "news/briefing/tpl-dark-feed.json", "status": "soon", "tags": [] }]
+        "mode": "briefing",
+        "label": "Briefing",
+        "templates": [
+          {
+            "id": "news-briefing-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "news/briefing/tpl-dark-feed.json",
+            "status": "soon",
+            "tags": []
+          }
+        ]
       },
       {
-        "mode": "opinion", "label": "Opinion",
-        "templates": [{ "id": "news-opinion-dark-feed", "size": "feed", "style": "dark", "aspect": "4:5", "width": 1080, "height": 1350, "file": "news/opinion/tpl-dark-feed.json", "status": "soon", "tags": [] }]
+        "mode": "opinion",
+        "label": "Opinion",
+        "templates": [
+          {
+            "id": "news-opinion-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "news/opinion/tpl-dark-feed.json",
+            "status": "soon",
+            "tags": []
+          }
+        ]
       }
     ]
   }
