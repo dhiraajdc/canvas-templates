@@ -108,7 +108,7 @@
       "width": "$canvas.width",
       "height": "$canvas.height",
       "color": "#000000",
-      "opacity": 0.42
+      "opacity": 0.55
     },
     {
       "id": "top_gradient",
@@ -278,16 +278,6 @@
       "line_height": 40,
       "align": "center",
       "baseline": "alphabetic",
-      "opacity": 0
-    },
-    {
-      "id": "outro_bg",
-      "type": "fill_rect",
-      "x": 0,
-      "y": 0,
-      "width": "$canvas.width",
-      "height": "$canvas.height",
-      "color": "@brand.colors.background",
       "opacity": 0
     },
     {
@@ -504,15 +494,6 @@
       "to_value": 0,
       "start_frame": 36,
       "end_frame": 58,
-      "easing": "ease_out"
-    },
-    {
-      "layer_id": "outro_bg",
-      "property": "opacity",
-      "from_value": 0,
-      "to_value": 1,
-      "start_frame": 0,
-      "end_frame": 20,
       "easing": "ease_out"
     },
     {
