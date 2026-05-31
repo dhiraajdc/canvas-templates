@@ -1,0 +1,411 @@
+{
+  "meta": {
+    "template_id": "product-feature-list-dark-feed-v1",
+    "intent": "product",
+    "mode": "feature_list",
+    "size": "feed",
+    "style": "dark",
+    "version": "1.0",
+    "total_frames": 90,
+    "fps": 30,
+    "best_frame": 55
+  },
+  "canvas": {
+    "ratio": "4:5",
+    "width": 1080,
+    "height": 1350,
+    "background": "#0A0A0C"
+  },
+  "brand": {
+    "logo": "OM·PEACE",
+    "colors": {
+      "primary":    "#C8A96E",
+      "background": "#0A0A0C",
+      "text":       "#F5F2EB",
+      "muted":      "#7A7468",
+      "surface":    "#111114"
+    },
+    "fonts": {
+      "display":  "Bebas Neue",
+      "serif":    "Playfair Display",
+      "sans":     "DM Sans",
+      "mono":     "DM Mono",
+      "grotesk":  "Space Grotesk"
+    }
+  },
+  "data": [
+    {
+      "slide_type": "intro",
+      "headline":   "Introducing OmPeace Glow Oil",
+      "subtext":    "Your skin's new daily ritual",
+      "category":   "New Launch",
+      "image":      "https://picsum.photos/id/42/1080/1350",
+      "label":      "Intro"
+    },
+    {
+      "slide_type": "feature",
+      "feature":    "Hydrates for 24 Hours",
+      "detail":     "Clinically tested formula locks moisture deep within skin layers",
+      "image":      "https://picsum.photos/id/42/1080/1350",
+      "label":      "01 / 03"
+    },
+    {
+      "slide_type": "feature",
+      "feature":    "100% Natural Ingredients",
+      "detail":     "No parabens, no sulphates, nothing you can't pronounce",
+      "image":      "https://picsum.photos/id/42/1080/1350",
+      "label":      "02 / 03"
+    },
+    {
+      "slide_type": "feature",
+      "feature":    "Dermatologist Approved",
+      "detail":     "Tested on all skin types including sensitive skin",
+      "image":      "https://picsum.photos/id/42/1080/1350",
+      "label":      "03 / 03"
+    },
+    {
+      "slide_type": "outro",
+      "cta_text":   "Shop Now",
+      "cta_sub":    "Limited launch offer — 20% off",
+      "image":      "https://picsum.photos/id/42/1080/1350",
+      "label":      "CTA"
+    }
+  ],
+  "playback": {
+    "frames_per_item": 90,
+    "hold_frames": 15,
+    "transition": { "type": "fade", "duration_frames": 20 }
+  },
+  "layers": [
+
+    {
+      "id": "bg",
+      "type": "fill_rect",
+      "x": 0, "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "color": "@brand.colors.background",
+      "opacity": 1
+    },
+
+    {
+      "id": "full_image",
+      "type": "image_fill",
+      "src": "@data.image",
+      "x": 0, "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "opacity": 1
+    },
+
+    {
+      "id": "image_scrim",
+      "type": "fill_rect",
+      "x": 0, "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "color": "#000000",
+      "opacity": 0.42
+    },
+
+    {
+      "id": "top_gradient",
+      "type": "linear_gradient",
+      "x1": 0, "y1": 0,
+      "x2": 0, "y2": "$canvas.height*0.28",
+      "color_start": "#000000", "opacity_start": 0.7,
+      "color_end":   "#000000", "opacity_end":   0,
+      "opacity": 1
+    },
+
+    {
+      "id": "bottom_gradient",
+      "type": "linear_gradient",
+      "x1": 0, "y1": "$canvas.height*0.72",
+      "x2": 0, "y2": "$canvas.height",
+      "color_start": "#000000", "opacity_start": 0,
+      "color_end":   "#000000", "opacity_end":   0.85,
+      "opacity": 1
+    },
+
+    {
+      "id": "category_tag",
+      "type": "source_tag",
+      "content_ref": "@data.category",
+      "x": "$canvas.width*0.5",
+      "y": 140,
+      "font": "@brand.fonts.mono",
+      "size": 22,
+      "letter_spacing": 3,
+      "color": "@brand.colors.primary",
+      "bg_opacity": 0.1,
+      "border_opacity": 0.35,
+      "padding_h": 28,
+      "padding_v": 12,
+      "align": "center",
+      "opacity": 0
+    },
+
+    {
+      "id": "brand_logo",
+      "type": "brand_watermark",
+      "x": "$canvas.width*0.5",
+      "y": 140,
+      "font": "@brand.fonts.mono",
+      "size": 20,
+      "letter_spacing": 5,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.4,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "intro_headline",
+      "type": "text_block",
+      "content_ref": "@data.headline",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.38",
+      "max_width": "$canvas.width*0.82",
+      "font": "@brand.fonts.serif",
+      "size": 96,
+      "weight": 700,
+      "color": "@brand.colors.text",
+      "line_height": 108,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "intro_accent",
+      "type": "line",
+      "x1": "$canvas.width*0.5 - 40",
+      "y1": "$canvas.height*0.67",
+      "x2": "$canvas.width*0.5 + 40",
+      "y2": "$canvas.height*0.67",
+      "color": "@brand.colors.primary",
+      "stroke_width": 2,
+      "opacity": 0
+    },
+
+    {
+      "id": "intro_subtext",
+      "type": "text",
+      "content_ref": "@data.subtext",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.72",
+      "font": "@brand.fonts.sans",
+      "size": 36,
+      "weight": 300,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.75,
+      "letter_spacing": 1,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "feature_card",
+      "type": "rounded_rect",
+      "x": "$canvas.width*0.08",
+      "y": "$canvas.height*0.34",
+      "width": "$canvas.width*0.84",
+      "height": "$canvas.height*0.34",
+      "radius": 24,
+      "color": "#0A0A0C",
+      "color_opacity": 0.82,
+      "border_color": "@brand.colors.primary",
+      "border_opacity": 0.18,
+      "border_width": 1,
+      "opacity": 0
+    },
+
+    {
+      "id": "feature_label",
+      "type": "text",
+      "content_ref": "@data.label",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.395",
+      "font": "@brand.fonts.mono",
+      "size": 20,
+      "weight": 400,
+      "color": "@brand.colors.primary",
+      "letter_spacing": 3,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "feature_divider",
+      "type": "line",
+      "x1": "$canvas.width*0.5 - 30",
+      "y1": "$canvas.height*0.425",
+      "x2": "$canvas.width*0.5 + 30",
+      "y2": "$canvas.height*0.425",
+      "color": "@brand.colors.primary",
+      "stroke_width": 1.5,
+      "opacity": 0
+    },
+
+    {
+      "id": "feature_text",
+      "type": "text_block",
+      "content_ref": "@data.feature",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.458",
+      "max_width": "$canvas.width*0.72",
+      "font": "@brand.fonts.serif",
+      "size": 68,
+      "weight": 700,
+      "color": "@brand.colors.text",
+      "line_height": 78,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "feature_detail",
+      "type": "text_block",
+      "content_ref": "@data.detail",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.6",
+      "max_width": "$canvas.width*0.68",
+      "font": "@brand.fonts.sans",
+      "size": 28,
+      "weight": 300,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.6,
+      "line_height": 40,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "outro_bg",
+      "type": "fill_rect",
+      "x": 0, "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "color": "@brand.colors.background",
+      "opacity": 0
+    },
+
+    {
+      "id": "outro_cta",
+      "type": "text",
+      "content_ref": "@data.cta_text",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.44",
+      "font": "@brand.fonts.display",
+      "size": 140,
+      "weight": 400,
+      "color": "@brand.colors.text",
+      "letter_spacing": 8,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "outro_accent",
+      "type": "line",
+      "x1": "$canvas.width*0.5 - 60",
+      "y1": "$canvas.height*0.52",
+      "x2": "$canvas.width*0.5 + 60",
+      "y2": "$canvas.height*0.52",
+      "color": "@brand.colors.primary",
+      "stroke_width": 2,
+      "opacity": 0
+    },
+
+    {
+      "id": "outro_sub",
+      "type": "text",
+      "content_ref": "@data.cta_sub",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.58",
+      "font": "@brand.fonts.sans",
+      "size": 32,
+      "weight": 300,
+      "color": "@brand.colors.primary",
+      "letter_spacing": 1,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "outro_brand",
+      "type": "brand_watermark",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.88",
+      "font": "@brand.fonts.mono",
+      "size": 18,
+      "letter_spacing": 5,
+      "color": "@brand.colors.muted",
+      "color_opacity": 0.4,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+
+    {
+      "id": "frame_label",
+      "type": "text",
+      "content_ref": "@data.label",
+      "x": "$canvas.width - 88",
+      "y": 140,
+      "font": "@brand.fonts.mono",
+      "size": 20,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.35,
+      "letter_spacing": 2,
+      "align": "right",
+      "baseline": "alphabetic",
+      "opacity": 0
+    }
+
+  ],
+  "animations": [
+
+    { "layer_id": "brand_logo",      "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 0,  "end_frame": 18, "easing": "ease_out" },
+    { "layer_id": "frame_label",     "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 0,  "end_frame": 18, "easing": "ease_out" },
+
+    { "layer_id": "category_tag",    "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 6,  "end_frame": 26, "easing": "ease_out" },
+
+    { "layer_id": "intro_headline",  "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 14, "end_frame": 40, "easing": "ease_out" },
+    { "layer_id": "intro_headline",  "property": "y",       "from_value": 30,  "to_value": 0,    "start_frame": 14, "end_frame": 40, "easing": "ease_out" },
+
+    { "layer_id": "intro_accent",    "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 35, "end_frame": 52, "easing": "ease_out" },
+
+    { "layer_id": "intro_subtext",   "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 40, "end_frame": 60, "easing": "ease_out" },
+    { "layer_id": "intro_subtext",   "property": "y",       "from_value": 16,  "to_value": 0,    "start_frame": 40, "end_frame": 60, "easing": "ease_out" },
+
+    { "layer_id": "feature_card",    "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 8,  "end_frame": 28, "easing": "ease_out" },
+    { "layer_id": "feature_card",    "property": "scale",   "from_value": 0.92,"to_value": 1,    "start_frame": 8,  "end_frame": 32, "easing": "ease_out" },
+
+    { "layer_id": "feature_label",   "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 18, "end_frame": 34, "easing": "ease_out" },
+    { "layer_id": "feature_divider", "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 22, "end_frame": 38, "easing": "ease_out" },
+
+    { "layer_id": "feature_text",    "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 26, "end_frame": 50, "easing": "ease_out" },
+    { "layer_id": "feature_text",    "property": "y",       "from_value": 20,  "to_value": 0,    "start_frame": 26, "end_frame": 50, "easing": "ease_out" },
+
+    { "layer_id": "feature_detail",  "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 36, "end_frame": 58, "easing": "ease_out" },
+    { "layer_id": "feature_detail",  "property": "y",       "from_value": 14,  "to_value": 0,    "start_frame": 36, "end_frame": 58, "easing": "ease_out" },
+
+    { "layer_id": "outro_bg",        "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 0,  "end_frame": 20, "easing": "ease_out" },
+    { "layer_id": "outro_cta",       "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 14, "end_frame": 42, "easing": "ease_out" },
+    { "layer_id": "outro_cta",       "property": "y",       "from_value": 30,  "to_value": 0,    "start_frame": 14, "end_frame": 42, "easing": "ease_out" },
+    { "layer_id": "outro_accent",    "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 38, "end_frame": 55, "easing": "ease_out" },
+    { "layer_id": "outro_sub",       "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 44, "end_frame": 62, "easing": "ease_out" },
+    { "layer_id": "outro_sub",       "property": "y",       "from_value": 14,  "to_value": 0,    "start_frame": 44, "end_frame": 62, "easing": "ease_out" },
+    { "layer_id": "outro_brand",     "property": "opacity", "from_value": 0,   "to_value": 1,    "start_frame": 55, "end_frame": 72, "easing": "ease_out" }
+
+  ]
+}

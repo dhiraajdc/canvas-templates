@@ -590,5 +590,34 @@
         ]
       }
     ]
+  },
+  {
+    "intent": "product",
+    "label": "Product & Sales",
+    "modes": [
+      {
+        "mode": "feature_list",
+        "label": "Feature List",
+        "templates": [
+          {
+            "id": "product-feature-list-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "product/feature_list/tpl-dark-feed.json",
+            "status": "ready",
+            "best_frame": 55,
+            "tags": [
+              "animated",
+              "multi-slide",
+              "image-bg",
+              "product"
+            ]
+          }
+        ]
+      }
+    ]
   }
 ]
