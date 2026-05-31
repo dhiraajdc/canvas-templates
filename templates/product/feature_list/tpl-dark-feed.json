@@ -212,14 +212,18 @@
     },
     {
       "id": "feature_card",
-      "type": "fill_rect",
+      "type": "rounded_rect",
       "x": "$canvas.width*0.08",
       "y": "$canvas.height*0.34",
       "width": "$canvas.width*0.84",
       "height": "$canvas.height*0.34",
       "color": "#0A0A0C",
       "opacity": 0,
-      "color_opacity": 0.82
+      "color_opacity": 0.82,
+      "radius": 24,
+      "border_color": "@brand.colors.primary",
+      "border_opacity": 0.18,
+      "border_width": 1
     },
     {
       "id": "feature_label",
