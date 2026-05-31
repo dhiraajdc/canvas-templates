@@ -1,18 +1,36 @@
 {
   "meta": {
-    "template_id": "testimonial-card-dark-feed-v1",
-    "intent": "testimonial",
-    "mode": "card",
+    "template_id": "product-testimonial-dark-feed",
+    "intent": "product",
+    "mode": "testimonial",
     "style": "dark",
     "version": "1.0",
     "total_frames": 300,
     "fps": 60,
-    "best_frame": 180
+    "best_frame": 180,
+    "quote_size_tiers": {
+      "short": {
+        "max_chars": 60,
+        "size": 78,
+        "line_height": 88
+      },
+      "medium": {
+        "max_chars": 85,
+        "size": 68,
+        "line_height": 78
+      },
+      "long": {
+        "max_chars": 120,
+        "size": 60,
+        "line_height": 70
+      }
+    }
   },
   "canvas": {
     "width": 1080,
     "height": 1350,
-    "background": "#0A0C10"
+    "background": "#0A0C10",
+    "ratio": "4:5"
   },
   "brand": {
     "logo": "VELLUM",
@@ -36,7 +54,7 @@
     "quote": "This completely changed how our team ships. We cut release time in half.",
     "rating": 5,
     "name": "Sarah Chen",
-    "company": "HEAD OF PRODUCT, VELLUM"
+    "company": "Head of Product, Vellum"
   },
   "layers": [
     {
@@ -55,37 +73,27 @@
     },
     {
       "id": "bottom_scrim",
-      "type": "color_overlay",
-      "x": 0,
-      "y": "$canvas.height*0.35",
+      "type": "linear_gradient",
       "x1": 0,
       "y1": "$canvas.height*0.35",
       "x2": 0,
       "y2": "$canvas.height",
-      "width": "$canvas.width",
-      "height": "$canvas.height*0.65",
-      "gradient": true,
       "color_start": "#070A0E",
-      "color_end": "#070A0E",
       "opacity_start": 0,
+      "color_end": "#070A0E",
       "opacity_end": 0.92,
       "opacity": 0
     },
     {
       "id": "top_scrim",
-      "type": "color_overlay",
-      "x": 0,
-      "y": 0,
+      "type": "linear_gradient",
       "x1": 0,
       "y1": 0,
       "x2": 0,
       "y2": "$canvas.height*0.3",
-      "width": "$canvas.width",
-      "height": "$canvas.height*0.3",
-      "gradient": true,
       "color_start": "#070A0E",
-      "color_end": "#070A0E",
       "opacity_start": 0.55,
+      "color_end": "#070A0E",
       "opacity_end": 0,
       "opacity": 0
     },
@@ -120,9 +128,9 @@
       "id": "card",
       "type": "frosted_glass",
       "x": "$canvas.width*0.08",
-      "y": "$canvas.height*0.30",
+      "y": "$canvas.height*0.26",
       "width": "$canvas.width*0.84",
-      "height": "$canvas.height*0.49",
+      "height": "$canvas.height*0.585",
       "tint": "#FFFFFF",
       "tint_opacity": 0.08,
       "stroke_color": "#FFFFFF",
@@ -136,14 +144,14 @@
     {
       "id": "quote_glyph",
       "type": "quote_mark",
-      "content": "“",
+      "content": "\u201c",
       "x": "$canvas.width*0.12",
-      "y": "$canvas.height*0.425",
+      "y": "$canvas.height*0.345",
       "font": "@brand.fonts.serif",
-      "size": 284,
+      "size": 230,
       "weight": 700,
       "color": "@brand.colors.primary",
-      "color_opacity": 0.38,
+      "color_opacity": 0.22,
       "align": "left",
       "opacity": 0
     },
@@ -152,13 +160,13 @@
       "type": "text_block",
       "content_ref": "@data.quote",
       "x": "$canvas.width*0.5",
-      "y": "$canvas.height*0.40",
+      "y": "$canvas.height*0.385",
       "max_width": "$canvas.width*0.78",
       "font": "@brand.fonts.serif",
-      "size": 78,
+      "size": 68,
       "weight": 600,
       "color": "@brand.colors.text",
-      "line_height": 88,
+      "line_height": 78,
       "align": "center",
       "baseline": "alphabetic",
       "opacity": 0
@@ -168,7 +176,7 @@
       "type": "rating_stars",
       "rating_ref": "@data.rating",
       "x": "$canvas.width*0.5",
-      "y": "$canvas.height*0.668",
+      "y": "$canvas.height*0.73",
       "size": 38,
       "color": "@brand.colors.primary",
       "gap": 14,
@@ -181,7 +189,7 @@
       "type": "text",
       "content_ref": "@data.name",
       "x": "$canvas.width*0.5",
-      "y": "$canvas.height*0.718",
+      "y": "$canvas.height*0.782",
       "font": "@brand.fonts.sans",
       "size": 38,
       "weight": 600,
@@ -195,7 +203,7 @@
       "type": "text",
       "content_ref": "@data.company",
       "x": "$canvas.width*0.5",
-      "y": "$canvas.height*0.752",
+      "y": "$canvas.height*0.818",
       "font": "@brand.fonts.grotesk",
       "size": 24,
       "weight": 500,
