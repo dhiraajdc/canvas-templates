@@ -1,0 +1,346 @@
+{
+  "meta": {
+    "template_id": "testimonial-card-dark-feed-v1",
+    "intent": "testimonial",
+    "mode": "card",
+    "style": "dark",
+    "version": "1.0",
+    "total_frames": 300,
+    "fps": 60,
+    "best_frame": 180
+  },
+  "canvas": {
+    "width": 1080,
+    "height": 1350,
+    "background": "#0A0C10"
+  },
+  "brand": {
+    "logo": "VELLUM",
+    "colors": {
+      "primary": "#E8B23A",
+      "background": "#0A0C10",
+      "text": "#F4F1EA",
+      "muted": "#B4B2A9",
+      "surface": "#14171D"
+    },
+    "fonts": {
+      "display": "Bebas Neue",
+      "serif": "Playfair Display",
+      "sans": "DM Sans",
+      "mono": "DM Mono",
+      "grotesk": "Space Grotesk"
+    }
+  },
+  "data": {
+    "image": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1080&q=80",
+    "quote": "This completely changed how our team ships. We cut release time in half.",
+    "rating": 5,
+    "name": "Sarah Chen",
+    "company": "HEAD OF PRODUCT, VELLUM"
+  },
+  "layers": [
+    {
+      "id": "bg_image",
+      "type": "ken_burns",
+      "src": "@data.image",
+      "x": 0,
+      "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "scale_start": 1.08,
+      "scale_end": 1,
+      "pan_x": -30,
+      "pan_y": -20,
+      "opacity": 1
+    },
+    {
+      "id": "bottom_scrim",
+      "type": "color_overlay",
+      "x": 0,
+      "y": "$canvas.height*0.35",
+      "x1": 0,
+      "y1": "$canvas.height*0.35",
+      "x2": 0,
+      "y2": "$canvas.height",
+      "width": "$canvas.width",
+      "height": "$canvas.height*0.65",
+      "gradient": true,
+      "color_start": "#070A0E",
+      "color_end": "#070A0E",
+      "opacity_start": 0,
+      "opacity_end": 0.92,
+      "opacity": 0
+    },
+    {
+      "id": "top_scrim",
+      "type": "color_overlay",
+      "x": 0,
+      "y": 0,
+      "x1": 0,
+      "y1": 0,
+      "x2": 0,
+      "y2": "$canvas.height*0.3",
+      "width": "$canvas.width",
+      "height": "$canvas.height*0.3",
+      "gradient": true,
+      "color_start": "#070A0E",
+      "color_end": "#070A0E",
+      "opacity_start": 0.55,
+      "opacity_end": 0,
+      "opacity": 0
+    },
+    {
+      "id": "edge_vignette",
+      "type": "vignette",
+      "cx": "$canvas.width*0.5",
+      "cy": "$canvas.height*0.5",
+      "inner_radius": "$canvas.width*0.25",
+      "outer_radius": "$canvas.width*1.0",
+      "color": "#000000",
+      "strength": 0.5,
+      "opacity": 0
+    },
+    {
+      "id": "watermark",
+      "type": "text",
+      "content_ref": "@brand.logo",
+      "x": "$canvas.width*0.5",
+      "y": 140,
+      "font": "@brand.fonts.grotesk",
+      "size": 30,
+      "weight": 500,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.55,
+      "letter_spacing": 8,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+    {
+      "id": "card",
+      "type": "frosted_glass",
+      "x": "$canvas.width*0.08",
+      "y": "$canvas.height*0.30",
+      "width": "$canvas.width*0.84",
+      "height": "$canvas.height*0.49",
+      "tint": "#FFFFFF",
+      "tint_opacity": 0.08,
+      "stroke_color": "#FFFFFF",
+      "stroke_opacity": 0.16,
+      "stroke_width": 1,
+      "blur": 22,
+      "corner_radius": 36,
+      "highlight": true,
+      "opacity": 0
+    },
+    {
+      "id": "quote_glyph",
+      "type": "quote_mark",
+      "content": "“",
+      "x": "$canvas.width*0.12",
+      "y": "$canvas.height*0.425",
+      "font": "@brand.fonts.serif",
+      "size": 284,
+      "weight": 700,
+      "color": "@brand.colors.primary",
+      "color_opacity": 0.38,
+      "align": "left",
+      "opacity": 0
+    },
+    {
+      "id": "quote",
+      "type": "text_block",
+      "content_ref": "@data.quote",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.40",
+      "max_width": "$canvas.width*0.78",
+      "font": "@brand.fonts.serif",
+      "size": 78,
+      "weight": 600,
+      "color": "@brand.colors.text",
+      "line_height": 88,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+    {
+      "id": "stars",
+      "type": "rating_stars",
+      "rating_ref": "@data.rating",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.668",
+      "size": 38,
+      "color": "@brand.colors.primary",
+      "gap": 14,
+      "count": 5,
+      "empty_color": "@brand.colors.muted",
+      "opacity": 0
+    },
+    {
+      "id": "name",
+      "type": "text",
+      "content_ref": "@data.name",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.718",
+      "font": "@brand.fonts.sans",
+      "size": 38,
+      "weight": 600,
+      "color": "@brand.colors.text",
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    },
+    {
+      "id": "company",
+      "type": "text",
+      "content_ref": "@data.company",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.752",
+      "font": "@brand.fonts.grotesk",
+      "size": 24,
+      "weight": 500,
+      "color": "@brand.colors.muted",
+      "letter_spacing": 3,
+      "align": "center",
+      "baseline": "alphabetic",
+      "opacity": 0
+    }
+  ],
+  "animations": [
+    {
+      "layer_id": "bottom_scrim",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 50,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "top_scrim",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 50,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "edge_vignette",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 60,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "watermark",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 20,
+      "end_frame": 70,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "card",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 50,
+      "end_frame": 110,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "card",
+      "property": "y",
+      "from_value": 30,
+      "to_value": 0,
+      "start_frame": 50,
+      "end_frame": 110,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "quote_glyph",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 80,
+      "end_frame": 130,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "quote",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 100,
+      "end_frame": 170,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "quote",
+      "property": "y",
+      "from_value": 24,
+      "to_value": 0,
+      "start_frame": 100,
+      "end_frame": 170,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "stars",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 170,
+      "end_frame": 220,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "stars",
+      "property": "y",
+      "from_value": 16,
+      "to_value": 0,
+      "start_frame": 170,
+      "end_frame": 220,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "name",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 200,
+      "end_frame": 250,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "name",
+      "property": "y",
+      "from_value": 16,
+      "to_value": 0,
+      "start_frame": 200,
+      "end_frame": 250,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "company",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 224,
+      "end_frame": 274,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "company",
+      "property": "y",
+      "from_value": 16,
+      "to_value": 0,
+      "start_frame": 224,
+      "end_frame": 274,
+      "easing": "ease_out"
+    }
+  ]
+}

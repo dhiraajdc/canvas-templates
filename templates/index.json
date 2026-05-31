@@ -617,6 +617,30 @@
             ]
           }
         ]
+      },
+      {
+        "mode": "testimonial",
+        "label": "Testimonial",
+        "templates": [
+          {
+            "id": "product-testimonial-dark-feed",
+            "size": "feed",
+            "style": "dark",
+            "aspect": "4:5",
+            "width": 1080,
+            "height": 1350,
+            "file": "product/testimonial/tpl-dark-feed.json",
+            "status": "ready",
+            "best_frame": 180,
+            "tags": [
+              "animated",
+              "single-slide",
+              "image-bg",
+              "testimonial",
+              "social-proof"
+            ]
+          }
+        ]
       }
     ]
   }
