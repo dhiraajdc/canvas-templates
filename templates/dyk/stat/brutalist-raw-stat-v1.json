@@ -1,0 +1,360 @@
+{
+  "meta": {
+    "template_id": "brutalist-raw-stat-v1",
+    "intent": "dyk",
+    "mode": "stat",
+    "style": "brutalist_mono_red",
+    "version": "3.1",
+    "total_frames": 210,
+    "fps": 30,
+    "best_frame": 160
+  },
+  "canvas": {
+    "ratio": "4:5",
+    "background": "@brand.colors.background"
+  },
+  "brand": {
+    "logo": "RAW\u00b7INDEX",
+    "colors": {
+      "primary": "#FF3B30",
+      "background": "#0A0A0A",
+      "text": "#F5F5F5",
+      "muted": "#6E6E6E",
+      "surface": "#1A1A1A"
+    },
+    "fonts": {
+      "display": "Bebas Neue",
+      "sans": "DM Sans",
+      "mono": "DM Mono",
+      "grotesk": "Space Grotesk",
+      "serif": "Playfair Display"
+    }
+  },
+  "data": {
+    "stat_value": "73",
+    "stat_unit": "%",
+    "stat_desc": "of remote workers report higher productivity at home",
+    "source": "Stanford Research 2024"
+  },
+  "layers": [
+    {
+      "id": "bg_fill",
+      "type": "fill_rect",
+      "x": 0,
+      "y": 0,
+      "width": "$canvas.width",
+      "height": "$canvas.height",
+      "color": "@brand.colors.background",
+      "opacity": 1
+    },
+    {
+      "id": "scan_lines",
+      "type": "scan_lines",
+      "gap": 5,
+      "line_height": 2,
+      "color": "@brand.colors.text",
+      "opacity": 0
+    },
+    {
+      "id": "top_bar",
+      "type": "rectangle",
+      "x": "$canvas.width * 0.08",
+      "y": "$canvas.height * 0.05",
+      "width": "$canvas.width * 0.84",
+      "height": "$canvas.height * 0.012",
+      "origin": "left",
+      "color": "@brand.colors.primary",
+      "opacity": 0
+    },
+    {
+      "id": "accent_spine",
+      "type": "rectangle",
+      "x": "$canvas.width * 0.08",
+      "y": "$canvas.height * 0.2",
+      "width": "$canvas.width * 0.025",
+      "height": "$canvas.height * 0.42",
+      "origin": "top",
+      "color": "@brand.colors.primary",
+      "opacity": 0
+    },
+    {
+      "id": "eyebrow",
+      "type": "text",
+      "content": "DID YOU KNOW",
+      "x": "$canvas.width * 0.14",
+      "y": "$canvas.height * 0.17",
+      "align": "left",
+      "font": "@brand.fonts.grotesk",
+      "size": "$canvas.width * 0.03",
+      "weight": 600,
+      "letter_spacing": 4,
+      "color": "@brand.colors.primary",
+      "opacity": 0
+    },
+    {
+      "id": "stat_number",
+      "type": "number_display",
+      "value_ref": "@data.stat_value",
+      "suffix": "@data.stat_unit",
+      "count_up": true,
+      "decimals": 0,
+      "x": "$canvas.width * 0.14",
+      "y": "$canvas.height * 0.45",
+      "align": "left",
+      "font": "@brand.fonts.display",
+      "size": "$canvas.width * 0.46",
+      "weight": 900,
+      "color": "@brand.colors.text",
+      "opacity": 0
+    },
+    {
+      "id": "stat_desc",
+      "type": "text_block",
+      "content_ref": "@data.stat_desc",
+      "x": "$canvas.width * 0.14",
+      "y": "$canvas.height * 0.58",
+      "align": "left",
+      "max_width": "$canvas.width * 0.78",
+      "font": "@brand.fonts.sans",
+      "size": "$canvas.width * 0.038",
+      "weight": 400,
+      "color": "@brand.colors.text",
+      "opacity": 0
+    },
+    {
+      "id": "mid_rule",
+      "type": "rectangle",
+      "x": "$canvas.width * 0.08",
+      "y": "$canvas.height * 0.72",
+      "width": "$canvas.width * 0.84",
+      "height": "$canvas.height * 0.006",
+      "origin": "left",
+      "color": "@brand.colors.primary",
+      "opacity": 0
+    },
+    {
+      "id": "src_label",
+      "type": "text",
+      "content": "SOURCE",
+      "x": "$canvas.width * 0.14",
+      "y": "$canvas.height * 0.78",
+      "align": "left",
+      "font": "@brand.fonts.mono",
+      "size": "$canvas.width * 0.022",
+      "weight": 500,
+      "letter_spacing": 3,
+      "color": "@brand.colors.muted",
+      "opacity": 0
+    },
+    {
+      "id": "src_value",
+      "type": "text",
+      "content_ref": "@data.source",
+      "x": "$canvas.width * 0.14",
+      "y": "$canvas.height * 0.815",
+      "align": "left",
+      "font": "@brand.fonts.mono",
+      "size": "$canvas.width * 0.026",
+      "weight": 400,
+      "color": "@brand.colors.text",
+      "opacity": 0
+    },
+    {
+      "id": "brand_watermark",
+      "type": "brand_watermark",
+      "content": "@brand.logo",
+      "x": "$canvas.width * 0.14",
+      "y": "$canvas.height * 0.93",
+      "align": "left",
+      "font": "@brand.fonts.display",
+      "size": "$canvas.width * 0.05",
+      "weight": 400,
+      "letter_spacing": 2,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.45,
+      "opacity": 0
+    }
+  ],
+  "animations": [
+    {
+      "layer_id": "top_bar",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 6,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "top_bar",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 14,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "accent_spine",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 10,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "accent_spine",
+      "property": "scale_y",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 2,
+      "end_frame": 22,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "scan_lines",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 0.05,
+      "start_frame": 8,
+      "end_frame": 22,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "eyebrow",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 10,
+      "end_frame": 22,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "eyebrow",
+      "property": "x",
+      "from_value": -30,
+      "to_value": 0,
+      "start_frame": 10,
+      "end_frame": 24,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "stat_number",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 18,
+      "end_frame": 28,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "stat_number",
+      "property": "y",
+      "from_value": 30,
+      "to_value": 0,
+      "start_frame": 18,
+      "end_frame": 36,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "stat_number",
+      "property": "count_progress",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 22,
+      "end_frame": 72,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "stat_desc",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 74,
+      "end_frame": 90,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "stat_desc",
+      "property": "y",
+      "from_value": 28,
+      "to_value": 0,
+      "start_frame": 74,
+      "end_frame": 94,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "mid_rule",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 92,
+      "end_frame": 100,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "mid_rule",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 92,
+      "end_frame": 112,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "src_label",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 112,
+      "end_frame": 126,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "src_label",
+      "property": "y",
+      "from_value": 16,
+      "to_value": 0,
+      "start_frame": 112,
+      "end_frame": 130,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "src_value",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 120,
+      "end_frame": 134,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "src_value",
+      "property": "y",
+      "from_value": 16,
+      "to_value": 0,
+      "start_frame": 120,
+      "end_frame": 138,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "brand_watermark",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 134,
+      "end_frame": 152,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "brand_watermark",
+      "property": "x",
+      "from_value": -24,
+      "to_value": 0,
+      "start_frame": 134,
+      "end_frame": 154,
+      "easing": "ease_out"
+    }
+  ]
+}
