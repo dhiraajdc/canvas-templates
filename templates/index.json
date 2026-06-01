@@ -25,7 +25,7 @@
           {
             "id": "brutalist-raw-stat-v1",
             "file": "templates/dyk/stat/brutalist-raw-stat-v1.json",
-            "status": "draft",
+            "status": "ready",
             "size": "feed"
           }
         ]
