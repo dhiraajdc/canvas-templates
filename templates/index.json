@@ -47,6 +47,12 @@
               "animated"
             ],
             "best_frame": 162
+          },
+          {
+            "id": "dyk-ratio-speech-bubble-v1",
+            "file": "dyk/ratio/dyk-ratio-speech-bubble-v1.json",
+            "status": "draft",
+            "size": "feed"
           }
         ]
       },
