@@ -90,6 +90,12 @@
             "file": "dyk/statement/tpl-dark-feed.json",
             "status": "soon",
             "tags": []
+          },
+          {
+            "id": "soft-casual-gradient-v1",
+            "file": "dyk/statement/soft-casual-gradient-v1.json",
+            "status": "draft",
+            "size": "feed"
           }
         ]
       }
