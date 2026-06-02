@@ -1,0 +1,290 @@
+{
+  "meta": {
+    "template_id": "soft-casual-gradient-v1",
+    "intent": "dyk",
+    "mode": "statement",
+    "style": "soft_casual_rounded",
+    "version": "3.1",
+    "total_frames": 300,
+    "fps": 30,
+    "best_frame": 90
+  },
+  "canvas": {
+    "ratio": "4:5",
+    "background": "@brand.colors.background",
+    "width": 1080,
+    "height": 1350
+  },
+  "brand": {
+    "logo": "CURIOUS\u00b7DAILY",
+    "colors": {
+      "primary": "#FF8A5B",
+      "background": "#221B3D",
+      "text": "#FBF4EC",
+      "muted": "#A99CC9",
+      "surface": "#2E2552"
+    },
+    "fonts": {
+      "display": "Bebas Neue",
+      "sans": "DM Sans",
+      "mono": "DM Mono",
+      "grotesk": "Space Grotesk",
+      "serif": "Playfair Display"
+    },
+    "inject_colors": false
+  },
+  "data": {
+    "headline": "The ocean produces more oxygen than all forests combined",
+    "detail": "Phytoplankton are responsible for at least 50% of Earth's oxygen supply.",
+    "source": "NOAA 2024"
+  },
+  "layers": [
+    {
+      "id": "grad_base",
+      "type": "linear_gradient",
+      "x1": "$canvas.width*0.5",
+      "y1": 0,
+      "x2": "$canvas.width*0.5",
+      "y2": "$canvas.height",
+      "color_start": "@brand.colors.surface",
+      "color_end": "@brand.colors.background",
+      "opacity_start": 1,
+      "opacity_end": 1,
+      "opacity": 1
+    },
+    {
+      "id": "grad_glow",
+      "type": "radial_gradient",
+      "cx": "$canvas.width*0.5",
+      "cy": "$canvas.height*0.28",
+      "radius": "$canvas.width*0.85",
+      "color_start": "@brand.colors.primary",
+      "color_end": "@brand.colors.background",
+      "opacity_start": 0.22,
+      "opacity_end": 0,
+      "opacity": 1
+    },
+    {
+      "id": "dot_texture",
+      "type": "dot_grid",
+      "spacing": 64,
+      "dot_radius": 2,
+      "color": "@brand.colors.muted",
+      "opacity": 0.05
+    },
+    {
+      "id": "frame_card",
+      "type": "rectangle",
+      "x": "$canvas.width*0.055",
+      "y": "$canvas.height*0.05",
+      "width": "$canvas.width*0.89",
+      "height": "$canvas.height*0.90",
+      "corner_radius": 52,
+      "fill": false,
+      "stroke_color": "@brand.colors.muted",
+      "stroke_width": 2,
+      "opacity": 0
+    },
+    {
+      "id": "tag_top",
+      "type": "tag",
+      "content": "DID YOU KNOW",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.155",
+      "align": "center",
+      "color": "@brand.colors.primary",
+      "bg_color": "@brand.colors.primary",
+      "bg_opacity": 0.14,
+      "border_opacity": 0.35,
+      "font": "@brand.fonts.grotesk",
+      "size": 24,
+      "weight": 500,
+      "letter_spacing": 3,
+      "padding_h": 32,
+      "padding_v": 16,
+      "opacity": 0
+    },
+    {
+      "id": "headline",
+      "type": "text_multiline",
+      "content_ref": "@data.headline",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.30",
+      "align": "center",
+      "font": "@brand.fonts.display",
+      "size": 140,
+      "weight": 400,
+      "line_height": 138,
+      "wrap_at": 18,
+      "color": "@brand.colors.text",
+      "accent_line": 1,
+      "accent_color": "@brand.colors.primary",
+      "accent_style": "normal",
+      "opacity": 0
+    },
+    {
+      "id": "detail",
+      "type": "text_block",
+      "content_ref": "@data.detail",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.700",
+      "align": "center",
+      "font": "@brand.fonts.sans",
+      "size": 34,
+      "weight": 400,
+      "max_width": "$canvas.width*0.74",
+      "line_height": 48,
+      "color": "@brand.colors.muted",
+      "opacity": 0
+    },
+    {
+      "id": "divider",
+      "type": "divider_ornament",
+      "x1": "$canvas.width*0.36",
+      "x2": "$canvas.width*0.64",
+      "y": "$canvas.height*0.80",
+      "gap": 12,
+      "stroke_width": 1.5,
+      "centre": "dot",
+      "centre_size": 12,
+      "color": "@brand.colors.primary",
+      "opacity": 0
+    },
+    {
+      "id": "source",
+      "type": "source_tag",
+      "content_ref": "@data.source",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.873",
+      "align": "center",
+      "color": "@brand.colors.primary",
+      "size": 20,
+      "letter_spacing": 1,
+      "opacity": 0
+    },
+    {
+      "id": "brand_mark",
+      "type": "brand_watermark",
+      "content": "@brand.logo",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.925",
+      "align": "center",
+      "font": "@brand.fonts.mono",
+      "size": 18,
+      "letter_spacing": 4,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.3,
+      "opacity": 0
+    }
+  ],
+  "animations": [
+    {
+      "layer_id": "frame_card",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 30,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "tag_top",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 6,
+      "end_frame": 32,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "tag_top",
+      "property": "y",
+      "from_value": 30,
+      "to_value": 0,
+      "start_frame": 6,
+      "end_frame": 44,
+      "easing": "elastic_out"
+    },
+    {
+      "layer_id": "headline",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 26,
+      "end_frame": 72,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "headline",
+      "property": "y",
+      "from_value": 52,
+      "to_value": 0,
+      "start_frame": 26,
+      "end_frame": 78,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "detail",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 64,
+      "end_frame": 104,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "detail",
+      "property": "y",
+      "from_value": 30,
+      "to_value": 0,
+      "start_frame": 64,
+      "end_frame": 108,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "divider",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 98,
+      "end_frame": 126,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "divider",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 98,
+      "end_frame": 132,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "source",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 116,
+      "end_frame": 150,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "source",
+      "property": "y",
+      "from_value": 24,
+      "to_value": 0,
+      "start_frame": 116,
+      "end_frame": 152,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "brand_mark",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 138,
+      "end_frame": 176,
+      "easing": "ease_out"
+    }
+  ]
+}
