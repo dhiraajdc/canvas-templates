@@ -576,6 +576,12 @@
             "file": "news/headline/breaking-news-framed-v1.json",
             "status": "ready",
             "size": "feed"
+          },
+          {
+            "id": "breaking-news-broadcast-v1",
+            "file": "news/headline/breaking-news-broadcast-v1.json",
+            "status": "draft",
+            "size": "feed"
           }
         ]
       },
