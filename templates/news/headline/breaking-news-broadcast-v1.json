@@ -1,0 +1,528 @@
+{
+  "meta": {
+    "template_id": "breaking-news-broadcast-v1",
+    "intent": "educational_informative",
+    "mode": "industry_news",
+    "sub_type": "announcement",
+    "style": "broadcast_breaking_news",
+    "version": "3.1",
+    "total_frames": 300,
+    "fps": 30,
+    "best_frame": 90
+  },
+  "canvas": {
+    "ratio": "9:16",
+    "background": "@brand.colors.background",
+    "width": 1080,
+    "height": 1920
+  },
+  "brand": {
+    "logo": "INSIGHT·DAILY",
+    "colors": {
+      "primary": "#DC2026",
+      "background": "#0B0D14",
+      "text": "#d6d6d6",
+      "muted": "#B7B3AD",
+      "surface": "#2A3158"
+    },
+    "fonts": {
+      "display": "Bebas Neue",
+      "sans": "DM Sans",
+      "mono": "DM Mono",
+      "grotesk": "Space Grotesk",
+      "serif": "Playfair Display"
+    }
+  },
+  "data": {
+    "headline": "New data privacy rules take effect this month",
+    "body": "Businesses handling EU customer data must now offer one-click data deletion.",
+    "image_src": "https://picsum.photos/1080/1280",
+    "source": "EU Commission 2025"
+  },
+  "layers": [
+    {
+      "id": "bg_fill",
+      "type": "fill_rect",
+      "x": "$canvas.width*0",
+      "y": "$canvas.height*0",
+      "width": "$canvas.width*1",
+      "height": "$canvas.height*1",
+      "color": "@brand.colors.background",
+      "opacity": 1
+    },
+    {
+      "id": "bg_glow",
+      "type": "radial_gradient",
+      "cx": "$canvas.width*0.5",
+      "cy": "$canvas.height*0.04",
+      "radius": 760,
+      "color_start": "@brand.colors.primary",
+      "opacity_start": 0.16,
+      "color_end": "@brand.colors.background",
+      "opacity_end": 0,
+      "opacity": 0
+    },
+    {
+      "id": "bg_dots",
+      "type": "dot_grid",
+      "color": "@brand.colors.primary",
+      "spacing": 62,
+      "dot_radius": 1.5,
+      "opacity": 0.05
+    },
+    {
+      "id": "diagonal_slash",
+      "type": "line",
+      "x1": "$canvas.width*0.48",
+      "y1": "$canvas.height*0",
+      "x2": "$canvas.width*1.02",
+      "y2": "$canvas.height*0.072",
+      "color": "@brand.colors.primary",
+      "stroke_width": 74,
+      "line_cap": "butt",
+      "origin": "left",
+      "opacity": 0
+    },
+    {
+      "id": "diagonal_thin",
+      "type": "line",
+      "x1": "$canvas.width*0.40",
+      "y1": "$canvas.height*0.10",
+      "x2": "$canvas.width*1.02",
+      "y2": "$canvas.height*0.024",
+      "color": "@brand.colors.primary",
+      "stroke_width": 3,
+      "line_cap": "butt",
+      "origin": "left",
+      "opacity": 0
+    },
+    {
+      "id": "live_dot",
+      "type": "circle",
+      "cx": "$canvas.width*0.705",
+      "cy": "$canvas.height*0.063",
+      "radius": 15,
+      "color": "@brand.colors.primary",
+      "opacity": 0
+    },
+    {
+      "id": "live_pill",
+      "type": "pill_text",
+      "x": "$canvas.width*0.83",
+      "y": "$canvas.height*0.063",
+      "align": "center",
+      "content": "LIVE",
+      "color": "@brand.colors.primary",
+      "bg_color": "@brand.colors.text",
+      "bg_opacity": 1,
+      "font": "@brand.fonts.grotesk",
+      "size": 30,
+      "weight": 700,
+      "letter_spacing": 2,
+      "padding_h": 30,
+      "padding_v": 16,
+      "opacity": 0
+    },
+    {
+      "id": "image_frame_fallback",
+      "type": "rectangle",
+      "x": "$canvas.width*0.05",
+      "y": "$canvas.height*0.095",
+      "width": "$canvas.width*0.90",
+      "height": "$canvas.height*0.50",
+      "color": "@brand.colors.surface",
+      "corner_radius": 24,
+      "opacity": 1,
+      "visible": false
+    },
+    {
+      "id": "image_layer",
+      "type": "image_fill",
+      "x": "$canvas.width*0.05",
+      "y": "$canvas.height*0.095",
+      "width": "$canvas.width*0.90",
+      "height": "$canvas.height*0.50",
+      "src": "@data.image_src",
+      "fit": "cover",
+      "corner_radius": 24,
+      "opacity": 0,
+      "visible": true
+    },
+    {
+      "id": "image_border",
+      "type": "rectangle",
+      "x": "$canvas.width*0.05",
+      "y": "$canvas.height*0.095",
+      "width": "$canvas.width*0.90",
+      "height": "$canvas.height*0.50",
+      "color": "@brand.colors.primary",
+      "fill": false,
+      "stroke_color": "@brand.colors.primary",
+      "stroke_width": 3,
+      "corner_radius": 24,
+      "opacity": 0
+    },
+    {
+      "id": "update_bg",
+      "type": "rectangle",
+      "x": "$canvas.width*0.05",
+      "y": "$canvas.height*0.548",
+      "width": "$canvas.width*0.40",
+      "height": "$canvas.height*0.058",
+      "color": "@brand.colors.primary",
+      "corner_radius": 0,
+      "origin": "left",
+      "opacity": 0
+    },
+    {
+      "id": "update_text",
+      "type": "text",
+      "x": "$canvas.width*0.078",
+      "y": "$canvas.height*0.577",
+      "align": "left",
+      "baseline": "middle",
+      "content": "UPDATE",
+      "font": "@brand.fonts.display",
+      "size": 78,
+      "weight": 900,
+      "letter_spacing": 2,
+      "color": "@brand.colors.text",
+      "opacity": 0
+    },
+    {
+      "id": "news_band",
+      "type": "rectangle",
+      "x": "$canvas.width*0",
+      "y": "$canvas.height*0.606",
+      "width": "$canvas.width*1",
+      "height": "$canvas.height*0.060",
+      "color": "@brand.colors.surface",
+      "corner_radius": 0,
+      "origin": "left",
+      "opacity": 0
+    },
+    {
+      "id": "news_today_text",
+      "type": "text",
+      "x": "$canvas.width*0.06",
+      "y": "$canvas.height*0.636",
+      "align": "left",
+      "baseline": "middle",
+      "content": "News Today",
+      "font": "@brand.fonts.serif",
+      "font_style": "italic",
+      "size": 70,
+      "weight": 700,
+      "color": "@brand.colors.text",
+      "opacity": 0
+    },
+    {
+      "id": "bottom_panel",
+      "type": "rectangle",
+      "x": "$canvas.width*0",
+      "y": "$canvas.height*0.666",
+      "width": "$canvas.width*1",
+      "height": "$canvas.height*0.334",
+      "color": "@brand.colors.primary",
+      "corner_radius": 0,
+      "opacity": 0
+    },
+    {
+      "id": "headline_text",
+      "type": "text_block",
+      "x": "$canvas.width*0.06",
+      "y": "$canvas.height*0.71",
+      "max_width": "$canvas.width*0.88",
+      "align": "left",
+      "content_ref": "@data.headline",
+      "font": "@brand.fonts.display",
+      "size": 96,
+      "weight": 800,
+      "color": "@brand.colors.text",
+      "line_height": 90,
+      "baseline": "top",
+      "opacity": 0
+    },
+    {
+      "id": "body_text",
+      "type": "text_block",
+      "x": "$canvas.width*0.06",
+      "y": "$canvas.height*0.85",
+      "max_width": "$canvas.width*0.86",
+      "align": "left",
+      "content_ref": "@data.body",
+      "font": "@brand.fonts.sans",
+      "size": 32,
+      "weight": 400,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.92,
+      "line_height": 42,
+      "baseline": "top",
+      "opacity": 0
+    },
+    {
+      "id": "source_pill",
+      "type": "source_tag",
+      "x": "$canvas.width*0.06",
+      "y": "$canvas.height*0.945",
+      "align": "left",
+      "content_ref": "@data.source",
+      "color": "@brand.colors.text",
+      "bg_opacity": 0.12,
+      "border_color": "@brand.colors.text",
+      "border_opacity": 0.25,
+      "font": "@brand.fonts.mono",
+      "size": 18,
+      "letter_spacing": 1,
+      "opacity": 0
+    },
+    {
+      "id": "brand_watermark",
+      "type": "brand_watermark",
+      "x": "$canvas.width*0.83",
+      "y": "$canvas.height*0.950",
+      "align": "center",
+      "size": 16,
+      "letter_spacing": 5,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.55,
+      "opacity": 1
+    }
+  ],
+  "animations": [
+    {
+      "layer_id": "bg_glow",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 25,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "diagonal_slash",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 15,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "diagonal_slash",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 22,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "diagonal_thin",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 0.4,
+      "start_frame": 8,
+      "end_frame": 26,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "diagonal_thin",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 8,
+      "end_frame": 30,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "live_dot",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 18,
+      "end_frame": 36,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "live_dot",
+      "property": "scale",
+      "from_value": 0.4,
+      "to_value": 1,
+      "start_frame": 18,
+      "end_frame": 40,
+      "easing": "elastic_out"
+    },
+    {
+      "layer_id": "live_pill",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 22,
+      "end_frame": 42,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "live_pill",
+      "property": "scale_x",
+      "from_value": 0.85,
+      "to_value": 1,
+      "start_frame": 22,
+      "end_frame": 46,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "image_layer",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 30,
+      "end_frame": 66,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "image_layer",
+      "property": "scale",
+      "from_value": 1.05,
+      "to_value": 1,
+      "start_frame": 30,
+      "end_frame": 100,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "image_border",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 0.5,
+      "start_frame": 42,
+      "end_frame": 72,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "update_bg",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 66,
+      "end_frame": 84,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "update_bg",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 66,
+      "end_frame": 90,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "update_text",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 80,
+      "end_frame": 100,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "update_text",
+      "property": "x",
+      "from_value": 14,
+      "to_value": 0,
+      "start_frame": 80,
+      "end_frame": 100,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "news_band",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 96,
+      "end_frame": 116,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "news_band",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 96,
+      "end_frame": 122,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "news_today_text",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 112,
+      "end_frame": 138,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "news_today_text",
+      "property": "x",
+      "from_value": 18,
+      "to_value": 0,
+      "start_frame": 112,
+      "end_frame": 138,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "bottom_panel",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 100,
+      "end_frame": 128,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "headline_text",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 134,
+      "end_frame": 176,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "headline_text",
+      "property": "y",
+      "from_value": 26,
+      "to_value": 0,
+      "start_frame": 134,
+      "end_frame": 176,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "body_text",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 180,
+      "end_frame": 216,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "body_text",
+      "property": "y",
+      "from_value": 18,
+      "to_value": 0,
+      "start_frame": 180,
+      "end_frame": 216,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "source_pill",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 212,
+      "end_frame": 240,
+      "easing": "ease_out"
+    }
+  ]
+}
