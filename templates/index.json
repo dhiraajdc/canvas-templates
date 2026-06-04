@@ -53,6 +53,12 @@
             "file": "dyk/ratio/dyk-ratio-speech-bubble-v1.json",
             "status": "ready",
             "size": "feed"
+          },
+          {
+            "id": "borcelle-speech-bubble-figures-v1",
+            "file": "dyk/ratio/borcelle-speech-bubble-figures-v1.json",
+            "status": "draft",
+            "size": "feed"
           }
         ]
       },
