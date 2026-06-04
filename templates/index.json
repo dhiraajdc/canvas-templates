@@ -661,5 +661,9 @@
         ]
       }
     ]
+  },
+  {
+    "intent": "educational/informative",
+    "modes": []
   }
 ]
