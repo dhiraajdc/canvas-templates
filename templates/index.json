@@ -574,7 +574,7 @@
           {
             "id": "breaking-news-framed-v1",
             "file": "news/headline/breaking-news-framed-v1.json",
-            "status": "draft",
+            "status": "ready",
             "size": "feed"
           }
         ]
