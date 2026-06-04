@@ -580,7 +580,7 @@
           {
             "id": "breaking-news-broadcast-v1",
             "file": "news/headline/breaking-news-broadcast-v1.json",
-            "status": "draft",
+            "status": "ready",
             "size": "feed"
           }
         ]
