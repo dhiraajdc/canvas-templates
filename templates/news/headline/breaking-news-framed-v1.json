@@ -1,0 +1,341 @@
+{
+  "meta": {
+    "template_id": "breaking-news-framed-v1",
+    "intent": "educational_informative",
+    "mode": "industry_news",
+    "sub_type": "announcement",
+    "style": "breaking_news_urgency",
+    "version": "3.1",
+    "total_frames": 300,
+    "fps": 30,
+    "best_frame": 90
+  },
+  "canvas": {
+    "ratio": "4:5",
+    "background": "@brand.colors.background",
+    "width": 1080,
+    "height": 1350
+  },
+  "brand": {
+    "logo": "INSIGHT·DAILY",
+    "colors": {
+      "primary": "#E8350A",
+      "background": "#0A0A0B",
+      "text": "#c0c0c0",
+      "muted": "#6B6860",
+      "surface": "#1A1918"
+    },
+    "fonts": {
+      "display": "Bebas Neue",
+      "sans": "DM Sans",
+      "mono": "DM Mono",
+      "grotesk": "Space Grotesk",
+      "serif": "Playfair Display"
+    }
+  },
+  "data": {
+    "headline": "New data privacy rules take effect this month",
+    "body": "Businesses handling EU customer data must now offer one-click data deletion.",
+    "image_src": "https://picsum.photos/1080/720",
+    "source": "EU Commission 2025"
+  },
+  "layers": [
+    {
+      "id": "bg_fill",
+      "type": "fill_rect",
+      "x": "$canvas.width*0",
+      "y": "$canvas.height*0",
+      "width": "$canvas.width*1",
+      "height": "$canvas.height*1",
+      "color": "@brand.colors.background",
+      "opacity": 1
+    },
+    {
+      "id": "bg_noise",
+      "type": "noise",
+      "opacity": 0.04,
+      "color": "@brand.colors.text",
+      "density": 0.18
+    },
+    {
+      "id": "top_accent_bar",
+      "type": "rectangle",
+      "x": "$canvas.width*0",
+      "y": "$canvas.height*0",
+      "width": "$canvas.width*1",
+      "height": 6,
+      "color": "@brand.colors.primary",
+      "opacity": 0
+    },
+    {
+      "id": "kicker_tag",
+      "type": "tag",
+      "x": "$canvas.width*0.08",
+      "y": "$canvas.height*0.085",
+      "align": "left",
+      "content": "BREAKING NEWS",
+      "color": "@brand.colors.primary",
+      "bg_color": "@brand.colors.primary",
+      "bg_opacity": 0.15,
+      "border": true,
+      "border_opacity": 0.5,
+      "font": "@brand.fonts.grotesk",
+      "size": 22,
+      "weight": 700,
+      "letter_spacing": 2,
+      "uppercase": true,
+      "padding_h": 24,
+      "padding_v": 12,
+      "opacity": 0
+    },
+    {
+      "id": "image_frame_fallback",
+      "type": "rectangle",
+      "x": "$canvas.width*0.07",
+      "y": "$canvas.height*0.12",
+      "width": "$canvas.width*0.86",
+      "height": "$canvas.height*0.33",
+      "color": "@brand.colors.surface",
+      "corner_radius": 10,
+      "opacity": 1,
+      "visible": false
+    },
+    {
+      "id": "image_layer",
+      "type": "image_fill",
+      "x": "$canvas.width*0.07",
+      "y": "$canvas.height*0.12",
+      "width": "$canvas.width*0.86",
+      "height": "$canvas.height*0.33",
+      "src": "@data.image_src",
+      "fit": "cover",
+      "corner_radius": 10,
+      "opacity": 0,
+      "visible": true
+    },
+    {
+      "id": "image_frame_border",
+      "type": "rectangle",
+      "x": "$canvas.width*0.07",
+      "y": "$canvas.height*0.12",
+      "width": "$canvas.width*0.86",
+      "height": "$canvas.height*0.33",
+      "color": "@brand.colors.primary",
+      "fill": false,
+      "stroke_color": "@brand.colors.primary",
+      "stroke_width": 1.5,
+      "corner_radius": 10,
+      "opacity": 0
+    },
+    {
+      "id": "divider_rule",
+      "type": "double_rule",
+      "x1": "$canvas.width*0.07",
+      "x2": "$canvas.width*0.93",
+      "y": "$canvas.height*0.485",
+      "gap": 10,
+      "stroke_width": 1,
+      "color": "@brand.colors.primary",
+      "opacity": 0
+    },
+    {
+      "id": "headline_text",
+      "type": "text_block",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.54",
+      "max_width": "$canvas.width*0.84",
+      "align": "center",
+      "content_ref": "@data.headline",
+      "font": "@brand.fonts.display",
+      "size": 95,
+      "weight": 900,
+      "color": "@brand.colors.text",
+      "line_height": 96,
+      "baseline": "top",
+      "opacity": 0
+    },
+    {
+      "id": "body_text",
+      "type": "text_block",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.755",
+      "max_width": "$canvas.width*0.78",
+      "align": "center",
+      "content_ref": "@data.body",
+      "font": "@brand.fonts.sans",
+      "size": 30,
+      "weight": 300,
+      "color": "@brand.colors.muted",
+      "line_height": 44,
+      "baseline": "top",
+      "opacity": 0
+    },
+    {
+      "id": "source_pill",
+      "type": "source_tag",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.895",
+      "align": "center",
+      "content_ref": "@data.source",
+      "color": "@brand.colors.muted",
+      "bg_opacity": 0.08,
+      "border_color": "@brand.colors.muted",
+      "border_opacity": 0.2,
+      "font": "@brand.fonts.mono",
+      "size": 19,
+      "letter_spacing": 1,
+      "opacity": 0
+    },
+    {
+      "id": "bottom_rule",
+      "type": "line",
+      "x1": "$canvas.width*0.07",
+      "y1": "$canvas.height*0.935",
+      "x2": "$canvas.width*0.93",
+      "y2": "$canvas.height*0.935",
+      "color": "@brand.colors.surface",
+      "stroke_width": 1,
+      "opacity": 0
+    },
+    {
+      "id": "brand_watermark",
+      "type": "brand_watermark",
+      "x": "$canvas.width*0.5",
+      "y": "$canvas.height*0.965",
+      "align": "center",
+      "size": 18,
+      "letter_spacing": 5,
+      "color": "@brand.colors.text",
+      "color_opacity": 0.25,
+      "opacity": 1
+    }
+  ],
+  "animations": [
+    {
+      "layer_id": "top_accent_bar",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 0,
+      "end_frame": 18,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "kicker_tag",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 12,
+      "end_frame": 38,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "kicker_tag",
+      "property": "y",
+      "from_value": 10,
+      "to_value": 0,
+      "start_frame": 12,
+      "end_frame": 38,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "image_layer",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 35,
+      "end_frame": 70,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "image_layer",
+      "property": "scale",
+      "from_value": 1.04,
+      "to_value": 1,
+      "start_frame": 35,
+      "end_frame": 95,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "image_frame_border",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 0.35,
+      "start_frame": 48,
+      "end_frame": 78,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "divider_rule",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 0.6,
+      "start_frame": 74,
+      "end_frame": 96,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "divider_rule",
+      "property": "scale_x",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 74,
+      "end_frame": 100,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "headline_text",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 92,
+      "end_frame": 132,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "headline_text",
+      "property": "y",
+      "from_value": 22,
+      "to_value": 0,
+      "start_frame": 92,
+      "end_frame": 132,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "body_text",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 138,
+      "end_frame": 176,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "body_text",
+      "property": "y",
+      "from_value": 18,
+      "to_value": 0,
+      "start_frame": 138,
+      "end_frame": 176,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "source_pill",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 172,
+      "end_frame": 202,
+      "easing": "ease_out"
+    },
+    {
+      "layer_id": "bottom_rule",
+      "property": "opacity",
+      "from_value": 0,
+      "to_value": 1,
+      "start_frame": 182,
+      "end_frame": 206,
+      "easing": "ease_out"
+    }
+  ]
+}
