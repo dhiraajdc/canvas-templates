@@ -570,6 +570,12 @@
               "live-data"
             ],
             "best_frame": 162
+          },
+          {
+            "id": "breaking-news-framed-v1",
+            "file": "news/headline/breaking-news-framed-v1.json",
+            "status": "draft",
+            "size": "feed"
           }
         ]
       },
