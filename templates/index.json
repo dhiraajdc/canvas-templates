@@ -664,6 +664,15 @@
   },
   {
     "intent": "educational/informative",
-    "modes": []
+    "modes": [
+      {
+        "mode": "how_to",
+        "templates": []
+      },
+      {
+        "mode": "how_to_guide",
+        "templates": []
+      }
+    ]
   }
 ]
